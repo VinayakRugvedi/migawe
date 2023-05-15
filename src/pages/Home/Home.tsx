@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom'
 
+import { Header } from 'components/ui'
+
 const Home = () => {
   return (
     <main className='overflow-x-hidden'>
-      <h3 className='text-7xl text-center font-bold'>Migawe</h3>
+      <Header />
+
+      {/* <h3 className='text-7xl text-center font-bold'>Migawe</h3>
       <section>
         <h4>Section 1 - Hero Section</h4>
         <p>Display the game here</p>
@@ -28,7 +32,7 @@ const Home = () => {
       <section>
         <h4>Section 5</h4>
         <p>Deep dive engagement, indapp games</p>
-      </section>
+      </section> */}
     </main>
   )
 }
