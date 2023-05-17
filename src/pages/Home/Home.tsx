@@ -12,14 +12,6 @@ const Home = () => {
 
       {/* <h3 className='text-7xl text-center font-bold'>Migawe</h3>
       <section>
-        <h4>Section 1 - Hero Section</h4>
-        <p>Display the game here</p>
-        <Link to='/game' className='btn btn-primary btn-wide'>
-          Play the game
-        </Link>
-        Enter with $1USDT
-      </section>
-      <section>
         <h4>Section 2</h4>
         <p>Explain what Migawe is</p>
       </section>
