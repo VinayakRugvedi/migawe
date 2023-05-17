@@ -1,0 +1,29 @@
+.slide-in-from-top-left {
+  animation: slideInFromTopLeft 0.5s ease-in;
+}
+
+.slide-in-from-bottom-right {
+  animation: slideInFromBottomRight 0.5s ease-in;
+}
+
+@keyframes slideInFromTopLeft {
+  0% {
+    top: 0px;
+    left: 0px;
+  }
+  100% {
+    top: 80px;
+    left: 160px;
+  }
+}
+
+@keyframes slideInFromBottomRight {
+  0% {
+    top: 80px;
+    right: -160px;
+  }
+  100% {
+    top: 0px;
+    right: 0px;
+  }
+}

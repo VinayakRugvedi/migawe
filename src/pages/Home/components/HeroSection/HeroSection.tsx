@@ -1,4 +1,5 @@
 import { heroSectionPrimaryIllustartion, heroSectionSecondaryIllustartion } from 'assets'
+import styles from './HeroSection.module.css'
 
 const HeroSection = () => {
   return (
@@ -68,12 +69,12 @@ const HeroSection = () => {
       </div>
       <img
         src={heroSectionPrimaryIllustartion}
-        className={`absolute top-0 right-0 mix-blend-color-burn`}
+        className={`${styles['slide-in-from-bottom-right']} absolute top-0 right-0 mix-blend-color-burn`}
       />
 
       <img
         src={heroSectionSecondaryIllustartion}
-        className={`absolute left-40 top-20 mix-blend-overlay`}
+        className={`${styles['slide-in-from-top-left']} absolute left-40 top-20 mix-blend-overlay`}
       />
     </section>
   )
