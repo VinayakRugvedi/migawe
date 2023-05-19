@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom'
 
-import { Header } from 'components/ui'
-import HeroSection from './components/HeroSection/HeroSection'
+import { HeroSection, AboutSection } from './components'
 
 const Home = () => {
   return (
     <main className='overflow-x-hidden'>
-      <Header />
-
       <HeroSection />
+
+      <AboutSection />
 
       {/* <h3 className='text-7xl text-center font-bold'>Migawe</h3>
       <section>
