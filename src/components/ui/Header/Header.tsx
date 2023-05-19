@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 const Header = () => {
   return (
     <header
-      className='h-[125px] fixed top-0 inset-x-0 px-12 z-30 bg-opacity-90 backdrop-blur transition-all duration-100 
+      className='h-[125px] fixed top-0 inset-x-0 px-12 z-30 bg-opacity-70 backdrop-blur transition-all duration-100 
     bg-base-100'
     >
       <nav className='h-full flex justify-between items-center uppercase'>
