@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Logo512 } from 'assets'
 
 const Header = () => {
   return (
@@ -7,7 +8,13 @@ const Header = () => {
     bg-base-100'
     >
       <nav className='h-full flex justify-between items-center uppercase'>
-        <Link to='/' className='hover:text-primary'>
+        <Link to='/' className='hover:text-primary flex items-center'>
+          <img
+            src={Logo512}
+            alt='logo'
+            width='24'
+            className='mr-2 animate-[spin_5s_ease-in-out_infinite]'
+          />
           <h3 className='text-2xl font-bold'>MIGAWE</h3>
         </Link>
         <div>

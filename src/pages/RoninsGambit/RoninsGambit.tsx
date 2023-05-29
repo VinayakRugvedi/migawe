@@ -1,3 +1,4 @@
+import { GiBroadsword, GiPlayButton } from 'react-icons/gi'
 import { gameTitleIllustration } from 'assets'
 
 const RoninsGambit = () => {
@@ -46,28 +47,43 @@ const RoninsGambit = () => {
           <div className='mt-8'>
             <h4 className='text-2xl font-medium'>Getting Started</h4>
 
-            <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20 mt-8'>
-              <div className='card-body'>
-                <div className='flex justify-between items-center'>
-                  <h2 className='card-title'>Step 1: Top-up Pool</h2>
+            <div className='flex items-center mt-8'>
+              <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20'>
+                <div className='card-body'>
+                  <div className='flex justify-between items-center'>
+                    <h2 className='card-title'>Step 1: Top-up Pool</h2>
+                  </div>
+                  <p>
+                    As a starter, you will be asked to transfer a minimum of 1USDT into our top-up
+                    pool. Consider this as a security deposit. Futhermore, this top-up pool will be
+                    used to setup the reward pool of every game.
+                  </p>
                 </div>
-                <p>
-                  As a starter, you will be asked to transfer a minimum of 1USDT into our top-up
-                  pool. Consider this as a security deposit. Futhermore, this top-up pool will be
-                  used to setup the reward pool of every game.
-                </p>
+              </div>
+              <div className='ml-4 tooltip' data-tip="Let's add some top-up">
+                <button className='btn btn-circle btn-primary text-xl'>
+                  <GiBroadsword />
+                </button>
               </div>
             </div>
 
-            <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20 mt-8'>
-              <div className='card-body'>
-                <div className='flex justify-between items-center'>
-                  <h2 className='card-title'>Step 2: Reward Pool</h2>
+            <div className='flex items-center mt-8'>
+              <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20'>
+                <div className='card-body'>
+                  <div className='flex justify-between items-center'>
+                    <h2 className='card-title'>Step 2: Reward Pool</h2>
+                  </div>
+                  <p>
+                    Every time you start a game, you have to transfer 0.2USDT into the reward pool
+                    (from top-up pool) which will set the reward pool&apos;s total value to 0.4USDT.
+                  </p>
                 </div>
-                <p>
-                  Every time you start a game, you have to transfer 0.2USDT into the reward pool
-                  (from top-up pool) which will set the reward pool&apos;s total value to 0.4USDT.
-                </p>
+              </div>
+
+              <div className='ml-4 tooltip' data-tip="Let's play">
+                <button className='btn btn-circle btn-primary text-xl pl-1'>
+                  <GiPlayButton />
+                </button>
               </div>
             </div>
           </div>
