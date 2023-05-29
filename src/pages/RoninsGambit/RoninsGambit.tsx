@@ -1,7 +1,15 @@
 import { GiBroadsword, GiPlayButton } from 'react-icons/gi'
 import { gameTitleIllustration } from 'assets'
 
-const RoninsGambit = () => {
+import { ActionsModal } from './components'
+
+interface PropTypes {
+  showModal: boolean
+  handleOnOpen: () => void
+  handleOnClose: () => void
+}
+
+const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose }: PropTypes) => {
   return (
     <main className='mt-[120px] py-4 mx-auto max-w-7xl mb-8'>
       <section className='mb-8 grid grid-cols-2'>
@@ -39,7 +47,9 @@ const RoninsGambit = () => {
           </div>
 
           <div className='mt-8 mb-8'>
-            <button className='btn btn-wide'>Get Started</button>
+            <button className='btn btn-wide' onClick={handleOnOpen}>
+              Get Started
+            </button>
           </div>
 
           <div className='divider'></div>
@@ -61,7 +71,7 @@ const RoninsGambit = () => {
                 </div>
               </div>
               <div className='ml-4 tooltip' data-tip="Let's add some top-up">
-                <button className='btn btn-circle btn-primary text-xl'>
+                <button className='btn btn-circle btn-primary text-xl' onClick={handleOnOpen}>
                   <GiBroadsword />
                 </button>
               </div>
@@ -81,7 +91,7 @@ const RoninsGambit = () => {
               </div>
 
               <div className='ml-4 tooltip' data-tip="Let's play">
-                <button className='btn btn-circle btn-primary text-xl pl-1'>
+                <button className='btn btn-circle btn-primary text-xl pl-1' onClick={handleOnOpen}>
                   <GiPlayButton />
                 </button>
               </div>
@@ -97,6 +107,8 @@ const RoninsGambit = () => {
           />
         </div>
       </section>
+
+      <ActionsModal showModal={showModal} handleOnClose={handleOnClose} />
     </main>
   )
 }
