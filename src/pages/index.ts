@@ -1,5 +1,5 @@
 import Home from './Home/Home'
-import Game from './Game/Game'
+import RoninsGambit from './RoninsGambit/RoninsGambit'
 import NotFound from './NotFound/NotFound'
 
-export { Home, Game, NotFound }
+export { Home, RoninsGambit, NotFound }
