@@ -1,3 +1,4 @@
 import ScrollToTop from './ScrollToTop/ScrollToTop'
+import Modal from './Modal/Modal.container'
 
-export { ScrollToTop }
+export { ScrollToTop, Modal }
