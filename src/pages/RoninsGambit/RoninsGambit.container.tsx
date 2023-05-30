@@ -1,9 +1,11 @@
 import { useState } from 'react'
 
+import { GamePlay } from 'pages'
 import RoninsGambit from './RoninsGambit'
 
 const RoninsGambitContainer = () => {
   const [showModal, setShowModal] = useState(false)
+  const [showGamePlay, setShowGamePlay] = useState(true)
 
   const handleOnOpen = () => {
     setShowModal(true)
@@ -14,7 +16,17 @@ const RoninsGambitContainer = () => {
   }
 
   return (
-    <RoninsGambit showModal={showModal} handleOnOpen={handleOnOpen} handleOnClose={handleOnClose} />
+    <>
+      {showGamePlay ? (
+        <GamePlay />
+      ) : (
+        <RoninsGambit
+          showModal={showModal}
+          handleOnOpen={handleOnOpen}
+          handleOnClose={handleOnClose}
+        />
+      )}
+    </>
   )
 }
 
