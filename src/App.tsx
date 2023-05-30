@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { ThirdwebProvider } from '@thirdweb-dev/react'
 
 import { Home, RoninsGambit, NotFound } from 'pages'
 import { ScrollToTop } from 'components/base'
@@ -7,7 +8,7 @@ import { Header, Footer } from 'components/ui'
 
 function App() {
   return (
-    <React.Fragment>
+    <ThirdwebProvider activeChain='ethereum'>
       <Router>
         <ScrollToTop />
         <Header />
@@ -18,7 +19,7 @@ function App() {
         </Routes>
         <Footer />
       </Router>
-    </React.Fragment>
+    </ThirdwebProvider>
   )
 }
 
