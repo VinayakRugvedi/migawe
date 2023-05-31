@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+
+import { ThirdWebConnectWalletButton } from 'components/ui'
 import { Logo512 } from 'assets'
 
 const Header = () => {
@@ -17,11 +19,12 @@ const Header = () => {
           />
           <h3 className='text-2xl font-bold'>MIGAWE</h3>
         </Link>
-        <div>
+        <div className='flex items-center'>
           <Link className='mr-6 font-normal hover:text-primary' to='/ronins-gambit'>
             Let&apos;s Play
           </Link>
-          <button className='btn'>Connect Wallet</button>
+          <ThirdWebConnectWalletButton />
+          {/* <button className='btn'>Connect Wallet</button> */}
         </div>
       </nav>
     </header>

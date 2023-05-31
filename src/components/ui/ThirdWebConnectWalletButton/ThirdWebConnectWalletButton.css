@@ -1,0 +1,36 @@
+/* NOTE: ThirdWeb enforces us to use !important to apply styling  */
+/* TODO: Find a way to get around using !important and try to get rid of using internal class names of ThirdWeb */
+
+.third-web-connect-wallet-button {
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  line-height: 1em !important;
+  height: 3rem !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  border-radius: var(--rounded-btn, 0.5rem) !important;
+
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--n) / var(--tw-border-opacity)) !important;
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--n) / var(--tw-bg-opacity)) !important;
+  --tw-text-opacity: 1;
+  color: hsl(var(--nc) / var(--tw-text-opacity)) !important;
+}
+
+.third-web-connect-wallet-button:hover {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--nf, var(--n)) / var(--tw-border-opacity)) !important;
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--nf, var(--n)) / var(--tw-bg-opacity)) !important;
+}
+
+.third-web-connect-wallet-button .tw-connected-wallet__balance {
+  color: hsl(var(--nc) / var(--tw-text-opacity));
+  font-weight: 600;
+}
+
+.third-web-connect-wallet-button .tw-connected-wallet__address {
+  color: hsl(var(--nc) / var(--tw-text-opacity));
+  font-weight: 500;
+}
