@@ -7,8 +7,9 @@ const AboutSection = () => {
         addictive setup.
       </p>
       <p className='text-xl'>
-        Migawe is the unique one-for-all ingredient to enhance adoption of web3, unite brands and
-        users, and improve engagement on dApp platforms.
+        We will be building MIGAWE - A unique one-for-all ingredient to unite brands and users (with
+        dual benefits/perks), improve engagement on dApp platforms, and enhance the adoption of web3
+        through an addictive setup fuelled by a diverse set of games.
       </p>
     </section>
   )

@@ -1,3 +1,3 @@
-import ActionsModal from './ActionsModal/ActionsModal'
+import ActionsModal from './ActionsModal/ActionsModal.container'
 
 export { ActionsModal }
