@@ -9,7 +9,7 @@ import { snarkjs } from "../snark";
 
 export default class Player implements IAgent<GameState> {
   private onMoveSelected: ((move: 0 | 1 | 2) => void) | undefined;
-  private privateState: PvtState = undefined;
+  private privateState: PvtState = { move: 3 };
   private pvtStateHash: PvtStateHash = 0;
 
   constructor() {}
@@ -18,21 +18,21 @@ export default class Player implements IAgent<GameState> {
     newPubState: PubState;
     newPvtStateHash: PvtStateHash;
     proof: any;
-    publicSignals;
+    publicSignals: any;
   }> {
     return new Promise((resolve) => {
       this.onMoveSelected = async (move: 0 | 1 | 2) => {
         this.onMoveSelected = undefined;
 
         // extract PubState from gameState & deep copy
-        let pubState = { ...gameState };
+        let pubState = { ...gameState } as any;
         delete pubState.pvtStateHash;
         pubState = JSON.parse(JSON.stringify(pubState));
 
         let agentId = gameState.step % 2;
         // save a deep copy of the previous private state
         // needed for proof generation
-        let prevPvtState = this.privateState
+        let prevPvtState = this.privateState.move !== 3
           ? JSON.parse(JSON.stringify(this.privateState))
           : undefined;
 
@@ -60,8 +60,9 @@ export default class Player implements IAgent<GameState> {
         //////////////////////////////////////////
         // construct proof of correct transition
         let zkCircuitName, inputs;
-        let pvtState = {};
-        for (let key in this.privateState) {
+        let pvtState = {} as any;
+        let key:keyof PvtState;
+        for (key in this.privateState) {
           pvtState["P" + agentId + "_" + key] = this.privateState[key];
         }
         if (gameState.step === 0) {

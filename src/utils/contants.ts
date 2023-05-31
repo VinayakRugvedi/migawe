@@ -2,4 +2,6 @@ const UI = {
   HeaderHeightInPx: 125,
 }
 
-export { UI }
+const START_HEALTH = 5
+
+export { UI, START_HEALTH }

@@ -1,8 +1,7 @@
-import { START_HEALTH } from "../constants";
+import { START_HEALTH } from "../utils/contants"
 import type { IGameLogic, GameState, PvtState } from "./types";
 
 export default class GameLogic implements IGameLogic<GameState> {
-  private playerPvtState: PvtState;
 
   getInitialState(): GameState {
     const state: GameState = {

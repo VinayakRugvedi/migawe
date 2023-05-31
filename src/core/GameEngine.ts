@@ -1,5 +1,4 @@
 import { GameEngineStatus, type IGameLogic } from "./types";
-import { writable, type Writable, type Readable, get } from "svelte/store";
 import type { IAgent, GameState } from "./types";
 import * as init_vk from "../assets/init_vk.json";
 import * as moveA_vk from "../assets/moveA_vk.json";
@@ -9,21 +8,23 @@ import { snarkjs } from "./snark";
 class GameEngine {
   private status: GameEngineStatus;
   private gameLogic: IGameLogic<GameState>;
-  private gameState: Writable<GameState>;
+  private gameState: GameState;
+  private onStateChange: (newState: GameState) => void;
 
-  constructor(gameLogic: IGameLogic<GameState>) {
+  constructor(gameLogic: IGameLogic<GameState>, onStateChange: (newState:GameState) => void) {
     this.gameLogic = gameLogic;
     this.status = GameEngineStatus.NotRunning;
-    this.gameState = writable(undefined);
+    this.gameState = undefined;
+    this.onStateChange = onStateChange;
   }
   /**
    * @param agents An array of agents. the first agent starts the game.
    */
   public async startGame(agents: IAgent<GameState>[]) {
-    this.gameState.set(this.gameLogic.getInitialState());
+    this.gameState = { ...this.gameLogic.getInitialState()};
     try {
       //////////////// Game loop
-      let state = get(this.gameState);
+      let state = this.gameState;
       let proof, publicSignals;
       while (!this.gameLogic.isFinalState(state)) {
         console.log("%c current GameSate", "color: brown;", state);
@@ -42,7 +43,6 @@ class GameEngine {
 
         /*************************************************/
         this.status = GameEngineStatus.WaitingForProofVerification;
-        // TODO verify the proof/ state transition
         let verification_key;
         if (currStep === 0) {
           verification_key = init_vk;
@@ -75,7 +75,8 @@ class GameEngine {
         };
         state.pvtStateHash[currAgentId] = newPvtStateHash;
         state.step = currStep + 1;
-        this.gameState.set(state);
+        this.gameState = state;
+        this.onStateChange(state);
       }
       // so that the other agent can get the final state/ final move
       // *Only works for 2 agents
@@ -87,7 +88,7 @@ class GameEngine {
     this.status = GameEngineStatus.Completed;
   }
 
-  public getGameStateStore(): Readable<GameState> {
+  public getGameStateStore(): GameState {
     return this.gameState;
   }
 
