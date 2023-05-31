@@ -1,16 +1,9 @@
-<script lang="ts">
+
   import type { DataConnection } from "peerjs";
   import Peer from "peerjs";
-  import Web3 from "web3";
-  import GamePage from "./GamePage.svelte";
-  import Player from "../core/agents/Player";
-  import NetworkedAgent from "../core/agents/NetworkedAgent";
-
-  export let onExit: () => void;
-
-  const web3 = new Web3();
-  // generate a new wallet, TODO read from local storage if exists
-  let wallet = web3.eth.accounts.create();
+  import { ethers } from "ethers";
+  
+  let wallet = ethers.Wallet.createRandom();
   console.log("Your Hot wallet", { wallet });
   const pvtkey = wallet.privateKey;
 
@@ -52,25 +45,3 @@
       console.error("Network/peerConn, not innitiator error: " + err);
     });
   }
-</script>
-
-{#if connected}
-  <GamePage
-    player={new Player()}
-    opponent={new NetworkedAgent(conn)}
-    {firstMover}
-    onExit={() => {
-      // close connection
-      conn.close();
-      connected = false;
-    }}
-  />
-{:else}
-  <h3>share your ID with others to connect, or join using other's ID</h3>
-  <p>Your ID: {peer.id}</p>
-  <div style="display:flex">
-    <input type="text" bind:value={opponentId} />
-    <button on:click={() => onJoin(opponentId)}>join</button>
-  </div>
-  <button on:click={onExit}>Back</button>
-{/if}
