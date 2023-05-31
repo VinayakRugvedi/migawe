@@ -6,11 +6,14 @@ interface PropTypes {
   buttonText?: string
 }
 
-const ThirdWebConnectWalletButton = ({ buttonText = 'Connect Wallet' }: PropTypes) => {
-  // const address: string | undefined = useAddress()
-  // const isWalletConnected = address ? true : false
-
-  return <ConnectWallet theme='light' className='third-web-connect-wallet-button' />
+const ThirdWebConnectWalletButton = ({ buttonText = 'CONNECT WALLET' }: PropTypes) => {
+  return (
+    <ConnectWallet
+      theme='light'
+      className='third-web-connect-wallet-button'
+      btnTitle={buttonText}
+    />
+  )
 }
 
 export default ThirdWebConnectWalletButton
