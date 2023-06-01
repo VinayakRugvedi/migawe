@@ -1,40 +1,33 @@
-import type {
-  IAgent,
-  GameState,
-  PvtStateHash,
-  PubState,
-  PvtState,
-} from "../types";
-import { snarkjs } from "../snark";
+import type { IAgent, GameState, PvtStateHash, PubState, PvtState } from '../types'
+import { snarkjs } from '../snark'
 
 export default class Player implements IAgent<GameState> {
-  private onMoveSelected: ((move: 0 | 1 | 2) => void) | undefined;
-  private privateState: PvtState = { move: 3 };
-  private pvtStateHash: PvtStateHash = 0;
+  private onMoveSelected: ((move: 0 | 1 | 2) => void) | undefined
+  private privateState: PvtState = { move: 3 }
+  private pvtStateHash: PvtStateHash = 0
 
   constructor() {}
 
   public async getNextState(gameState: GameState): Promise<{
-    newPubState: PubState;
-    newPvtStateHash: PvtStateHash;
-    proof: any;
-    publicSignals: any;
+    newPubState: PubState
+    newPvtStateHash: PvtStateHash
+    proof: any
+    publicSignals: any
   }> {
     return new Promise((resolve) => {
       this.onMoveSelected = async (move: 0 | 1 | 2) => {
-        this.onMoveSelected = undefined;
+        this.onMoveSelected = undefined
 
         // extract PubState from gameState & deep copy
-        let pubState = { ...gameState } as any;
-        delete pubState.pvtStateHash;
-        pubState = JSON.parse(JSON.stringify(pubState));
+        let pubState = { ...gameState } as any
+        delete pubState.pvtStateHash
+        pubState = JSON.parse(JSON.stringify(pubState))
 
-        let agentId = gameState.step % 2;
+        const agentId = gameState.step % 2
         // save a deep copy of the previous private state
         // needed for proof generation
-        let prevPvtState = this.privateState.move !== 3
-          ? JSON.parse(JSON.stringify(this.privateState))
-          : undefined;
+        let prevPvtState =
+          this.privateState.move !== 3 ? JSON.parse(JSON.stringify(this.privateState)) : undefined
 
         //////////////////////////////////////////
         // GAME LOGIC
@@ -42,66 +35,66 @@ export default class Player implements IAgent<GameState> {
           // 0's turn
           if (gameState.step > 0) {
             // update healths
-            let diff = (3 + this.privateState.move - gameState.B_move) % 3;
+            let diff = (3 + this.privateState.move - gameState.B_move) % 3
             if (diff === 1) {
               // 0 wins
-              pubState.Health[1] -= 1;
+              pubState.Health[1] -= 1
             } else if (diff === 2) {
               // 1 wins
-              pubState.Health[0] -= 1;
+              pubState.Health[0] -= 1
             }
           }
-          this.privateState = { move: move };
+          this.privateState = { move: move }
         } else {
           // 1's turn
-          pubState.B_move = move;
+          pubState.B_move = move
         }
 
         //////////////////////////////////////////
         // construct proof of correct transition
-        let zkCircuitName, inputs;
-        let pvtState = {} as any;
-        let key:keyof PvtState;
+        let zkCircuitName, inputs
+        let pvtState = {} as any
+        let key: keyof PvtState
         for (key in this.privateState) {
-          pvtState["P" + agentId + "_" + key] = this.privateState[key];
+          pvtState['P' + agentId + '_' + key] = this.privateState[key]
         }
         if (gameState.step === 0) {
-          zkCircuitName = "init";
-          inputs = { ...pubState, ...pvtState };
+          zkCircuitName = 'init'
+          inputs = { ...pubState, ...pvtState }
         } else {
-          zkCircuitName = agentId === 0 ? "moveA" : "moveB";
+          zkCircuitName = agentId === 0 ? 'moveA' : 'moveB'
           // construct prevStates
-          let prevStates = {};
+          let prevStates = {}
           for (let key in pubState) {
-            prevStates[key + "_prev"] = gameState[key];
+            prevStates[key + '_prev'] = gameState[key]
           }
           for (let key in prevPvtState) {
-            prevStates["P" + agentId + "_" + key + "_prev"] = prevPvtState[key];
+            prevStates['P' + agentId + '_' + key + '_prev'] = prevPvtState[key]
           }
           // @ts-ignore
-          prevStates.step_prev = gameState.step - 1; // Super hacky, as gameEngine is updating the 'step'
+          prevStates.step_prev = gameState.step - 1 // Super hacky, as gameEngine is updating the 'step'
 
           inputs = {
             ...prevStates,
             ...pubState,
             ...pvtState,
             hash_prev: this.pvtStateHash,
-          };
+          }
         }
         try {
-          console.log(`generating proof for ${zkCircuitName}`, { inputs });
-          let time = performance.now();
+          console.log(`generating proof for ${zkCircuitName}`, { inputs })
+          let time = performance.now()
           let { proof, publicSignals } = await snarkjs.groth16.fullProve(
             inputs,
-            zkCircuitName + ".wasm",
-            zkCircuitName + ".zkey"
-          );
-          this.pvtStateHash = publicSignals[0]; // as circuit has only one output
-          time = performance.now() - time;
+            zkCircuitName + '.wasm',
+            zkCircuitName + '.zkey',
+          )
+          this.pvtStateHash = publicSignals[0] // as circuit has only one output
+          time = performance.now() - time
           console.log(
             `%c proofGeneration took ${(time / 1000).toFixed(5)} sec`,
-            "color: blue; font-size: 15px;"
-          );
+            'color: blue; font-size: 15px;',
+          )
           // console.log(
           //   `%c generated proof:`,
           //   "color: aqua; font-size: 15px;",
@@ -114,23 +107,19 @@ export default class Player implements IAgent<GameState> {
             newPvtStateHash: agentId === 0 ? this.pvtStateHash : 0,
             proof: proof,
             publicSignals: publicSignals,
-          });
+          })
         } catch (error) {
-          console.warn(
-            "%cproof generation failed!!!",
-            "color: red; font-size: 20px;",
-            error
-          );
+          console.warn('%cproof generation failed!!!', 'color: red; font-size: 20px;', error)
         }
-      };
-    });
+      }
+    })
   }
 
   public selectMove(move: 0 | 1 | 2): void {
     if (this.onMoveSelected) {
-      this.onMoveSelected(move);
+      this.onMoveSelected(move)
     } else {
-      console.error("onMoveSelected is undefined !! not agent's turn");
+      console.error("onMoveSelected is undefined !! not agent's turn")
     }
   }
 }
