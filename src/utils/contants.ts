@@ -3,6 +3,6 @@ const UI = {
 }
 
 const START_HEALTH = 5
-const MatchMakerUrl = 'https://simple-mm.cyclic.app/'
+const MatchMakerUrl = 'http://simple-mm.cyclic.app/'
 
 export { UI, START_HEALTH, MatchMakerUrl }

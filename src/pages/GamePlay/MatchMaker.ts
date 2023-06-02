@@ -1,7 +1,6 @@
-import { ethers } from 'ethers'
+import { Signer, ethers } from 'ethers'
 import Peer, { DataConnection } from 'peerjs'
 import { MatchMakerUrl } from 'utils/contants'
-import { useSigner } from '@thirdweb-dev/react'
 
 class MatchMaker {
   peer: Peer
@@ -23,60 +22,64 @@ class MatchMaker {
    * @param wager amount to wager
    * @param validUntil the time until the game request is valid
    */
-  findMatch(wager: number, validUntil: number): Promise<DataConnection> {
-    return new Promise(async (resolve, reject) => {
+  findMatch(wager: number,signer:Signer , validUntil: number): Promise<DataConnection> {
+    return new Promise((resolve, reject) => {
       let connected = false
       // call match making server
-      let response = await this.getMatchMackerServerResponse(wager, validUntil)
-      if (response.wait) {
-        console.log('waiting for opponent')
-        this.peer.on('connection', (connection) => {
-          if (connected) {
-            // this can happen when a 3rd player tries to connect
-            console.warn('Already connected to an opponent')
-            return
-          }
-          // TODO verifiy onChain that opponent is the one we want to play with
-          console.log('Connected to opponent ID', connection.peer)
-          connected = true
-          this.playerId = 0
-          console.log('Connected to opponent ID', connection.peer)
-          resolve(connection)
-        })
-        // TODO:
-      } else {
-        let opponentAddr = response.opponent.addr
-        let opponentProxyAddr = response.opponent.proxyAddr
-        let opponentValidUntil = response.opponent.validUntil
-        let opponentSign = response.opponent.sign
-        // TODO: call startGame onChain before connecting to opponent
-
-        let connection = this.peer.connect(opponentProxyAddr, { reliable: true })
-        connection.on('open', () => {
-          connected = true
-          console.log('connected with:', opponentProxyAddr)
-          this.playerId = 1
-          resolve(connection)
-        })
-        connection.on('error', (err) => {
-          reject(err)
-          console.error('peer connection error: ' + err)
-        })
-      }
+      this.getMatchMackerServerResponse(wager,signer, validUntil).then(async(response) => {
+        console.log('response', response);
+        if (response.wait) {
+          console.log('waiting for opponent')
+          this.peer.on('connection', (connection) => {
+            if (connected) {
+              // this can happen when a 3rd player tries to connect
+              console.warn('Already connected to an opponent')
+              return
+            }
+            // TODO verifiy onChain that opponent is the one we want to play with
+            console.log('Connected to opponent ID', connection.peer)
+            connected = true
+            this.playerId = 0
+            console.log('Connected to opponent ID', connection.peer)
+            resolve(connection)
+          })
+          // TODO:
+        } else {
+          const opponentAddr = response.opponent.addr
+          const opponentProxyAddr = response.opponent.proxyAddr
+          const opponentValidUntil = response.opponent.validUntil
+          const opponentSign = response.opponent.sign
+          // TODO: call startGame onChain before connecting to opponent
+  
+          const connection = this.peer.connect(opponentProxyAddr, { reliable: true })
+          connection.on('open', () => {
+            connected = true
+            console.log('connected with:', opponentProxyAddr)
+            this.playerId = 1
+            resolve(connection)
+          })
+          connection.on('error', (err) => {
+            reject(err)
+            console.error('peer connection error: ' + err)
+          })
+        }
+      })
     })
   }
 
   private async getMatchMackerServerResponse(
     wager: number,
+    signer: Signer,
     validUntil: number,
   ): Promise<{ wait: boolean; opponent?: any }> {
-    const signer = useSigner()
-    const playerAddress = await signer.getAddress()
-    let gameRequestHash = ethers.utils.solidityPack(
+    const playerAddress = await signer.getAddress();
+    const gameRequestHash = ethers.utils.solidityKeccak256(
       ['address', 'address', 'uint256', 'uint256'],
-      [playerAddress, this.proxyWallet.address, wager, validUntil],
+      [playerAddress, this.proxyWallet.address, wager.toString(), validUntil],
     )
+    console.log('gameRequestHash', gameRequestHash)
     const sign = await signer.signMessage(ethers.utils.arrayify(gameRequestHash))
+    console.log('sign', sign)
     const param = JSON.stringify({
       addr: playerAddress,
       proxyAddr: this.proxyWallet.address,
@@ -84,7 +87,8 @@ class MatchMaker {
       validUntil: validUntil,
       sign: sign,
     })
-    return await fetch(MatchMakerUrl + 'friendly/' + param).then((res) => res.json())
+    console.log('param', param)
+    return await fetch(MatchMakerUrl + 'friendly/' + param,{mode:"cors"}).then((res) => res.json())
   }
 }
 export default MatchMaker

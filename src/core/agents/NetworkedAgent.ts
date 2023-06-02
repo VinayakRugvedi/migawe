@@ -30,7 +30,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
   }> {
     // extract PubState from gameState
     const agentId = gameState.step % 2
-    let pubState = { ...gameState }
+    const pubState = { ...gameState }
     delete pubState.pvtStateHash
     // send the game state to the other player
     this.conn.send(
