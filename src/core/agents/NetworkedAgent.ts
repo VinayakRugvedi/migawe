@@ -36,7 +36,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
     this.conn.send(
       JSON.stringify({
         pubState: pubState,
-        pvtStateHash: gameState.pvtStateHash[agentId ? 0 : 1],
+        pvtStateHash: gameState.pvtStateHash[(agentId + 1) % 2],
         proof: prevProof,
         publicSignals: prevPublicSignals,
       }),
