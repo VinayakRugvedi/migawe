@@ -6,14 +6,16 @@ import { GiStripedSword, GiVibratingShield, GiSwordBreak } from 'react-icons/gi'
 
 import { IntroScreen } from './components'
 
+type outcome = 'win' | 'lose' | 'tie'
+
 interface GamePlayProps {
   playerHealth: number
   opponentHealth: number
-  outcome: 'win' | 'lose' | 'tie'
+  outcomes: outcome[]
   finalizeMove: (move: 0 | 1 | 2) => void
 }
 
-const GamePlay = ({ playerHealth, opponentHealth, outcome, finalizeMove }: GamePlayProps) => {
+const GamePlay = ({ playerHealth, opponentHealth, outcomes, finalizeMove }: GamePlayProps) => {
   let playerHasMadeAMove = false
   const [videoType, setVideoType] = useState('idle')
   const [hasGameStarted, setHasGameStarted] = useState(false)
@@ -31,12 +33,12 @@ const GamePlay = ({ playerHealth, opponentHealth, outcome, finalizeMove }: GameP
     finalizeMove(move)
   }
   const handleVideoEnd = () => {
-    if (playerHasMadeAMove) {
-      setVideoType(outcome)
-      playerHasMadeAMove = false
-    } else {
-      setVideoType('idle')
-    }
+    // if (playerHasMadeAMove && outcomes.length > lastLength) {
+    //   setVideoType(outcomes[0])
+    //   playerHasMadeAMove = false
+    // } else {
+    //   setVideoType('idle')
+    // }
   }
 
   useEffect(() => {

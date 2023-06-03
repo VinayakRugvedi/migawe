@@ -22,12 +22,12 @@ class MatchMaker {
    * @param wager amount to wager
    * @param validUntil the time until the game request is valid
    */
-  findMatch(wager: number,signer:Signer , validUntil: number): Promise<DataConnection> {
+  findMatch(wager: number, signer: Signer, validUntil: number): Promise<DataConnection> {
     return new Promise((resolve, reject) => {
       let connected = false
       // call match making server
-      this.getMatchMackerServerResponse(wager,signer, validUntil).then(async(response) => {
-        console.log('response', response);
+      this.getMatchMackerServerResponse(wager, signer, validUntil).then(async (response) => {
+        console.log('response', response)
         if (response.wait) {
           console.log('waiting for opponent')
           this.peer.on('connection', (connection) => {
@@ -49,7 +49,7 @@ class MatchMaker {
           const opponentValidUntil = response.opponent.validUntil
           const opponentSign = response.opponent.sign
           // TODO: call startGame onChain before connecting to opponent
-  
+
           const connection = this.peer.connect(opponentProxyAddr, { reliable: true })
           connection.on('open', () => {
             connected = true
@@ -71,7 +71,7 @@ class MatchMaker {
     signer: Signer,
     validUntil: number,
   ): Promise<{ wait: boolean; opponent?: any }> {
-    const playerAddress = await signer.getAddress();
+    const playerAddress = await signer.getAddress()
     const gameRequestHash = ethers.utils.solidityKeccak256(
       ['address', 'address', 'uint256', 'uint256'],
       [playerAddress, this.proxyWallet.address, wager.toString(), validUntil.toString()],
@@ -87,7 +87,9 @@ class MatchMaker {
       sign: sign,
     })
     console.log('param', param)
-    return await fetch(MatchMakerUrl + 'friendly/' + param,{mode:"cors"}).then((res) => res.json())
+    return await fetch(MatchMakerUrl + 'friendly/' + param, { mode: 'cors' }).then((res) =>
+      res.json(),
+    )
   }
 }
 export default MatchMaker
