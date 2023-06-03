@@ -10,6 +10,7 @@ import NetworkedAgent from 'core/agents/NetworkedAgent'
 import type { GameState,IAgent } from "core/types"
 import { start } from 'repl'
 
+// TODO: Move relevant logic and state from GamePlay.tsx to this file
 const GamePlayContainer = () => {
   const player= new Player();
   const gameEngine = new GameEngine(new GameLogic(),(newState:GameState)=>{
