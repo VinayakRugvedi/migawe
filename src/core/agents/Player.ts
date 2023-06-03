@@ -69,6 +69,7 @@ export default class Player implements IAgent<GameState> {
           for (const key in prevPvtState) {
             prevStates['P' + agentId + '_' + key + '_prev'] = prevPvtState[key]
           }
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           prevStates.step_prev = gameState.step - 1 // Super hacky, as gameEngine is updating the 'step'
 

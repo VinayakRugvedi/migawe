@@ -8,7 +8,7 @@ class MatchMaker {
   playerId: 0 | 1 // player with id 0 starts the game
   constructor(debug: 0 | 1 | 2 | 3 = 0) {
     this.proxyWallet = ethers.Wallet.createRandom()
-    this.peer = new Peer(this.proxyWallet.address.toLowerCase().substring(2, 5), {
+    this.peer = new Peer(this.proxyWallet.address, {
       host: 'peerjs.92k.de', // TODO: use own peerjs server,
       secure: true,
       debug: debug,
@@ -37,7 +37,6 @@ class MatchMaker {
               return
             }
             // TODO verifiy onChain that opponent is the one we want to play with
-            console.log('Connected to opponent ID', connection.peer)
             connected = true
             this.playerId = 0
             console.log('Connected to opponent ID', connection.peer)
@@ -75,7 +74,7 @@ class MatchMaker {
     const playerAddress = await signer.getAddress();
     const gameRequestHash = ethers.utils.solidityKeccak256(
       ['address', 'address', 'uint256', 'uint256'],
-      [playerAddress, this.proxyWallet.address, wager.toString(), validUntil],
+      [playerAddress, this.proxyWallet.address, wager.toString(), validUntil.toString()],
     )
     console.log('gameRequestHash', gameRequestHash)
     const sign = await signer.signMessage(ethers.utils.arrayify(gameRequestHash))
