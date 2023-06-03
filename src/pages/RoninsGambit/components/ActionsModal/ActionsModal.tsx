@@ -7,13 +7,17 @@ interface PropTypes {
   showModal: boolean
   handleOnClose: () => void
   isWalletConnected: boolean
-  balance: number
-  userHasEnoughBalance: boolean
+  userBalance: number
   minimumBalanceToPlay: number
+  needToPay: number
   tokenName:string
+  topUpWallet:()=>void
+  playNow:()=>void
 }
 
-const ActionsModal = ({ showModal, handleOnClose, isWalletConnected, balance,userHasEnoughBalance,minimumBalanceToPlay,tokenName }: PropTypes) => {
+const ActionsModal = ({ showModal, handleOnClose, isWalletConnected, userBalance,minimumBalanceToPlay,tokenName,needToPay,topUpWallet,playNow }: PropTypes) => {
+  const userHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false;
+
   let modalContent = null
 
   if (!isWalletConnected) {
@@ -44,7 +48,7 @@ const ActionsModal = ({ showModal, handleOnClose, isWalletConnected, balance,use
             You are ready to start playing. Click the button below to start playing. <br/>
             You will be charged {minimumBalanceToPlay} {tokenName}.
           </p>
-          <button className='btn'>Play Now</button>
+          <button className='btn' onClick={()=>{playNow()}}>Play Now</button>
         </div>
       )
     } else {
@@ -56,10 +60,10 @@ const ActionsModal = ({ showModal, handleOnClose, isWalletConnected, balance,use
           </div>
           <p className='text-center mb-4 px-4'>
             Please top-up your game wallet. You game wallet should have a minimum balance of {minimumBalanceToPlay} {tokenName} to
-            start playing games.<br/>Your currrent balance is {balance} {tokenName}.
-            You need {minimumBalanceToPlay - balance} {tokenName} more.
+            start playing games.<br/>Your currrent balance is {userBalance} {tokenName}.
+            You need {needToPay} {tokenName} more.
           </p>
-          <button onClick={()=>{alert("Not Implemented")}}className='btn'>Add {minimumBalanceToPlay - balance} {tokenName}</button>
+          <button onClick={()=>{topUpWallet()}}className='btn'>Add {needToPay} {tokenName}</button>
         </div>
       )
     }
