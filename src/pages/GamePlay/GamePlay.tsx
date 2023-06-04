@@ -6,7 +6,17 @@ import { GiStripedSword, GiVibratingShield, GiSwordBreak } from 'react-icons/gi'
 
 import { IntroScreen } from './components'
 
-const GamePlay = () => {
+type outcome = 'win' | 'lose' | 'tie'
+
+interface GamePlayProps {
+  playerHealth: number
+  opponentHealth: number
+  outcomes: outcome[]
+  finalizeMove: (move: 0 | 1 | 2) => void
+}
+
+const GamePlay = ({ playerHealth, opponentHealth, outcomes, finalizeMove }: GamePlayProps) => {
+  let playerHasMadeAMove = false
   const [videoType, setVideoType] = useState('idle')
   const [hasGameStarted, setHasGameStarted] = useState(false)
 
@@ -14,6 +24,22 @@ const GamePlay = () => {
   const winVideoRef = useRef<HTMLVideoElement>(null)
   const loseVideoRef = useRef<HTMLVideoElement>(null)
   const tieVideoRef = useRef<HTMLVideoElement>(null)
+
+  const videoWidth = window.screen.width
+  const videoHeight = window.screen.height
+
+  const handlePlayerMove = (move: 0 | 1 | 2) => {
+    playerHasMadeAMove = true
+    finalizeMove(move)
+  }
+  const handleVideoEnd = () => {
+    // if (playerHasMadeAMove && outcomes.length > lastLength) {
+    //   setVideoType(outcomes[0])
+    //   playerHasMadeAMove = false
+    // } else {
+    //   setVideoType('idle')
+    // }
+  }
 
   useEffect(() => {
     if (videoType === 'win') {
@@ -34,19 +60,6 @@ const GamePlay = () => {
   const handleGameStart = () => {
     setHasGameStarted(true)
   }
-
-  const handleActionSelect = (actionType: string) => {
-    // if (actionType === 'attack') {
-    //   setVideoType('win')
-    // }
-  }
-
-  const handleVideoEnd = () => {
-    setVideoType('idle')
-  }
-
-  const videoWidth = window.screen.width
-  const videoHeight = window.screen.height
 
   return (
     <div
@@ -106,7 +119,7 @@ const GamePlay = () => {
             <div
               className='w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full mr-12 hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer'
               role='button'
-              onClick={() => handleActionSelect('attack')}
+              onClick={() => handlePlayerMove(0)}
             >
               <div className='p-2 text-4xl'>
                 <GiStripedSword />
@@ -114,14 +127,22 @@ const GamePlay = () => {
               <p className='font-bold'>ATTACK</p>
             </div>
 
-            <div className='w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full mr-12 hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer bg-white text-black'>
+            <div
+              className='w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full mr-12 hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer bg-white text-black'
+              role='button'
+              onClick={() => handlePlayerMove(1)}
+            >
               <div className='p-2 text-4xl'>
                 <GiVibratingShield />
               </div>
               <p className='font-bold'>DEFEND</p>
             </div>
 
-            <div className='w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer'>
+            <div
+              className='w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer'
+              role='button'
+              onClick={() => handlePlayerMove(2)}
+            >
               <div className='p-2 text-4xl'>
                 <GiSwordBreak />
               </div>
