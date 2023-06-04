@@ -23,7 +23,6 @@
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "eqeqeq": "off",
     "no-console": "off"
   }
 }
