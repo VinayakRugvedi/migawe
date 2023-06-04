@@ -28,11 +28,25 @@ const GamePlay = () => {
     type: '',
     isLocked: false,
   })
+  // let playerHasMadeAMove = false
 
   const idleVideoRef = useRef<HTMLVideoElement>(null)
   const winVideoRef = useRef<HTMLVideoElement>(null)
   const loseVideoRef = useRef<HTMLVideoElement>(null)
   const tieVideoRef = useRef<HTMLVideoElement>(null)
+
+  // const handlePlayerMove = (move: 0 | 1 | 2) => {
+  //   playerHasMadeAMove = true
+  //   finalizeMove(move)
+  // }
+  // const handleVideoEnd = () => {
+  // if (playerHasMadeAMove && outcomes.length > lastLength) {
+  //   setVideoType(outcomes[0])
+  //   playerHasMadeAMove = false
+  // } else {
+  //   setVideoType('idle')
+  // }
+  // }
 
   useEffect(() => {
     setCanShowTimer(true)
@@ -244,6 +258,7 @@ const GamePlay = () => {
               }`}
               role='button'
               onClick={() => handleActionSelect(ACTION_TYPES.Attack)}
+              // onClick={() => handlePlayerMove(0)}
             >
               <div className='p-2 text-4xl'>
                 <GiStripedSword />
