@@ -5,7 +5,7 @@ import { MatchMakerUrl } from 'utils/contants'
 class MatchMaker {
   peer: Peer
   proxyWallet: ethers.Wallet
-  playerId: 0 | 1 // player with id 0 starts the game
+  playerId!: 0 | 1 // player with id 0 starts the game
   constructor(debug: 0 | 1 | 2 | 3 = 0) {
     this.proxyWallet = ethers.Wallet.createRandom()
     this.peer = new Peer(this.proxyWallet.address, {

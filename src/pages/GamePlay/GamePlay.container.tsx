@@ -1,5 +1,5 @@
 import GamePlay from './GamePlay'
-import type { DataConnection } from 'peerjs'
+// import type { DataConnection } from 'peerjs'
 import { useEffect, useState } from 'react'
 import MatchMaker from './MatchMaker'
 import { useSigner } from '@thirdweb-dev/react-core'
@@ -7,7 +7,7 @@ import GameEngine from 'core/GameEngine'
 import GameLogic from 'core/GameLogic'
 import Player from 'core/agents/Player'
 import NetworkedAgent from 'core/agents/NetworkedAgent'
-import type { GameState, IAgent } from 'core/types'
+import type { GameState } from 'core/types'
 
 // TODO: Move relevant logic and state from GamePlay.tsx to this file
 const GamePlayContainer = () => {
@@ -41,10 +41,10 @@ const GamePlayContainer = () => {
   }
   return (
     <GamePlay
-      playerHealth={5}
-      opponentHealth={5}
-      outcomes={[]}
-      finalizeMove={(move: 0 | 1 | 2) => player.selectMove(move)}
+    // playerHealth={5}
+    // opponentHealth={5}
+    // outcomes={[]}
+    // finalizeMove={(move: 0 | 1 | 2) => player.selectMove(move)}
     />
   )
 }

@@ -14,7 +14,7 @@ class GameEngine {
   constructor(gameLogic: IGameLogic<GameState>, onStateChange: (newState: GameState) => void) {
     this.gameLogic = gameLogic
     this.status = GameEngineStatus.NotRunning
-    this.gameState = undefined
+    this.gameState = {} as GameState
     this.onStateChange = onStateChange
   }
   /**
@@ -72,6 +72,8 @@ class GameEngine {
           ...newPubState,
           pvtStateHash: state.pvtStateHash,
         }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         state.pvtStateHash[currAgentId] = newPvtStateHash
         state.step = currStep + 1
         this.gameState = state

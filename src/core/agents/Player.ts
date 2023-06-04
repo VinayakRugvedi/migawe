@@ -62,8 +62,10 @@ export default class Player implements IAgent<GameState> {
         } else {
           zkCircuitName = agentId === 0 ? 'moveA' : 'moveB'
           // construct prevStates
-          const prevStates = {}
+          const prevStates: any = {}
           for (const key in pubState) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             prevStates[key + '_prev'] = gameState[key]
           }
           for (const key in prevPvtState) {

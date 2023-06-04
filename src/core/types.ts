@@ -3,18 +3,18 @@ interface IAgent<GameState> {
   getNextState(
     gameState: GameState,
     prevProof?: any,
-    prevpublicSignals?: any
+    prevpublicSignals?: any,
   ): Promise<{
-    newPubState: PubState;
-    newPvtStateHash: PvtStateHash;
-    proof: any; // TODO: define this type
-    publicSignals: any; // TODO: redundant, as can be extracted from PubState or vice versa
-  }>;
+    newPubState: PubState
+    newPvtStateHash: PvtStateHash
+    proof: any // TODO: define this type
+    publicSignals: any // TODO: redundant, as can be extracted from PubState or vice versa
+  }>
 }
 
 interface IGameLogic<GameState> {
-  getInitialState: () => GameState;
-  isFinalState: (gameState: GameState) => boolean;
+  getInitialState: () => GameState
+  isFinalState: (gameState: GameState) => boolean
 }
 
 enum GameEngineStatus {
@@ -27,25 +27,25 @@ enum GameEngineStatus {
 
 /////////// User defined stuff ///////////
 /**  Define GameState & Move  **/
-type PvtStateHash = number;
+type PvtStateHash = number
 type PubState = {
-  step: number;
+  step: number
   Health: {
-    0: number;
-    1: number;
-  };
+    0: number
+    1: number
+  }
   // 0:rock, 1:paper, 2:scissors 3:unfedined
-  B_move: 0 | 1 | 2 | 3;
-};
+  B_move: 0 | 1 | 2 | 3
+}
 type PvtState = {
-  move: 0 | 1 | 2 | 3;
-};
+  move: 0 | 1 | 2 | 3
+}
 type GameState = PubState & {
-  pvtStateHash: {
-    0: PvtStateHash;
-    1: PvtStateHash;
-  };
-};
+  pvtStateHash?: {
+    0: PvtStateHash
+    1: PvtStateHash
+  }
+}
 
-export { GameEngineStatus };
-export type { IAgent, GameState, IGameLogic, PubState, PvtStateHash, PvtState };
+export { GameEngineStatus }
+export type { IAgent, GameState, IGameLogic, PubState, PvtStateHash, PvtState }

@@ -8,7 +8,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
   constructor(conn: DataConnection) {
     this.conn = conn
 
-    conn.on('data', (msg) => {
+    conn.on('data', (msg: any) => {
       // console.log("NetworkedAgent: data received: " + msg);
       if (this.onMsgReceive) {
         this.onMsgReceive(JSON.parse(msg.toString()))
@@ -20,13 +20,13 @@ export default class NetworkedAgent implements IAgent<GameState> {
 
   public async getNextState(
     gameState: GameState,
-    prevProof,
-    prevPublicSignals,
+    prevProof: any,
+    prevPublicSignals: any,
   ): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash
     proof: any
-    publicSignals
+    publicSignals: any
   }> {
     // extract PubState from gameState
     const agentId = gameState.step % 2
@@ -36,7 +36,9 @@ export default class NetworkedAgent implements IAgent<GameState> {
     this.conn.send(
       JSON.stringify({
         pubState: pubState,
-        pvtStateHash: gameState.pvtStateHash[(agentId + 1) % 2],
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        pvtStateHash: gameState?.pvtStateHash[(agentId + 1) % 2],
         proof: prevProof,
         publicSignals: prevPublicSignals,
       }),
