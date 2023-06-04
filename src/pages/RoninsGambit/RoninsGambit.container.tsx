@@ -24,6 +24,7 @@ const RoninsGambitContainer = () => {
           showModal={showModal}
           handleOnOpen={handleOnOpen}
           handleOnClose={handleOnClose}
+          setShowGamePlay={setShowGamePlay}
         />
       )}
     </>

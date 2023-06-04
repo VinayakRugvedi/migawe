@@ -7,9 +7,10 @@ interface PropTypes {
   showModal: boolean
   handleOnOpen: () => void
   handleOnClose: () => void
+  setShowGamePlay: (arg0: boolean) => void
 }
 
-const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose }: PropTypes) => {
+const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay }: PropTypes) => {
   return (
     <main className='mt-[120px] py-4 mx-auto max-w-7xl mb-8'>
       <section className='mb-8 grid grid-cols-2'>
@@ -47,7 +48,10 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose }: PropTypes) => 
           </div>
 
           <div className='mt-8 mb-8'>
-            <button className='btn btn-wide' onClick={handleOnOpen}>
+            {/* <button className='btn btn-wide' onClick={handleOnOpen}>
+              Get Started
+            </button> */}
+            <button className='btn btn-wide' onClick={() => setShowGamePlay(true)}>
               Get Started
             </button>
           </div>
