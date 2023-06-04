@@ -3,7 +3,7 @@
   animation: glow 1.5s ease-in;
 }
 
-.startGameButton {
+.button {
   filter: drop-shadow(2px 4px 6px hsl(var(--pf)));
 }
 
