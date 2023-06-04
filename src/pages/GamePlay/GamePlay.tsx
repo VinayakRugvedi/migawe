@@ -4,6 +4,7 @@ import { idleVideo, winVideo, loseVideo, tieVideo } from 'game-play-assets'
 
 import { GiStripedSword, GiVibratingShield, GiSwordBreak } from 'react-icons/gi'
 
+import { Timer } from 'components/base'
 import { IntroScreen } from './components'
 
 const VIDEO_TYPES = {
@@ -22,7 +23,11 @@ const ACTION_TYPES = {
 const GamePlay = () => {
   const [videoType, setVideoType] = useState(VIDEO_TYPES.Idle)
   const [hasGameStarted, setHasGameStarted] = useState(false)
-  const [actionType, setActionType] = useState('')
+  const [canShowTimer, setCanShowTimer] = useState(false)
+  const [action, setAction] = useState({
+    type: '',
+    isLocked: false,
+  })
 
   const idleVideoRef = useRef<HTMLVideoElement>(null)
   const winVideoRef = useRef<HTMLVideoElement>(null)
@@ -30,38 +35,83 @@ const GamePlay = () => {
   const tieVideoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    if (videoType === 'win') {
+    setCanShowTimer(true)
+  }, [])
+
+  useEffect(() => {
+    if (videoType === VIDEO_TYPES.Win) {
       if (winVideoRef && winVideoRef.current) {
         winVideoRef.current.play()
       }
-    } else if (videoType === 'lose') {
+    } else if (videoType === VIDEO_TYPES.Lose) {
       if (loseVideoRef && loseVideoRef.current) {
         loseVideoRef.current.play()
       }
-    } else if (videoType === 'tie') {
+    } else if (videoType === VIDEO_TYPES.Tie) {
       if (tieVideoRef && tieVideoRef.current) {
         tieVideoRef.current.play()
       }
     }
   }, [videoType])
 
+  useEffect(() => {
+    if (action.isLocked) {
+      // send the state to the peer
+      console.log(action, 'ACTION')
+    }
+  }, [action.isLocked])
+
   const handleGameStart = () => {
     setHasGameStarted(true)
   }
 
   const handleActionSelect = (actionType: string) => {
-    setActionType(actionType)
+    if (action.isLocked) return
+
+    const actionCopy = {
+      type: actionType,
+      isLocked: false,
+    }
+    setAction(actionCopy)
+  }
+
+  const handleActionLock = () => {
+    const actionCopy = { ...action }
+    actionCopy.isLocked = true
+    setCanShowTimer(false)
+    setAction(actionCopy)
+  }
+
+  const handleTimerEnd = () => {
+    if (!canShowTimer) return
+
+    // choosing a random action
+    const actions = [ACTION_TYPES.Attack, ACTION_TYPES.Defend, ACTION_TYPES.Break]
+    const actionCopy = {
+      type: actions[Math.floor(Math.random() * 3)],
+      isLocked: true,
+    }
+    setCanShowTimer(false)
+    setAction(actionCopy)
   }
 
   const handleVideoEnd = () => {
     setVideoType('idle')
-    setActionType('')
+    const actionCopy = {
+      type: '',
+      isLocked: false,
+    }
+    setAction(actionCopy)
+    setCanShowTimer(true)
   }
 
   const videoWidth = window.screen.width
   const videoHeight = window.screen.height
-  const isActionChosen = actionType.length > 0 ? true : false
+  const isActionChosen = action.type.length > 0 ? true : false
+  const isActionLocked = action.isLocked
   const isWaitingForEnemyMove = false
+
+  console.log(isActionLocked, 'ACTIOn LOCKED?', action)
 
   return (
     <div
@@ -112,31 +162,69 @@ const GamePlay = () => {
         <source src={tieVideo} type='video/mp4'></source>
       </video>
 
+      {/* Show Enemy Health */}
+      {hasGameStarted ? (
+        <div className='absolute z-[30] top-0 font-game py-4 px-8 bg-black/30 text-white font-medium'>
+          <div className='my-4 flex items-start justify-between'>
+            <h4 className='mr-8'>Ememy&apos;s Health :</h4>
+            <div className='flex flex-col items-end'>
+              <div className='flex'>
+                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
+                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
+                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
+                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
+                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
+              </div>
+              <span className='text-sm mt-1'>5 out of 5</span>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {/* TODO: Better semantic tags */}
       {hasGameStarted ? (
         <div className='absolute z-[30] bottom-0 font-game py-4 px-8 bg-black/30 text-white font-medium'>
           {isWaitingForEnemyMove ? (
             <div className='flex flex-col items-center justify-center mb-8'>
-              <progress className='progress w-56 text-black bg-white after:bg-black'></progress>
-              <p className='text-xs'>Waiting for your enemy samurai</p>
+              <p className='text-xs'>...Waiting for your enemy Samurai...</p>
+            </div>
+          ) : null}
+
+          {/* Display timer until player locks an action */}
+          {canShowTimer ? (
+            <div>
+              <div className='mb-2'>
+                Lock your next move in&nbsp;
+                <Timer durationInSeconds={20} handleTimerEnd={handleTimerEnd} />
+                &nbsp;seconds
+              </div>
+              <div
+                className={`${isActionChosen && !isActionLocked ? '' : 'invisible'} text-center`}
+              >
+                <button
+                  className='p-4 bg-white text-black uppercase hover:text-primary-focus'
+                  onClick={handleActionLock}
+                >
+                  Lock {action.type}
+                </button>
+              </div>
             </div>
           ) : null}
 
           <h4 className='mb-4 text-center'>
-            {isActionChosen ? (
+            {isActionChosen && isActionLocked ? (
               <>
                 You have chosen to{' '}
-                <span className='uppercase text-primary-focus bg-white p-1'>{actionType}</span>
+                <span className='uppercase text-primary-focus bg-white p-1'>{action.type}</span>
               </>
-            ) : (
-              'Choose your next move'
-            )}
+            ) : null}
           </h4>
+
           <div className='mb-8 flex items-start justify-between'>
-            <h4>Health Indicator :</h4>
+            <h4>Health :</h4>
             <div className='flex flex-col items-end'>
               <div className='flex'>
-                <div className='bg-black border border-white w-[25px] h-[30px] mr-1'></div>
+                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
                 <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
                 <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
                 <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
@@ -148,8 +236,10 @@ const GamePlay = () => {
           <div className='flex items-center justify-between'>
             <div
               className={`w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full mr-12 ${
-                actionType === ACTION_TYPES.Attack
+                action.type === ACTION_TYPES.Attack
                   ? 'bg-white text-black'
+                  : isActionLocked
+                  ? ''
                   : 'hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer'
               }`}
               role='button'
@@ -163,8 +253,10 @@ const GamePlay = () => {
 
             <div
               className={`w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full mr-12 ${
-                actionType === ACTION_TYPES.Defend
+                action.type === ACTION_TYPES.Defend
                   ? 'bg-white text-black'
+                  : isActionLocked
+                  ? ''
                   : 'hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer'
               }`}
               onClick={() => handleActionSelect(ACTION_TYPES.Defend)}
@@ -177,8 +269,10 @@ const GamePlay = () => {
 
             <div
               className={`w-32 h-32 flex flex-col items-center justify-center border-2 rounded-full ${
-                actionType === ACTION_TYPES.Break
+                action.type === ACTION_TYPES.Break
                   ? 'bg-white text-black'
+                  : isActionLocked
+                  ? ''
                   : 'hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer'
               }`}
               onClick={() => handleActionSelect(ACTION_TYPES.Break)}
