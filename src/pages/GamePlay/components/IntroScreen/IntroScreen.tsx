@@ -25,7 +25,7 @@ const IntroScreen = ({ isMatchMaking, handleTimerEnd, canRetry, handleRetry }: P
         {isMatchMaking ? (
           <div className='text-white'>
             Trying to find a Samurai in{' '}
-            {<Timer durationInSeconds={10} handleTimerEnd={handleTimerEnd} />} seconds.
+            {<Timer durationInSeconds={60} handleTimerEnd={handleTimerEnd} />} seconds.
           </div>
         ) : (
           <div>
