@@ -87,9 +87,11 @@ class MatchMaker {
       sign: sign,
     })
     console.log('param', param)
-    return await fetch(MatchMakerUrl + 'friendly/' + param, { mode: 'cors' }).then((res) =>
-      res.json(),
-    )
+    return await fetch(MatchMakerUrl + 'friendly/' + param)
+      .then((res) => res.json())
+      .catch((error) => {
+        console.log(error, 'ERROR in getMatchMackerServerResponse')
+      })
   }
 }
 export default MatchMaker
