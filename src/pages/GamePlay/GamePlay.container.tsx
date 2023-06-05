@@ -24,23 +24,54 @@ const GamePlayContainer = () => {
     isLocked: false,
   })
 
+  const playerId: 0 | 1 = 0
+  let playerHealth = 5
+  let opponentHealth = 5
+  const outcomes: string[] = []
+
   useEffect(() => {
     setMatchedEnemy(AI)
     // setCanShowTimer(true)
   }, [])
 
   useEffect(() => {
-    console.log(matchedEnemy, 'MATCHAED ENE<EYY')
+    console.log(matchedEnemy, 'MATCHAED ENE<EYY', playerId)
     if (matchedEnemy) {
       const gameEngine = new GameEngine(new GameLogic(), handleNewGameState)
-      gameEngine.startGame([PLAYER, matchedEnemy])
+      if (playerId === 0) {
+        console.log('starting game, player first')
+        gameEngine.startGame([PLAYER, matchedEnemy])
+      } else {
+        console.log('starting game, enemy first')
+        gameEngine.startGame([matchedEnemy, PLAYER])
+      }
       setHasGameStarted(true)
       setCanShowTimer(true)
     }
   }, [matchedEnemy])
 
   function handleNewGameState(newGameState: GameState) {
-    console.log(newGameState, 'NEW STATETETTE')
+    console.log('NEW STATE', { newGameState })
+    if (playerId == 0 && newGameState.step > 0) {
+      const diff = (3 + PLAYER.getPrivateState().move - newGameState.B_move) % 3
+      if (diff == 1) {
+        outcomes.push('win')
+      } else if (diff == 2) {
+        outcomes.push('lose')
+      }
+      playerHealth = newGameState.Health[0]
+      opponentHealth = newGameState.Health[1]
+    } else if (playerId == 1 && newGameState.step > 1) {
+      if (newGameState.Health[1] < playerHealth) {
+        //player lost health
+        outcomes.push('lose')
+      } else if (newGameState.Health[0] < opponentHealth) {
+        outcomes.push('win')
+      }
+      playerHealth = newGameState.Health[1]
+      opponentHealth = newGameState.Health[0]
+    }
+    console.log('outcomes', outcomes)
   }
 
   useEffect(() => {
@@ -48,6 +79,7 @@ const GamePlayContainer = () => {
       console.log(action, 'ACTION')
       // send the state to the peer
       const playerMoveValue = PLAYER_MOVE_TYPES[action.type]
+      console.log('%c player move: ' + playerMoveValue, 'color: blue; font-size: 15px')
       PLAYER.selectMove(playerMoveValue)
     }
   }, [action.isLocked])

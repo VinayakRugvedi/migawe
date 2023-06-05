@@ -22,8 +22,8 @@ const IntroScreenContainer = ({ setMatchedEnemy }: PropTypes) => {
 
     setIsMatchMaking(true)
     // MATCH_MAKER.findMatch(1e17, signer, Math.floor(Date.now() / 1000) + 60 * 100).then(
-    //   (connection) => {
-    //     const enemy = new NetworkedAgent(connection)
+    //   (conn, playerId) => {
+    //     const enemy = new NetworkedAgent(obj.connection)
     //     setMatchedEnemy(enemy)
     //     setIsMatchMaking(false)
     //   },

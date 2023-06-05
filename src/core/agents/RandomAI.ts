@@ -2,7 +2,7 @@ import { snarkjs } from '../snark'
 import type { IAgent, GameState, PubState, PvtStateHash, PvtState } from '../types'
 export default class RandomAI implements IAgent<GameState> {
   private privateState!: PvtState
-  private pvtStateHash!: PvtStateHash
+  private pvtStateHash: PvtStateHash = 0
 
   public async getNextState(gameState: GameState): Promise<{
     newPubState: PubState
@@ -29,7 +29,7 @@ export default class RandomAI implements IAgent<GameState> {
         //////////////////////////////////////////
         // GAME LOGIC
         const move = Math.floor(Math.random() * 1) as 0 | 1 | 2
-        console.log('%c RandomAI: move selected: ' + move, 'color: red;')
+        console.log('%c RandomAI: move selected: ' + move, 'color: red; font-size: 15px;')
         if (agentId === 0) {
           // 0's turn
           if (gameState.step > 0) {
@@ -85,6 +85,7 @@ export default class RandomAI implements IAgent<GameState> {
           }
         }
         try {
+          console.log(`generating proof for ${zkCircuitName}`, { inputs })
           let time = performance.now()
           const { proof, publicSignals } = await snarkjs.groth16.fullProve(
             inputs,

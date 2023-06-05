@@ -5,7 +5,6 @@ import { MatchMakerUrl } from 'utils/contants'
 class MatchMaker {
   peer: Peer
   proxyWallet: ethers.Wallet
-  playerId!: 0 | 1 // player with id 0 starts the game
   constructor(debug: 0 | 1 | 2 | 3 = 0) {
     this.proxyWallet = ethers.Wallet.createRandom()
     this.peer = new Peer(this.proxyWallet.address, {
@@ -22,7 +21,11 @@ class MatchMaker {
    * @param wager amount to wager
    * @param validUntil the time until the game request is valid
    */
-  findMatch(wager: number, signer: Signer, validUntil: number): Promise<DataConnection> {
+  findMatch(
+    wager: number,
+    signer: Signer,
+    validUntil: number,
+  ): Promise<{ conn: DataConnection; playerId: 0 | 1 }> {
     return new Promise((resolve, reject) => {
       let connected = false
       // call match making server
@@ -38,9 +41,8 @@ class MatchMaker {
             }
             // TODO verifiy onChain that opponent is the one we want to play with
             connected = true
-            this.playerId = 0
             console.log('Connected to opponent ID', connection.peer)
-            resolve(connection)
+            resolve({ conn: connection, playerId: 0 })
           })
           // TODO:
         } else {
@@ -54,8 +56,7 @@ class MatchMaker {
           connection.on('open', () => {
             connected = true
             console.log('connected with:', opponentProxyAddr)
-            this.playerId = 1
-            resolve(connection)
+            resolve({ conn: connection, playerId: 1 })
           })
           connection.on('error', (err) => {
             reject(err)
