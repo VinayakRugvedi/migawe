@@ -1,8 +1,14 @@
 import type { IAgent, GameState, PvtStateHash, PubState, PvtState } from '../types'
 import { snarkjs } from '../snark'
 
+enum PlayerMove {
+  Attack = 0,
+  Defend = 1,
+  Break = 2,
+}
+
 export default class Player implements IAgent<GameState> {
-  private onMoveSelected: ((move: 0 | 1 | 2) => void) | undefined
+  private onMoveSelected: ((move: PlayerMove) => void) | undefined
   private privateState: PvtState = { move: 3 }
   private pvtStateHash: PvtStateHash = 0
 
@@ -13,7 +19,7 @@ export default class Player implements IAgent<GameState> {
     publicSignals: any
   }> {
     return new Promise((resolve) => {
-      this.onMoveSelected = async (move: 0 | 1 | 2) => {
+      this.onMoveSelected = async (move: PlayerMove) => {
         this.onMoveSelected = undefined
 
         // extract PubState from gameState & deep copy
@@ -116,7 +122,7 @@ export default class Player implements IAgent<GameState> {
     })
   }
 
-  public selectMove(move: 0 | 1 | 2): void {
+  public selectMove(move: PlayerMove): void {
     if (this.onMoveSelected) {
       this.onMoveSelected(move)
     } else {
