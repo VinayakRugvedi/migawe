@@ -1,50 +1,108 @@
-import GamePlay from './GamePlay'
-// import type { DataConnection } from 'peerjs'
 import { useEffect, useState } from 'react'
-import MatchMaker from './MatchMaker'
-import { useSigner } from '@thirdweb-dev/react-core'
+
 import GameEngine from 'core/GameEngine'
 import GameLogic from 'core/GameLogic'
 import Player from 'core/agents/Player'
-import NetworkedAgent from 'core/agents/NetworkedAgent'
-import type { GameState } from 'core/types'
+import type { IAgent, GameState } from 'core/types'
+import RandomAI from 'core/agents/RandomAI'
 
-// TODO: Move relevant logic and state from GamePlay.tsx to this file
+import { RONIN_GAMBIT } from 'utils/types'
+import GamePlay from './GamePlay'
+
+const PLAYER = new Player()
+const AI = new RandomAI()
+
+const { VIDEO_TYPES, ACTION_TYPES, PLAYER_MOVE_TYPES } = RONIN_GAMBIT
+
 const GamePlayContainer = () => {
-  const player = new Player()
-  const gameEngine = new GameEngine(new GameLogic(), (newState: GameState) => {
-    console.log(newState)
-    newState.Health[0]
-    //TODO update playerHealth and opponentHealth
-    //TODO update outcome
+  const [matchedEnemy, setMatchedEnemy] = useState<IAgent<GameState>>()
+  const [hasGameStarted, setHasGameStarted] = useState(false)
+  const [videoType, setVideoType] = useState(VIDEO_TYPES.Idle)
+  const [canShowTimer, setCanShowTimer] = useState(false)
+  const [action, setAction] = useState({
+    type: '',
+    isLocked: false,
   })
-  const matchMaker = new MatchMaker()
-  const [matchFound, setMatchFound] = useState<boolean>(false)
-  //to start match making process call
-  const signer = useSigner()
+
   useEffect(() => {
-    if (!signer) return
-    matchMaker.findMatch(1e17, signer, Math.floor(Date.now() / 1000) + 60 * 100).then((conn) => {
-      const opponent = new NetworkedAgent(conn)
-      gameEngine.startGame([player, opponent])
-      setMatchFound(true)
-    })
-  }, [signer])
-  //TODO if time runs out before match is found, show error screen
-  if (matchFound === false) {
-    // TODO show loading screen
-    return (
-      <div className='w-screen h-screen fixed top-0 left-0 right-0 z-30 bg-black text-white'>
-        Waiting for opponent...
-      </div>
-    )
+    setMatchedEnemy(AI)
+    // setCanShowTimer(true)
+  }, [])
+
+  useEffect(() => {
+    console.log(matchedEnemy, 'MATCHAED ENE<EYY')
+    if (matchedEnemy) {
+      const gameEngine = new GameEngine(new GameLogic(), handleNewGameState)
+      gameEngine.startGame([PLAYER, matchedEnemy])
+      setHasGameStarted(true)
+      setCanShowTimer(true)
+    }
+  }, [matchedEnemy])
+
+  function handleNewGameState(newGameState: GameState) {
+    console.log(newGameState, 'NEW STATETETTE')
   }
+
+  useEffect(() => {
+    if (action.isLocked) {
+      console.log(action, 'ACTION')
+      // send the state to the peer
+      const playerMoveValue = PLAYER_MOVE_TYPES[action.type]
+      PLAYER.selectMove(playerMoveValue)
+    }
+  }, [action.isLocked])
+
+  const handleTimerEnd = () => {
+    if (!canShowTimer) return
+
+    // choosing a random action
+    const actions = [ACTION_TYPES.Attack, ACTION_TYPES.Defend, ACTION_TYPES.Break]
+    const actionCopy = {
+      type: actions[Math.floor(Math.random() * 3)],
+      isLocked: true,
+    }
+    setCanShowTimer(false)
+    setAction(actionCopy)
+  }
+
+  const handleVideoEnd = () => {
+    setVideoType('idle')
+    const actionCopy = {
+      type: '',
+      isLocked: false,
+    }
+    setAction(actionCopy)
+    setCanShowTimer(true)
+  }
+
+  const handleActionSelect = (actionType: string) => {
+    if (action.isLocked) return
+
+    const actionCopy = {
+      type: actionType,
+      isLocked: false,
+    }
+    setAction(actionCopy)
+  }
+
+  const handleActionLock = () => {
+    const actionCopy = { ...action }
+    actionCopy.isLocked = true
+    setCanShowTimer(false)
+    setAction(actionCopy)
+  }
+
   return (
     <GamePlay
-    // playerHealth={5}
-    // opponentHealth={5}
-    // outcomes={[]}
-    // finalizeMove={(move: 0 | 1 | 2) => player.selectMove(move)}
+      setMatchedEnemy={setMatchedEnemy}
+      hasGameStarted={hasGameStarted}
+      videoType={videoType}
+      handleVideoEnd={handleVideoEnd}
+      canShowTimer={canShowTimer}
+      handleTimerEnd={handleTimerEnd}
+      action={action}
+      handleActionSelect={handleActionSelect}
+      handleActionLock={handleActionLock}
     />
   )
 }
