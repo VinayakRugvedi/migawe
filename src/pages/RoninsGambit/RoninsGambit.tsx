@@ -2,15 +2,24 @@ import { GiBroadsword, GiPlayButton } from 'react-icons/gi'
 import { gameTitleIllustration } from 'assets'
 
 import { ActionsModal } from './components'
+import { MatchMakerResponse } from './components/ActionsModal/MatchMaker'
+import { OpponentInfo } from './RoninsGambit.container'
+// import { randomInt } from 'crypto'
 
 interface PropTypes {
   showModal: boolean
   handleOnOpen: () => void
   handleOnClose: () => void
-  setShowGamePlay: (arg0: boolean) => void
+  setOpponentInfo:React.Dispatch<OpponentInfo>
 }
 
-const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay }: PropTypes) => {
+const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose,setOpponentInfo }: PropTypes) => {
+  const handlePlayRandomAI = () => {
+    setOpponentInfo({ isReady: true, type: "cpu", connection: undefined, playerId: 0 })
+  }
+  const handleOnConnection = (response:MatchMakerResponse) => {
+    setOpponentInfo({ isReady: true, type: "network", connection: response.conn, playerId: response.playerId })
+  }
   return (
     <main className='mt-[120px] py-4 mx-auto max-w-7xl mb-8'>
       <section className='mb-8 grid grid-cols-2'>
@@ -47,12 +56,12 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay 
             </div>
           </div>
 
-          <div className='mt-8 mb-8'>
-            {/* <button className='btn btn-wide' onClick={handleOnOpen}>
-              Get Started
-            </button> */}
-            <button className='btn btn-wide' onClick={() => setShowGamePlay(true)}>
-              Get Started
+          <div className='mt-8 mb-8 flex gap-4'>
+            <button className='btn btn-wide' onClick={handleOnOpen}>
+              Play Now 
+            </button>
+            <button className='btn btn-outline' onClick={handlePlayRandomAI}>
+              Play Against CPU
             </button>
           </div>
 
@@ -112,7 +121,7 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay 
         </div>
       </section>
 
-      <ActionsModal showModal={showModal} handleOnClose={handleOnClose} />
+      <ActionsModal showModal={showModal} handleOnClose={handleOnClose} handleOnConnection={handleOnConnection} />
     </main>
   )
 }

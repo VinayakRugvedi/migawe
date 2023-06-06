@@ -1,9 +1,15 @@
 import type { IAgent, GameState, PvtStateHash, PubState, PvtState } from '../types'
 import { snarkjs } from '../snark'
 
+enum PlayerMove {
+  Attack = 0,
+  Defend = 1,
+  Break = 2,
+}
+
 export default class Player implements IAgent<GameState> {
-  private onMoveSelected: ((move: 0 | 1 | 2) => void) | undefined
-  private privateState: PvtState = { move: 3 }
+  private onMoveSelected: ((move: PlayerMove) => void) | undefined
+  private privateState: PvtState | undefined = undefined
   private pvtStateHash: PvtStateHash = 0
 
   public async getNextState(gameState: GameState): Promise<{
@@ -13,7 +19,7 @@ export default class Player implements IAgent<GameState> {
     publicSignals: any
   }> {
     return new Promise((resolve) => {
-      this.onMoveSelected = async (move: 0 | 1 | 2) => {
+      this.onMoveSelected = async (move: PlayerMove) => {
         this.onMoveSelected = undefined
 
         // extract PubState from gameState & deep copy
@@ -24,14 +30,15 @@ export default class Player implements IAgent<GameState> {
         const agentId = gameState.step % 2
         // save a deep copy of the previous private state
         // needed for proof generation
-        const prevPvtState =
-          this.privateState.move !== 3 ? JSON.parse(JSON.stringify(this.privateState)) : undefined
+        const prevPvtState = this.privateState
+          ? JSON.parse(JSON.stringify(this.privateState))
+          : undefined
 
         //////////////////////////////////////////
         // GAME LOGIC
         if (agentId === 0) {
           // 0's turn
-          if (gameState.step > 0) {
+          if (gameState.step > 0 && this.privateState) {
             // update healths
             const diff = (3 + this.privateState.move - gameState.B_move) % 3
             if (diff === 1) {
@@ -52,9 +59,11 @@ export default class Player implements IAgent<GameState> {
         // construct proof of correct transition
         let zkCircuitName, inputs
         const pvtState = {} as any
-        let key: keyof PvtState
-        for (key in this.privateState) {
-          pvtState['P' + agentId + '_' + key] = this.privateState[key]
+        if (this.privateState) {
+          let key: keyof PvtState
+          for (key in this.privateState) {
+            pvtState['P' + agentId + '_' + key] = this.privateState[key]
+          }
         }
         if (gameState.step === 0) {
           zkCircuitName = 'init'
@@ -116,11 +125,15 @@ export default class Player implements IAgent<GameState> {
     })
   }
 
-  public selectMove(move: 0 | 1 | 2): void {
+  public selectMove(move: PlayerMove): void {
     if (this.onMoveSelected) {
       this.onMoveSelected(move)
     } else {
       console.error("onMoveSelected is undefined !! not agent's turn")
     }
+  }
+
+  public getPrivateState(): PvtState {
+    return this.privateState ? this.privateState : { move: 3 }
   }
 }

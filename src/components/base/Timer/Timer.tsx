@@ -4,6 +4,12 @@ interface PropTypes {
   durationInSeconds: number
   handleTimerEnd: () => void
 }
+function formatNumber(number: number) {
+  return number.toLocaleString('en-US', {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  })
+}
 
 const Timer = ({ durationInSeconds, handleTimerEnd }: PropTypes) => {
   const [secondsLeft, setSecondsLeft] = useState(formatNumber(durationInSeconds))
@@ -33,13 +39,12 @@ const Timer = ({ durationInSeconds, handleTimerEnd }: PropTypes) => {
     handleTimerEnd()
   }
 
-  function formatNumber(number: number) {
-    return number.toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false,
-    })
-  }
-  return <span>{secondsLeft}</span>
+
+  return (
+  <span className="countdown">
+    <span style={{"--value":secondsLeft} as any}></span>
+  </span>
+  )
 }
 
 export default Timer

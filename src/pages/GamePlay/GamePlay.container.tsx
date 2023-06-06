@@ -1,109 +1,65 @@
-import { useEffect, useState } from 'react'
-
 import GameEngine from 'core/GameEngine'
 import GameLogic from 'core/GameLogic'
 import Player from 'core/agents/Player'
 import type { IAgent, GameState } from 'core/types'
-import RandomAI from 'core/agents/RandomAI'
-
-import { RONIN_GAMBIT } from 'utils/types'
 import GamePlay from './GamePlay'
+import { OpponentInfo } from 'pages/RoninsGambit/RoninsGambit.container'
+import RandomAI from 'core/agents/RandomAI'
+import NetworkedAgent from 'core/agents/NetworkedAgent'
+import { DataConnection } from 'peerjs'
+import { useState } from 'react'
 
-const PLAYER = new Player()
-const AI = new RandomAI()
+interface PropTypes {
+  opponentInfo:OpponentInfo
+}
+const onStateChange = (gameState:GameState) => {
+  alert("state changed unimplemented"+gameState)
+}
 
-const { VIDEO_TYPES, ACTION_TYPES, PLAYER_MOVE_TYPES } = RONIN_GAMBIT
+const gameEngine= new GameEngine(new GameLogic())
 
-const GamePlayContainer = () => {
-  const [matchedEnemy, setMatchedEnemy] = useState<IAgent<GameState>>()
-  const [hasGameStarted, setHasGameStarted] = useState(false)
-  const [videoType, setVideoType] = useState(VIDEO_TYPES.Idle)
-  const [canShowTimer, setCanShowTimer] = useState(false)
-  const [action, setAction] = useState({
-    type: '',
-    isLocked: false,
-  })
-
-  useEffect(() => {
-    setMatchedEnemy(AI)
-    // setCanShowTimer(true)
-  }, [])
-
-  useEffect(() => {
-    console.log(matchedEnemy, 'MATCHAED ENE<EYY')
-    if (matchedEnemy) {
-      const gameEngine = new GameEngine(new GameLogic(), handleNewGameState)
-      gameEngine.startGame([PLAYER, matchedEnemy])
-      setHasGameStarted(true)
-      setCanShowTimer(true)
+const GamePlayContainer = ({opponentInfo}: PropTypes) => {
+  console.log('%c GamePlayContainer', 'background: #222; color: #bada55');
+  const {type,connection,playerId} = opponentInfo
+  const player= new Player();
+  let opponent:IAgent<GameState>;
+    switch (type) {
+      case "network":
+        opponent = new NetworkedAgent(connection as DataConnection);
+        break;
+      case "cpu":
+        opponent = new RandomAI();
+        break;
+      default:
+        opponent = new RandomAI();
     }
-  }, [matchedEnemy])
-
-  function handleNewGameState(newGameState: GameState) {
-    console.log(newGameState, 'NEW STATETETTE')
-  }
-
-  useEffect(() => {
-    if (action.isLocked) {
-      console.log(action, 'ACTION')
-      // send the state to the peer
-      const playerMoveValue = PLAYER_MOVE_TYPES[action.type]
-      PLAYER.selectMove(playerMoveValue)
+    switch (playerId) {
+      case 0:
+        gameEngine.startGame([player,opponent]);
+        break;
+      case 1:
+        gameEngine.startGame([opponent,player]);
+        break;
+      default:
+        console.error("invalid player id");
     }
-  }, [action.isLocked])
 
-  const handleTimerEnd = () => {
-    if (!canShowTimer) return
-
-    // choosing a random action
-    const actions = [ACTION_TYPES.Attack, ACTION_TYPES.Defend, ACTION_TYPES.Break]
-    const actionCopy = {
-      type: actions[Math.floor(Math.random() * 3)],
-      isLocked: true,
-    }
-    setCanShowTimer(false)
-    setAction(actionCopy)
+  const selectRandomOutcome=()=>{
+    const outcomes=['win','loose','tie'];
+    const outcome=outcomes[Math.floor(Math.random()*outcomes.length)];
+    return outcome as 'win' | 'loose' | 'tie';
   }
-
-  const handleVideoEnd = () => {
-    setVideoType('idle')
-    const actionCopy = {
-      type: '',
-      isLocked: false,
-    }
-    setAction(actionCopy)
-    setCanShowTimer(true)
+  const outcomes:string[]=[];
+  const loop=()=>{
+    const randomOutcome=selectRandomOutcome();
+    outcomes.push(randomOutcome);
+    const nextTimeout=8*1000;
+    console.log("outcomes",outcomes);
+    setTimeout(loop,nextTimeout);
   }
-
-  const handleActionSelect = (actionType: string) => {
-    if (action.isLocked) return
-
-    const actionCopy = {
-      type: actionType,
-      isLocked: false,
-    }
-    setAction(actionCopy)
-  }
-
-  const handleActionLock = () => {
-    const actionCopy = { ...action }
-    actionCopy.isLocked = true
-    setCanShowTimer(false)
-    setAction(actionCopy)
-  }
-
+    loop()
   return (
-    <GamePlay
-      setMatchedEnemy={setMatchedEnemy}
-      hasGameStarted={hasGameStarted}
-      videoType={videoType}
-      handleVideoEnd={handleVideoEnd}
-      canShowTimer={canShowTimer}
-      handleTimerEnd={handleTimerEnd}
-      action={action}
-      handleActionSelect={handleActionSelect}
-      handleActionLock={handleActionLock}
-    />
+    <GamePlay outcomes={outcomes}/>
   )
 }
 

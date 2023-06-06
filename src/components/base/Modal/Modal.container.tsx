@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react'
-
 import Modal from './Modal'
 
 interface PropTypes {
