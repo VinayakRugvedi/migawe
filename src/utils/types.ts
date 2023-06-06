@@ -19,6 +19,12 @@ const RONIN_GAMBIT = {
     [ACTION_TYPES.Defend]: 1,
     [ACTION_TYPES.Break]: 2,
   },
+
+  PLAYER_ROUND_OUTCOME_TYPES: {
+    Win: 'win',
+    Lose: 'lose',
+    Tie: 'tie',
+  },
 }
 
 export { RONIN_GAMBIT }
