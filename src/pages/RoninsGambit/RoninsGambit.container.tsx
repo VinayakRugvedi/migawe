@@ -5,7 +5,7 @@ import RoninsGambit from './RoninsGambit'
 
 const RoninsGambitContainer = () => {
   const [showModal, setShowModal] = useState(false)
-  const [showGamePlay, setShowGamePlay] = useState(true)
+  const [showGamePlay, setShowGamePlay] = useState(false)
 
   const handleOnOpen = () => {
     setShowModal(true)
@@ -13,6 +13,10 @@ const RoninsGambitContainer = () => {
 
   const handleOnClose = () => {
     setShowModal(false)
+  }
+
+  const handleGameStart = () => {
+    setShowGamePlay(true)
   }
 
   return (
@@ -24,7 +28,7 @@ const RoninsGambitContainer = () => {
           showModal={showModal}
           handleOnOpen={handleOnOpen}
           handleOnClose={handleOnClose}
-          setShowGamePlay={setShowGamePlay}
+          handleGameStart={handleGameStart}
         />
       )}
     </>

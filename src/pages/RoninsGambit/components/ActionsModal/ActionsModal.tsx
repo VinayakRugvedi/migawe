@@ -11,8 +11,8 @@ interface PropTypes {
   minimumBalanceToPlay: number
   needToPay: number
   tokenName: string
-  topUpWallet: () => void
-  playNow: () => void
+  handleTopup: () => void
+  handleGameStart: () => void
 }
 
 const ActionsModal = ({
@@ -23,8 +23,8 @@ const ActionsModal = ({
   minimumBalanceToPlay,
   tokenName,
   needToPay,
-  topUpWallet,
-  playNow,
+  handleTopup,
+  handleGameStart,
 }: PropTypes) => {
   const userHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false
 
@@ -55,10 +55,14 @@ const ActionsModal = ({
             <GiPlayButton />
           </div>
           <p className='text-center mb-4 px-4'>
-            You are ready to start playing. Click the button below to start playing. <br />
-            You will be charged {minimumBalanceToPlay} {tokenName}.
+            You are all set! Click on the button below to start playing. <br />
+            You will be charged{' '}
+            <span className='font-medium'>
+              {minimumBalanceToPlay} {tokenName}
+            </span>
+            &nbsp; to setup the reward pool.
           </p>
-          <button className='btn' onClick={playNow}>
+          <button className='btn' onClick={handleGameStart}>
             Play Now
           </button>
         </div>
@@ -71,13 +75,25 @@ const ActionsModal = ({
             <GiPiggyBank />
           </div>
           <p className='text-center mb-4 px-4'>
-            Please top-up your game wallet. You game wallet should have a minimum balance of{' '}
-            {minimumBalanceToPlay} {tokenName} to start playing games.
+            Please top-up your game wallet.
             <br />
-            Your currrent balance is {userBalance} {tokenName}. You need {needToPay} {tokenName}{' '}
+            You game wallet should have a minimum balance of{' '}
+            <span className='font-medium'>
+              {minimumBalanceToPlay} {tokenName}
+            </span>
+            &nbsp;to start playing games.
+            <br />
+            Your current balance is{' '}
+            <span className='font-medium'>
+              {userBalance} {tokenName}
+            </span>
+            &nbsp;and you need{' '}
+            <span className='font-medium'>
+              {needToPay} {tokenName}
+            </span>{' '}
             more.
           </p>
-          <button onClick={topUpWallet} className='btn'>
+          <button onClick={handleTopup} className='btn'>
             Add {needToPay} {tokenName}
           </button>
         </div>

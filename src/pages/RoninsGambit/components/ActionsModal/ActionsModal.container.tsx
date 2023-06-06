@@ -6,9 +6,10 @@ import { Modal } from 'components/base'
 interface PropTypes {
   showModal: boolean
   handleOnClose: () => void
+  handleGameStart: () => void
 }
 
-const ActionsModalContainer = ({ showModal, handleOnClose }: PropTypes) => {
+const ActionsModalContainer = ({ showModal, handleOnClose, handleGameStart }: PropTypes) => {
   const userAddress = useAddress()
   //userAddress is undefined when wallet is not connected
   //at this time we face some error in useContractRead
@@ -27,15 +28,12 @@ const ActionsModalContainer = ({ showModal, handleOnClose }: PropTypes) => {
   const needToPay = minimumBalanceToPlay - userBalance
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
 
-  const topUpWallet = async () => {
-    console.log('topUpWallet')
+  const handleTopup = async () => {
+    console.log('handleTopup')
     console.log('needToPay', needToPay)
     await mutateAsync({ args: [(needToPay * 10 ** 18).toString()] })
   }
 
-  const playNow = async () => {
-    alert('playNow')
-  }
   return (
     <ActionsModal
       showModal={showModal}
@@ -45,8 +43,8 @@ const ActionsModalContainer = ({ showModal, handleOnClose }: PropTypes) => {
       minimumBalanceToPlay={minimumBalanceToPlay}
       needToPay={needToPay}
       tokenName={tokenName}
-      topUpWallet={topUpWallet}
-      playNow={playNow}
+      handleTopup={handleTopup}
+      handleGameStart={handleGameStart}
     />
   )
 }

@@ -7,10 +7,10 @@ interface PropTypes {
   showModal: boolean
   handleOnOpen: () => void
   handleOnClose: () => void
-  setShowGamePlay: (arg0: boolean) => void
+  handleGameStart: () => void
 }
 
-const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay }: PropTypes) => {
+const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, handleGameStart }: PropTypes) => {
   return (
     <main className='mt-[120px] py-4 mx-auto max-w-7xl mb-8'>
       <section className='mb-8 grid grid-cols-2'>
@@ -40,18 +40,37 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay 
           <div className='card w-96 bg-primary/20 shadow-xl mt-4'>
             <div className='card-body'>
               <h2 className='card-title'>Rule Book</h2>
-              <div>Attack wins over Defend</div>
-              <div>Defend wins over Break</div>
-              <div>Break wins over Attack</div>
-              <div>Rest results in a tie</div>
+              <div className='grid grid-cols-3 gap-2'>
+                <div className='card p-1 bg-primary/20'>
+                  <div className='flex flex-col items-center'>
+                    <div className='uppercase text-secondary font-bold'>Attack</div>
+                    <span>wins</span>
+                    <div className='uppercase text-secondary font-bold'>Break</div>
+                  </div>
+                </div>
+                <div className='card p-1 bg-primary/20'>
+                  <div className='flex flex-col items-center'>
+                    <div className='uppercase text-secondary font-bold'>Defend</div>
+                    <span>wins</span>
+                    <div className='uppercase text-secondary font-bold'>Attack</div>
+                  </div>
+                </div>
+                <div className='card p-1 bg-primary/20'>
+                  <div className='flex flex-col items-center'>
+                    <div className='uppercase text-secondary font-bold'>Break</div>
+                    <span>wins</span>
+                    <div className='uppercase text-secondary font-bold'>Defend</div>
+                  </div>
+                </div>
+              </div>
+              <div className='card p-1 bg-primary/20 text-center uppercase font-medium'>
+                Rest results in a tie
+              </div>
             </div>
           </div>
 
           <div className='mt-8 mb-8'>
-            {/* <button className='btn btn-wide' onClick={handleOnOpen}>
-              Get Started
-            </button> */}
-            <button className='btn btn-wide' onClick={() => setShowGamePlay(true)}>
+            <button className='btn btn-wide' onClick={handleOnOpen}>
               Get Started
             </button>
           </div>
@@ -112,7 +131,11 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay 
         </div>
       </section>
 
-      <ActionsModal showModal={showModal} handleOnClose={handleOnClose} />
+      <ActionsModal
+        showModal={showModal}
+        handleOnClose={handleOnClose}
+        handleGameStart={handleGameStart}
+      />
     </main>
   )
 }
