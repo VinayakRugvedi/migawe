@@ -10,13 +10,23 @@ interface PropTypes {
   userBalance: number
   minimumBalanceToPlay: number
   needToPay: number
-  tokenName:string
-  topUpWallet:()=>void
-  playNow:()=>void
+  tokenName: string
+  topUpWallet: () => void
+  playNow: () => void
 }
 
-const ActionsModal = ({ showModal, handleOnClose, isWalletConnected, userBalance,minimumBalanceToPlay,tokenName,needToPay,topUpWallet,playNow }: PropTypes) => {
-  const userHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false;
+const ActionsModal = ({
+  showModal,
+  handleOnClose,
+  isWalletConnected,
+  userBalance,
+  minimumBalanceToPlay,
+  tokenName,
+  needToPay,
+  topUpWallet,
+  playNow,
+}: PropTypes) => {
+  const userHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false
 
   let modalContent = null
 
@@ -45,10 +55,12 @@ const ActionsModal = ({ showModal, handleOnClose, isWalletConnected, userBalance
             <GiPlayButton />
           </div>
           <p className='text-center mb-4 px-4'>
-            You are ready to start playing. Click the button below to start playing. <br/>
+            You are ready to start playing. Click the button below to start playing. <br />
             You will be charged {minimumBalanceToPlay} {tokenName}.
           </p>
-          <button className='btn' onClick={()=>{playNow()}}>Play Now</button>
+          <button className='btn' onClick={playNow}>
+            Play Now
+          </button>
         </div>
       )
     } else {
@@ -59,11 +71,15 @@ const ActionsModal = ({ showModal, handleOnClose, isWalletConnected, userBalance
             <GiPiggyBank />
           </div>
           <p className='text-center mb-4 px-4'>
-            Please top-up your game wallet. You game wallet should have a minimum balance of {minimumBalanceToPlay} {tokenName} to
-            start playing games.<br/>Your currrent balance is {userBalance} {tokenName}.
-            You need {needToPay} {tokenName} more.
+            Please top-up your game wallet. You game wallet should have a minimum balance of{' '}
+            {minimumBalanceToPlay} {tokenName} to start playing games.
+            <br />
+            Your currrent balance is {userBalance} {tokenName}. You need {needToPay} {tokenName}{' '}
+            more.
           </p>
-          <button onClick={()=>{topUpWallet()}}className='btn'>Add {needToPay} {tokenName}</button>
+          <button onClick={topUpWallet} className='btn'>
+            Add {needToPay} {tokenName}
+          </button>
         </div>
       )
     }

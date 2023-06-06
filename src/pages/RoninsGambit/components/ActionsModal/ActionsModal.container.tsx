@@ -1,6 +1,6 @@
-import { useAddress,useContractRead,useContract, useContractWrite} from '@thirdweb-dev/react'
+import { useAddress, useContractRead, useContract, useContractWrite } from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
-import {CONTRACTS} from 'utils/contants'
+import { CONTRACTS } from 'utils/constants'
 import { Modal } from 'components/base'
 
 interface PropTypes {
@@ -12,21 +12,25 @@ const ActionsModalContainer = ({ showModal, handleOnClose }: PropTypes) => {
   const userAddress = useAddress()
   //userAddress is undefined when wallet is not connected
   //at this time we face some error in useContractRead
-  const {data: erc20Contract} = useContract(CONTRACTS.erc20Address, CONTRACTS.erc20ABI)
-  const { data:tokenName} = useContractRead(erc20Contract, "symbol");
+  const { data: erc20Contract } = useContract(CONTRACTS.erc20Address, CONTRACTS.erc20ABI)
+  const { data: tokenName } = useContractRead(erc20Contract, 'symbol')
   const { data: walletContract } = useContract(CONTRACTS.gameWalletAddress, CONTRACTS.gameWalletABI)
-  const { data:deposit,isLoading,error } = useContractRead(walletContract, "deposits",[userAddress]);
-  const { mutateAsync } =useContractWrite(walletContract, "deposit");
+  const {
+    data: deposit,
+    isLoading,
+    error,
+  } = useContractRead(walletContract, 'deposits', [userAddress])
+  const { mutateAsync } = useContractWrite(walletContract, 'deposit')
 
-  const userBalance = deposit ? Number(deposit.toString())/10**18 : -1;
-  const minimumBalanceToPlay=10;
-  const needToPay=minimumBalanceToPlay-userBalance;
+  const userBalance = deposit ? Number(deposit.toString()) / 10 ** 18 : -1
+  const minimumBalanceToPlay = 10
+  const needToPay = minimumBalanceToPlay - userBalance
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
 
   const topUpWallet = async () => {
-    console.log('topUpWallet')  
-    console.log('needToPay',needToPay)
-    await mutateAsync({ args: [(needToPay*10**18).toString()] });
+    console.log('topUpWallet')
+    console.log('needToPay', needToPay)
+    await mutateAsync({ args: [(needToPay * 10 ** 18).toString()] })
   }
 
   const playNow = async () => {
@@ -41,7 +45,7 @@ const ActionsModalContainer = ({ showModal, handleOnClose }: PropTypes) => {
       minimumBalanceToPlay={minimumBalanceToPlay}
       needToPay={needToPay}
       tokenName={tokenName}
-      topUpWallet={topUpWallet} 
+      topUpWallet={topUpWallet}
       playNow={playNow}
     />
   )

@@ -7,47 +7,51 @@ interface PropTypes {
   showModal: boolean
   handleOnOpen: () => void
   handleOnClose: () => void
+  setShowGamePlay: (arg0: boolean) => void
 }
 
-const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose }: PropTypes) => {
+const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setShowGamePlay }: PropTypes) => {
   return (
     <main className='mt-[120px] py-4 mx-auto max-w-7xl mb-8'>
       <section className='mb-8 grid grid-cols-2'>
         <div className='px-4'>
-          <div  className='italic'>
+          <div className='italic'>
             <span className='font-medium'>MIGAWE</span> Presents,
-          </div >
+          </div>
           <h3 className='text-5xl font-medium'>The Ronin&apos;s Gambit</h3>
 
-          <div  className='text-xl mt-8'>
+          <div className='text-xl mt-8'>
             This is a combat game inspired by the classic rock paper scissors.
             <br />
             You are the chosen samurai and your job is to defeat the enemy samurai in order to save
             your squad.
-          </div >
+          </div>
 
-          <div  className='mt-8 text-xl'>
+          <div className='mt-8 text-xl'>
             Every fight is a round and you win the battle if you{' '}
             <span className='text-primary font-medium'>win 5 rounds</span>.
-            <div  className='text-xl'>
+            <div className='text-xl'>
               You and your enemy are allowed to execute one of the{' '}
               <span className='text-secondary font-medium'>3 actions</span> namely:{' '}
               <span className='text-secondary font-medium'>Attack, Defend, and Break</span>
-            </div >
-          </div >
+            </div>
+          </div>
 
           <div className='card w-96 bg-primary/20 shadow-xl mt-4'>
             <div className='card-body'>
               <h2 className='card-title'>Rule Book</h2>
-              <div >Attack wins over Defend</div >
-              <div >Defend wins over Break</div >
-              <div >Break wins over Attack</div >
-              <div >Rest results in a tie</div >
+              <div>Attack wins over Defend</div>
+              <div>Defend wins over Break</div>
+              <div>Break wins over Attack</div>
+              <div>Rest results in a tie</div>
             </div>
           </div>
 
           <div className='mt-8 mb-8'>
-            <button className='btn btn-wide' onClick={handleOnOpen}>
+            {/* <button className='btn btn-wide' onClick={handleOnOpen}>
+              Get Started
+            </button> */}
+            <button className='btn btn-wide' onClick={() => setShowGamePlay(true)}>
               Get Started
             </button>
           </div>
@@ -63,11 +67,11 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose }: PropTypes) => 
                   <div className='flex justify-between items-center'>
                     <h2 className='card-title'>Step 1: Top-up Pool</h2>
                   </div>
-                  <div >
+                  <div>
                     As a starter, you will be asked to transfer a minimum of 1USDT into our top-up
                     pool. Consider this as a security deposit. Futhermore, this top-up pool will be
                     used to setup the reward pool of every game.
-                  </div >
+                  </div>
                 </div>
               </div>
               <div className='ml-4 tooltip' data-tip="Let's add some top-up">
@@ -83,10 +87,10 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose }: PropTypes) => 
                   <div className='flex justify-between items-center'>
                     <h2 className='card-title'>Step 2: Reward Pool</h2>
                   </div>
-                  <div >
+                  <div>
                     Every time you start a game, you have to transfer 0.2USDT into the reward pool
                     (from top-up pool) which will set the reward pool&apos;s total value to 0.4USDT.
-                  </div >
+                  </div>
                 </div>
               </div>
 
