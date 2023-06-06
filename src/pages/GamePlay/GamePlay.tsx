@@ -27,6 +27,11 @@ const GamePlay = ({outcomes}:GamePlayProps) => {
   };
   return (
     <div className = 'absolute inset-0 w-full h-full bg-black z-30'>
+      <video
+        className='absolute inset-0 w-full h-full object-contain object-center'
+      >
+        <source src={idleVideo} type="video/mp4" />
+      </video>
     {videoSrcs.map((src,index)=>(
       <video 
       key={index}
