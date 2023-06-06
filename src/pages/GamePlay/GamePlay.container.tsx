@@ -12,7 +12,16 @@ import GamePlay from './GamePlay'
 const PLAYER = new Player()
 const AI = new RandomAI()
 
-const { VIDEO_TYPES, ACTION_TYPES, PLAYER_MOVE_TYPES } = RONIN_GAMBIT
+const { VIDEO_TYPES, ACTION_TYPES, PLAYER_MOVE_TYPES, PLAYER_ROUND_OUTCOME_TYPES } = RONIN_GAMBIT
+
+export interface InternalGameState {
+  step: number
+  playerHealth: number
+  enemyHealth: number
+  outcomes: string[]
+  hasGameEnded: boolean
+  winningPlayerId: string
+}
 
 const GamePlayContainer = () => {
   const [matchedEnemy, setMatchedEnemy] = useState<IAgent<GameState>>()
@@ -23,11 +32,16 @@ const GamePlayContainer = () => {
     type: '',
     isLocked: false,
   })
-
-  const playerId: 0 | 1 = 0
-  let playerHealth = 5
-  let opponentHealth = 5
-  const outcomes: string[] = []
+  // TODO: Fix type
+  const [gameState, setGameState] = useState<InternalGameState>({
+    step: 0,
+    playerHealth: 5,
+    enemyHealth: 5,
+    outcomes: [],
+    hasGameEnded: false,
+    winningPlayerId: '',
+  })
+  const [playerId, setPlayerId] = useState(0)
 
   useEffect(() => {
     setMatchedEnemy(AI)
@@ -35,51 +49,69 @@ const GamePlayContainer = () => {
   }, [])
 
   useEffect(() => {
-    console.log(matchedEnemy, 'MATCHAED ENE<EYY', playerId)
     if (matchedEnemy) {
       const gameEngine = new GameEngine(new GameLogic(), handleNewGameState)
-      if (playerId === 0) {
-        console.log('starting game, player first')
-        gameEngine.startGame([PLAYER, matchedEnemy])
-      } else {
-        console.log('starting game, enemy first')
-        gameEngine.startGame([matchedEnemy, PLAYER])
-      }
+      // The value of playerId determines the order in which the agents(players) are passed to the gameEngine.startGame
+      playerId === 0
+        ? gameEngine.startGame([PLAYER, matchedEnemy])
+        : gameEngine.startGame([matchedEnemy, PLAYER])
       setHasGameStarted(true)
       setCanShowTimer(true)
     }
   }, [matchedEnemy])
 
-  function handleNewGameState(newGameState: GameState) {
-    console.log('NEW STATE', { newGameState })
+  useEffect(() => {
+    const outcomesLength = gameState.outcomes.length
+    if (outcomesLength > 0) {
+      setCanShowTimer(false)
+      setVideoType(gameState.outcomes[outcomesLength - 1])
+    }
+  }, [gameState.outcomes])
+
+  const handleNewGameState = (newGameState: GameState) => {
+    // TODO: Handle health updates and ending game state
+    // Return back if the opponent hasn't made any move yet
+    if (newGameState && newGameState.B_move && newGameState.B_move === 3) return
+    if (newGameState && newGameState.step === gameState.step) return
+
+    const gameStateCopy = { ...gameState }
+    gameStateCopy.step = newGameState.step
+    // Check why everytime gameState.outcomes is being an empty array
+    const outcomesCopy = [...gameState.outcomes]
     if (playerId == 0 && newGameState.step > 0) {
       const diff = (3 + PLAYER.getPrivateState().move - newGameState.B_move) % 3
       if (diff == 1) {
-        outcomes.push('win')
+        outcomesCopy.push(PLAYER_ROUND_OUTCOME_TYPES.Win)
       } else if (diff == 2) {
-        outcomes.push('lose')
+        outcomesCopy.push(PLAYER_ROUND_OUTCOME_TYPES.Lose)
+      } else {
+        outcomesCopy.push(PLAYER_ROUND_OUTCOME_TYPES.Tie)
       }
-      playerHealth = newGameState.Health[0]
-      opponentHealth = newGameState.Health[1]
+      // console.log(outcomesCopy, 'OUTCOMES COPY LAST')
+      gameStateCopy.outcomes = [...outcomesCopy]
+
+      setGameState(gameStateCopy)
+
+      // Health is not actually being updated
+      // gameStateCopy.playerHealth = newGameState.Health[0]
+      // gameStateCopy.enemyHealth = newGameState.Health[1]
     } else if (playerId == 1 && newGameState.step > 1) {
-      if (newGameState.Health[1] < playerHealth) {
-        //player lost health
-        outcomes.push('lose')
-      } else if (newGameState.Health[0] < opponentHealth) {
-        outcomes.push('win')
-      }
-      playerHealth = newGameState.Health[1]
-      opponentHealth = newGameState.Health[0]
+      // if (newGameState.Health[1] < playerHealth) {
+      //   //player lost health
+      //   outcomes.push('lose')
+      // } else if (newGameState.Health[0] < opponentHealth) {
+      //   outcomes.push('win')
+      // }
+      // playerHealth = newGameState.Health[1]
+      // opponentHealth = newGameState.Health[0]
     }
-    console.log('outcomes', outcomes)
+    // console.log('outcomes', outcomes)
   }
 
   useEffect(() => {
     if (action.isLocked) {
-      console.log(action, 'ACTION')
       // send the state to the peer
       const playerMoveValue = PLAYER_MOVE_TYPES[action.type]
-      console.log('%c player move: ' + playerMoveValue, 'color: blue; font-size: 15px')
       PLAYER.selectMove(playerMoveValue)
     }
   }, [action.isLocked])
@@ -135,6 +167,7 @@ const GamePlayContainer = () => {
       action={action}
       handleActionSelect={handleActionSelect}
       handleActionLock={handleActionLock}
+      gameState={gameState}
     />
   )
 }

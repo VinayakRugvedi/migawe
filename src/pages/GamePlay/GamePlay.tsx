@@ -3,10 +3,11 @@ import { GiStripedSword, GiVibratingShield, GiSwordBreak } from 'react-icons/gi'
 
 import { idleVideo, winVideo, loseVideo, tieVideo } from 'game-play-assets'
 import type { IAgent, GameState } from 'core/types'
-
 import { RONIN_GAMBIT } from 'utils/types'
 import { Timer } from 'components/base'
-import { IntroScreen } from './components'
+import { IntroScreen, HealthIndicator } from './components'
+
+import { InternalGameState } from './GamePlay.container'
 
 interface PropTypes {
   setMatchedEnemy: (arg0: IAgent<GameState>) => void
@@ -18,6 +19,7 @@ interface PropTypes {
   action: { type: string; isLocked: boolean }
   handleActionSelect: (arg0: string) => void
   handleActionLock: () => void
+  gameState: InternalGameState
 }
 
 const { VIDEO_TYPES, ACTION_TYPES } = RONIN_GAMBIT
@@ -32,8 +34,8 @@ const GamePlay = ({
   action,
   handleActionSelect,
   handleActionLock,
+  gameState,
 }: PropTypes) => {
-  // let playerHasMadeAMove = false
   const idleVideoRef = useRef<HTMLVideoElement>(null)
   const winVideoRef = useRef<HTMLVideoElement>(null)
   const loseVideoRef = useRef<HTMLVideoElement>(null)
@@ -54,19 +56,6 @@ const GamePlay = ({
       }
     }
   }, [videoType])
-
-  // const handlePlayerMove = (move: 0 | 1 | 2) => {
-  //   playerHasMadeAMove = true
-  //   finalizeMove(move)
-  // }
-  // const handleVideoEnd = () => {
-  // if (playerHasMadeAMove && outcomes.length > lastLength) {
-  //   setVideoType(outcomes[0])
-  //   playerHasMadeAMove = false
-  // } else {
-  //   setVideoType('idle')
-  // }
-  // }
 
   const videoWidth = window.screen.width
   const videoHeight = window.screen.height
@@ -128,16 +117,7 @@ const GamePlay = ({
         <div className='absolute z-[30] top-0 font-game py-4 px-8 bg-black/30 text-white font-medium'>
           <div className='my-4 flex items-start justify-between'>
             <h4 className='mr-8'>Ememy&apos;s Health :</h4>
-            <div className='flex flex-col items-end'>
-              <div className='flex'>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-              </div>
-              <span className='text-sm mt-1'>5 out of 5</span>
-            </div>
+            <HealthIndicator updatedHealth={gameState.enemyHealth} canUpdateHealth={canShowTimer} />
           </div>
         </div>
       ) : null}
@@ -183,16 +163,10 @@ const GamePlay = ({
 
           <div className='mb-8 flex items-start justify-between'>
             <h4>Health :</h4>
-            <div className='flex flex-col items-end'>
-              <div className='flex'>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-                <div className='bg-white border border-white w-[25px] h-[30px] mr-1'></div>
-              </div>
-              <span className='text-sm mt-1'>5 out of 5</span>
-            </div>
+            <HealthIndicator
+              updatedHealth={gameState.playerHealth}
+              canUpdateHealth={canShowTimer}
+            />
           </div>
           <div className='flex items-center justify-between'>
             <div
@@ -203,9 +177,7 @@ const GamePlay = ({
                   ? ''
                   : 'hover:text-primary-focus hover:border-primary-focus hover:cursor-pointer'
               }`}
-              role='button'
               onClick={() => handleActionSelect(ACTION_TYPES.Attack)}
-              // onClick={() => handlePlayerMove(0)}
             >
               <div className='p-2 text-4xl'>
                 <GiStripedSword />

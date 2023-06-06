@@ -20,10 +20,10 @@ const IntroScreenContainer = ({ setMatchedEnemy }: PropTypes) => {
   useEffect(() => {
     if (!signer) return
 
-    setIsMatchMaking(true)
+    // setIsMatchMaking(true)
     // MATCH_MAKER.findMatch(1e17, signer, Math.floor(Date.now() / 1000) + 60 * 100).then(
-    //   (conn, playerId) => {
-    //     const enemy = new NetworkedAgent(obj.connection)
+    //   (connection, playerId) => {
+    //     const enemy = new NetworkedAgent(connection)
     //     setMatchedEnemy(enemy)
     //     setIsMatchMaking(false)
     //   },
