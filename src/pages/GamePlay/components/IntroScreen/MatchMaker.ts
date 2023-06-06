@@ -1,6 +1,6 @@
 import { Signer, ethers } from 'ethers'
 import Peer, { DataConnection } from 'peerjs'
-import { MatchMakerUrl } from 'utils/contants'
+import { RONIN_GAMBIT } from 'utils/constants'
 
 class MatchMaker {
   peer: Peer
@@ -88,7 +88,7 @@ class MatchMaker {
       sign: sign,
     })
     console.log('param', param)
-    return await fetch(MatchMakerUrl + 'friendly/' + param)
+    return await fetch(RONIN_GAMBIT.MATCH_MAKER_URL + 'friendly/' + param)
       .then((res) => res.json())
       .catch((error) => {
         console.log(error, 'ERROR in getMatchMackerServerResponse')
