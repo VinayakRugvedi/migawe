@@ -11,12 +11,12 @@ const AI = new RandomAI()
 
 interface PropTypes {
   handleMatch: (arg0: IAgent<GameState>, arg1: number) => void
+  canPlayWithAi: boolean
 }
 
 const MATCH_MAKER = new MatchMaker()
-const USE_RANDOM_UI = false
 
-const IntroScreenContainer = ({ handleMatch }: PropTypes) => {
+const IntroScreenContainer = ({ handleMatch, canPlayWithAi }: PropTypes) => {
   const [isMatchMaking, setIsMatchMaking] = useState(false)
   const [canRetry, setCanRetry] = useState(false)
 
@@ -26,7 +26,7 @@ const IntroScreenContainer = ({ handleMatch }: PropTypes) => {
 
     setIsMatchMaking(true)
 
-    if (USE_RANDOM_UI) {
+    if (canPlayWithAi) {
       setTimeout(() => {
         handleMatch(AI, 0)
         setIsMatchMaking(false)
@@ -59,6 +59,7 @@ const IntroScreenContainer = ({ handleMatch }: PropTypes) => {
       handleTimerEnd={handleTimerEnd}
       canRetry={canRetry}
       handleRetry={handleRetry}
+      canPlayWithAi={canPlayWithAi}
     />
   )
 }

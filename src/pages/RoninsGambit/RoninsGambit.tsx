@@ -8,9 +8,16 @@ interface PropTypes {
   handleOnOpen: () => void
   handleOnClose: () => void
   handleGameStart: () => void
+  handleGameStartWithAi: () => void
 }
 
-const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, handleGameStart }: PropTypes) => {
+const RoninsGambit = ({
+  showModal,
+  handleOnOpen,
+  handleOnClose,
+  handleGameStart,
+  handleGameStartWithAi,
+}: PropTypes) => {
   return (
     <main className='mt-[120px] py-4 mx-auto max-w-7xl mb-8'>
       <section className='mb-8 grid grid-cols-2'>
@@ -70,8 +77,11 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, handleGameStart 
           </div>
 
           <div className='mt-8 mb-8'>
-            <button className='btn btn-wide' onClick={handleOnOpen}>
-              Get Started
+            <button className='btn btn-wide mr-4' onClick={handleGameStart}>
+              Play Now
+            </button>
+            <button className='btn btn-outline' onClick={handleGameStartWithAi}>
+              Play with CPU
             </button>
           </div>
 

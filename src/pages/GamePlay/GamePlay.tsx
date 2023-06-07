@@ -11,6 +11,7 @@ const { ACTION_TYPES } = RONIN_GAMBIT
 
 interface PropTypes {
   handleMatch: (arg0: IAgent<GameState>, arg1: number) => void
+  canPlayWithAi: boolean
   hasGameStarted: boolean
   videoType: string
   handleVideoEnd: () => void
@@ -20,10 +21,13 @@ interface PropTypes {
   handleActionSelect: (arg0: string) => void
   handleActionLock: () => void
   gameState: InternalGameState
+  canHandleGameEnd: boolean
+  handleBackToGamePage: () => void
 }
 
 const GamePlay = ({
   handleMatch,
+  canPlayWithAi,
   hasGameStarted,
   videoType,
   handleVideoEnd,
@@ -33,17 +37,49 @@ const GamePlay = ({
   handleActionSelect,
   handleActionLock,
   gameState,
+  canHandleGameEnd,
+  handleBackToGamePage,
 }: PropTypes) => {
   const isActionChosen = action.type.length > 0 ? true : false
   const isActionLocked = action.isLocked
   const isWaitingForEnemyMove = false
+  const hasGameEnded = gameState.hasGameEnded
+  const hasCurrentPlayerWon = gameState.winningPlayerId === 0 ? true : false
 
   return (
     <div
       className='w-screen h-screen fixed top-0 left-0 right-0 z-30 bg-black flex flex-col items-center justify-start'
       id='game-play'
     >
-      {!hasGameStarted ? <IntroScreen handleMatch={handleMatch} /> : null}
+      {!hasGameStarted ? (
+        <IntroScreen handleMatch={handleMatch} canPlayWithAi={canPlayWithAi} />
+      ) : null}
+
+      {hasGameEnded && canHandleGameEnd ? (
+        <div className='absolute w-screen h-screen top-0 left-0 z-[40] font-game  bg-black/70 flex flex-col justify-center items-center'>
+          <h3 className='text-4xl text-white text-center mb-8'>
+            {hasCurrentPlayerWon ? (
+              <span>
+                Congratulations!
+                <br />
+                You have won this game.
+              </span>
+            ) : (
+              <span>
+                Uh-oh!
+                <br />
+                You have lost this game.
+              </span>
+            )}
+          </h3>
+          <button
+            className='p-4 bg-white text-black uppercase hover:text-primary-focus justify-center'
+            onClick={handleBackToGamePage}
+          >
+            Go back
+          </button>
+        </div>
+      ) : null}
 
       <Videos videoType={videoType} handleVideoEnd={handleVideoEnd} />
 
@@ -52,7 +88,10 @@ const GamePlay = ({
         <div className='absolute z-[30] top-0 font-game py-4 px-8 bg-black/30 text-white font-medium'>
           <div className='my-4 flex items-start justify-between'>
             <h4 className='mr-8'>Ememy&apos;s Health :</h4>
-            <HealthIndicator updatedHealth={gameState.enemyHealth} canUpdateHealth={canShowTimer} />
+            <HealthIndicator
+              updatedHealth={gameState.enemyHealth}
+              canUpdateHealth={canShowTimer || canHandleGameEnd}
+            />
           </div>
         </div>
       ) : null}
@@ -100,7 +139,7 @@ const GamePlay = ({
             <h4>Health :</h4>
             <HealthIndicator
               updatedHealth={gameState.playerHealth}
-              canUpdateHealth={canShowTimer}
+              canUpdateHealth={canShowTimer || canHandleGameEnd}
             />
           </div>
           <div className='flex items-center justify-between'>

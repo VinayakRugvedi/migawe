@@ -8,9 +8,16 @@ interface PropTypes {
   handleTimerEnd: () => void
   canRetry: boolean
   handleRetry: () => void
+  canPlayWithAi: boolean
 }
 
-const IntroScreen = ({ isMatchMaking, handleTimerEnd, canRetry, handleRetry }: PropTypes) => {
+const IntroScreen = ({
+  isMatchMaking,
+  handleTimerEnd,
+  canRetry,
+  handleRetry,
+  canPlayWithAi,
+}: PropTypes) => {
   return (
     <div className='absolute w-screen h-screen top-0 left-0 z-30 font-game  bg-black flex flex-col items-center'>
       <h3 className='text-6xl mt-16 text-white text-center'>The Ronins Gambit</h3>
@@ -24,7 +31,7 @@ const IntroScreen = ({ isMatchMaking, handleTimerEnd, canRetry, handleRetry }: P
       <div className='absolute bottom-[8%] p-4'>
         {isMatchMaking ? (
           <div className='text-white'>
-            Trying to find a Samurai in{' '}
+            Trying to find {canPlayWithAi ? 'an AI' : 'a'} Samurai in{' '}
             {<Timer durationInSeconds={60} handleTimerEnd={handleTimerEnd} />} seconds.
           </div>
         ) : (

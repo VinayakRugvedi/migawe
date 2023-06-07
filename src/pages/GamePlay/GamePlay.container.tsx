@@ -18,12 +18,18 @@ export interface InternalGameState {
   enemyHealth: number
   outcomes: string[]
   hasGameEnded: boolean
-  winningPlayerId: string
+  winningPlayerId: number | null
 }
 
-const GamePlayContainer = () => {
+interface PropTypes {
+  canPlayWithAi: boolean
+  setShowGamePlay: (arg0: boolean) => void
+}
+
+const GamePlayContainer = ({ setShowGamePlay, canPlayWithAi }: PropTypes) => {
   const [matchedEnemy, setMatchedEnemy] = useState<IAgent<GameState>>()
   const [hasGameStarted, setHasGameStarted] = useState(false)
+  const [canHandleGameEnd, setCanHandleGameEnd] = useState(false)
   const [videoType, setVideoType] = useState(VIDEO_TYPES.Idle)
   const [canShowTimer, setCanShowTimer] = useState(false)
   const [action, setAction] = useState({
@@ -36,7 +42,7 @@ const GamePlayContainer = () => {
     enemyHealth: 5,
     outcomes: [],
     hasGameEnded: false,
-    winningPlayerId: '',
+    winningPlayerId: null,
   })
   const [playerId, setPlayerId] = useState(0)
 
@@ -69,32 +75,39 @@ const GamePlayContainer = () => {
   }, [action.isLocked])
 
   const handleNewGameState = (newGameState: GameState) => {
-    // TODO: Handle health updates and ending game state
     // Return back if the opponent hasn't made any move yet
     if (newGameState && newGameState.B_move && newGameState.B_move === 3) return
     if (newGameState && newGameState.step === gameState.step) return
 
     const gameStateCopy = { ...gameState }
     gameStateCopy.step = newGameState.step
-    // Check why everytime gameState.outcomes is being an empty array
-    const outcomesCopy = [...gameState.outcomes]
+    let playerHealth = newGameState.Health[0]
+    let enemyHealth = newGameState.Health[1]
+    const outcomesCopy = [...gameStateCopy.outcomes]
     if (playerId == 0 && newGameState.step > 0) {
       const diff = (3 + PLAYER.getPrivateState().move - newGameState.B_move) % 3
       if (diff == 1) {
         outcomesCopy.push(PLAYER_ROUND_OUTCOME_TYPES.Win)
+        enemyHealth -= 1
       } else if (diff == 2) {
         outcomesCopy.push(PLAYER_ROUND_OUTCOME_TYPES.Lose)
+        playerHealth -= 1
       } else {
         outcomesCopy.push(PLAYER_ROUND_OUTCOME_TYPES.Tie)
       }
-      // console.log(outcomesCopy, 'OUTCOMES COPY LAST')
+      gameStateCopy.playerHealth = playerHealth
+      gameStateCopy.enemyHealth = enemyHealth
       gameStateCopy.outcomes = [...outcomesCopy]
 
-      setGameState(gameStateCopy)
+      if (gameStateCopy.playerHealth === 0) {
+        gameStateCopy.hasGameEnded = true
+        gameStateCopy.winningPlayerId = 1
+      } else if (gameStateCopy.enemyHealth === 0) {
+        gameStateCopy.hasGameEnded = true
+        gameStateCopy.winningPlayerId = 0
+      }
 
-      // Health is not actually being updated
-      // gameStateCopy.playerHealth = newGameState.Health[0]
-      // gameStateCopy.enemyHealth = newGameState.Health[1]
+      setGameState({ ...gameStateCopy })
     } else if (playerId == 1 && newGameState.step > 1) {
       // if (newGameState.Health[1] < playerHealth) {
       //   //player lost health
@@ -105,7 +118,6 @@ const GamePlayContainer = () => {
       // playerHealth = newGameState.Health[1]
       // opponentHealth = newGameState.Health[0]
     }
-    // console.log('outcomes', outcomes)
   }
 
   const handleMatch = (enemy: IAgent<GameState>, id: number) => {
@@ -126,6 +138,15 @@ const GamePlayContainer = () => {
     setAction(actionCopy)
   }
 
+  const handleGameEnd = () => {
+    if (gameState.hasGameEnded) {
+      setCanShowTimer(false)
+      setCanHandleGameEnd(true)
+    } else {
+      setCanShowTimer(true)
+    }
+  }
+
   const handleVideoEnd = () => {
     setVideoType('idle')
     const actionCopy = {
@@ -133,7 +154,7 @@ const GamePlayContainer = () => {
       isLocked: false,
     }
     setAction(actionCopy)
-    setCanShowTimer(true)
+    handleGameEnd()
   }
 
   const handleActionSelect = (actionType: string) => {
@@ -153,9 +174,14 @@ const GamePlayContainer = () => {
     setAction(actionCopy)
   }
 
+  const handleBackToGamePage = () => {
+    setShowGamePlay(false)
+  }
+
   return (
     <GamePlay
       handleMatch={handleMatch}
+      canPlayWithAi={canPlayWithAi}
       hasGameStarted={hasGameStarted}
       videoType={videoType}
       handleVideoEnd={handleVideoEnd}
@@ -165,6 +191,8 @@ const GamePlayContainer = () => {
       handleActionSelect={handleActionSelect}
       handleActionLock={handleActionLock}
       gameState={gameState}
+      canHandleGameEnd={canHandleGameEnd}
+      handleBackToGamePage={handleBackToGamePage}
     />
   )
 }
