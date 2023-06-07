@@ -26,9 +26,12 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className='card w-96 bg-base-100 shadow-xl bg-primary/20'>
+            <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20'>
               <div className='card-body'>
-                <h2 className='card-title'>Branded Game</h2>
+                <div className='flex justify-between items-center'>
+                  <h2 className='card-title'>Branded Game</h2>
+                  <div className='badge'>coming soon</div>
+                </div>
                 <p>
                   Play the game in the branded environment and earn rewards/digital-assets like NFTs
                   from the brands which can be redeemed later.
