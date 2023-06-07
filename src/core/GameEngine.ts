@@ -11,7 +11,7 @@ class GameEngine {
   private gameState: GameState
   onStateChange: (newState: GameState) => void
 
-  constructor(gameLogic: IGameLogic<GameState>,) {
+  constructor(gameLogic: IGameLogic<GameState>) {
     this.gameLogic = gameLogic
     this.status = GameEngineStatus.NotRunning
     this.gameState = {} as GameState

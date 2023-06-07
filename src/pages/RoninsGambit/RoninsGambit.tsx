@@ -4,7 +4,6 @@ import { gameTitleIllustration } from 'assets'
 import { ActionsModal } from './components'
 import { MatchMakerResponse } from './components/ActionsModal/MatchMaker'
 import { OpponentInfo } from './RoninsGambit.container'
-// import { randomInt } from 'crypto'
 
 interface PropTypes {
   showModal: boolean

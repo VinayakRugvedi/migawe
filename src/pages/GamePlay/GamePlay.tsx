@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
-import { GiStripedSword, GiVibratingShield, GiSwordBreak } from 'react-icons/gi'
-
 import { idleVideo, winVideo, looseVideo, tieVideo } from 'game-play-assets'
+import { Outcome } from './GamePlay.container';
+
+export type Scene= "idle" | "win" | "loose" | "tie";
 
 interface GamePlayProps {
   outcomes:any
@@ -15,13 +15,11 @@ const outcomeToVideoSrc = {
   'idle':idleVideo
 }
 const GamePlay = ({outcomes}:GamePlayProps) => {
-  console.log('%c GamePlay', 'background: #222; color: #bada55');
+  // console.log('%c GamePlay', 'background: #222; color: #bada55');
   let lastOutcomeLength=0;
   let nextVideoSrc = idleVideo;
   const videoElements:HTMLVideoElement[]=[]
-  function enableChoices(){
-    // document.querySelectorAll(".choice-button").forEach(button=>button.disabled=false);
-  }
+
   function hideAll(){
     videoElements.forEach((el)=>el.style.display="none");
   };
@@ -52,14 +50,17 @@ const GamePlay = ({outcomes}:GamePlayProps) => {
         }
       }}
       onEnded={(el)=>{
-        console.log("%c video ended","background: #222; color: #ff2a55");
-        enableChoices();
+        // console.log("%c video ended","background: #222; color: #ff2a55");
         //hide all videos
         hideAll();
+        let nextScene="idle" as Scene;
         if(outcomes.length>lastOutcomeLength){
-          nextVideoSrc= outcomeToVideoSrc[outcomes.at(-1) as 'win' | 'loose' | 'tie'];
+          nextScene=outcomes.at(-1) as Outcome;
+          nextVideoSrc= outcomeToVideoSrc[nextScene];
           lastOutcomeLength=outcomes.length;
         }
+        console.log("nextScene dispatched",nextScene);
+        dispatchEvent(new CustomEvent("scene-change",{detail:nextScene}));
         //show the next video
         videoElements.forEach((el)=>{
           if(el.dataset.src===nextVideoSrc){
