@@ -1,7 +1,6 @@
 import { useAddress, useContractRead, useContract, useContractWrite } from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
 import { CONTRACTS } from 'utils/constants'
-import { Modal } from 'components/base'
 
 interface PropTypes {
   showModal: boolean

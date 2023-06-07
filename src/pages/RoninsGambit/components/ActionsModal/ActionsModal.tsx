@@ -1,4 +1,4 @@
-import { GiWallet, GiPiggyBank, GiPlayButton } from 'react-icons/gi'
+import { GiWallet, GiPiggyBank, GiSamuraiHelmet } from 'react-icons/gi'
 
 import { Modal } from 'components/base'
 import { ThirdWebConnectWalletButton } from 'components/ui'
@@ -52,7 +52,7 @@ const ActionsModal = ({
         <div className='flex items-center justify-center flex-col py-2'>
           <h4 className='text-lg font-bold mt-2 self-start'>Start Playing</h4>
           <div className='text-7xl my-2'>
-            <GiPlayButton />
+            <GiSamuraiHelmet />
           </div>
           <p className='text-center mb-4 px-4'>
             You are all set! Click on the button below to start playing. <br />
