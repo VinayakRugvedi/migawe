@@ -34,6 +34,7 @@ const RoninsGambitContainer = () => {
   return (
   <GamePlay 
   opponentInfo={opponentInfo}
+  setOpponentInfo={setOpponentInfo}
   />
   )
 }

@@ -7,6 +7,7 @@ import "components/base/swap.css"
 interface PropTypes {
     gameData:GameData
     handlePlayerMove: (move: 0|1|2) => void;
+    handleOnEnd: () => void;
 }
 const playerMoveFrom = {
     "tiger": 0,
@@ -14,7 +15,7 @@ const playerMoveFrom = {
     "eagle": 2
 }
 
-const GamePlayUI = ({gameData,handlePlayerMove}: PropTypes) => {
+const GamePlayUI = ({gameData,handlePlayerMove,handleOnEnd}: PropTypes) => {
     const [ playerHealth, setPlayerHealth ] = useState(gameData.playerHealth);
     const [ opponentHealth, setOpponentHealth ] = useState(gameData.opponentHealth);
     const [countdown, setCountdown] = useState(15);
@@ -28,11 +29,13 @@ const GamePlayUI = ({gameData,handlePlayerMove}: PropTypes) => {
             if(newScene!=="idle"){
                 setShowChoice(false);
                 setTimeout(() => {
-                    if(gameData.playerHealth<=4){
+                    if(gameData.playerHealth<=0){
                         setMsg("You Loose");
+                        handleOnEnd();
                     }
-                    else if(gameData.opponentHealth<=4){
+                    else if(gameData.opponentHealth<=0){
                         setMsg("You Win");
+                        handleOnEnd();
                     }
                     setPlayerHealth(gameData.playerHealth);
                     setOpponentHealth(gameData.opponentHealth);

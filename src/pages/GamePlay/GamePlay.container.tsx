@@ -12,6 +12,7 @@ import { useEffect, useRef } from 'react'
 
 interface PropTypes {
   opponentInfo:OpponentInfo
+  setOpponentInfo:(opponentInfo:OpponentInfo)=>void
 }
 const onStateChange = (gameState:GameState) => {
   alert("state changed unimplemented"+gameState)
@@ -24,7 +25,7 @@ export type Outcome = "win"|"loose"|"tie"
 
 const gameEngine= new GameEngine(new GameLogic())
 
-const GamePlayContainer = ({opponentInfo}: PropTypes) => {
+const GamePlayContainer = ({opponentInfo,setOpponentInfo}: PropTypes) => {
   // console.log('%c GamePlayContainer', 'background: #222; color: #bada55');
   const {type,connection,playerId} = opponentInfo
   const player= new Player();
@@ -91,7 +92,9 @@ const GamePlayContainer = ({opponentInfo}: PropTypes) => {
     player.selectMove(move)
   }
   const handleOnEnd=()=>{
-    console.log('%c GamePlayContainer: handleOnEnd', 'background: #222; color: #bada55');
+    setTimeout(()=>{
+    setOpponentInfo({isReady:false,type:"network",connection:undefined,playerId:0})
+    },3000)
   }
   return (
     <div className='absolute inset-0 overflow-hidden'>
@@ -101,6 +104,7 @@ const GamePlayContainer = ({opponentInfo}: PropTypes) => {
       <GamePlayUI
         gameData={gameData}
         handlePlayerMove={handlePlayerMove}
+        handleOnEnd={handleOnEnd}
       />
     </div>
   )
