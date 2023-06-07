@@ -4,13 +4,11 @@ import GameEngine from 'core/GameEngine'
 import GameLogic from 'core/GameLogic'
 import Player from 'core/agents/Player'
 import type { IAgent, GameState } from 'core/types'
-import RandomAI from 'core/agents/RandomAI'
 
 import { RONIN_GAMBIT } from 'utils/types'
 import GamePlay from './GamePlay'
 
 const PLAYER = new Player()
-const AI = new RandomAI()
 
 const { VIDEO_TYPES, ACTION_TYPES, PLAYER_MOVE_TYPES, PLAYER_ROUND_OUTCOME_TYPES } = RONIN_GAMBIT
 
@@ -32,7 +30,6 @@ const GamePlayContainer = () => {
     type: '',
     isLocked: false,
   })
-  // TODO: Fix type
   const [gameState, setGameState] = useState<InternalGameState>({
     step: 0,
     playerHealth: 5,
@@ -42,11 +39,6 @@ const GamePlayContainer = () => {
     winningPlayerId: '',
   })
   const [playerId, setPlayerId] = useState(0)
-
-  useEffect(() => {
-    setMatchedEnemy(AI)
-    // setCanShowTimer(true)
-  }, [])
 
   useEffect(() => {
     if (matchedEnemy) {
@@ -67,6 +59,14 @@ const GamePlayContainer = () => {
       setVideoType(gameState.outcomes[outcomesLength - 1])
     }
   }, [gameState.outcomes])
+
+  useEffect(() => {
+    if (action.isLocked) {
+      // send the state to the peer
+      const playerMoveValue = PLAYER_MOVE_TYPES[action.type]
+      PLAYER.selectMove(playerMoveValue)
+    }
+  }, [action.isLocked])
 
   const handleNewGameState = (newGameState: GameState) => {
     // TODO: Handle health updates and ending game state
@@ -108,13 +108,10 @@ const GamePlayContainer = () => {
     // console.log('outcomes', outcomes)
   }
 
-  useEffect(() => {
-    if (action.isLocked) {
-      // send the state to the peer
-      const playerMoveValue = PLAYER_MOVE_TYPES[action.type]
-      PLAYER.selectMove(playerMoveValue)
-    }
-  }, [action.isLocked])
+  const handleMatch = (enemy: IAgent<GameState>, id: number) => {
+    setPlayerId(id)
+    setMatchedEnemy(enemy)
+  }
 
   const handleTimerEnd = () => {
     if (!canShowTimer) return
@@ -158,7 +155,7 @@ const GamePlayContainer = () => {
 
   return (
     <GamePlay
-      setMatchedEnemy={setMatchedEnemy}
+      handleMatch={handleMatch}
       hasGameStarted={hasGameStarted}
       videoType={videoType}
       handleVideoEnd={handleVideoEnd}

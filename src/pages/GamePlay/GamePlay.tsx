@@ -1,16 +1,16 @@
-import { useEffect, useRef } from 'react'
 import { GiStripedSword, GiVibratingShield, GiSwordBreak } from 'react-icons/gi'
 
-import { idleVideo, winVideo, loseVideo, tieVideo } from 'game-play-assets'
 import type { IAgent, GameState } from 'core/types'
-import { RONIN_GAMBIT } from 'utils/types'
-import { Timer } from 'components/base'
-import { IntroScreen, HealthIndicator } from './components'
-
 import { InternalGameState } from './GamePlay.container'
 
+import { RONIN_GAMBIT } from 'utils/types'
+import { Timer } from 'components/base'
+import { IntroScreen, HealthIndicator, Videos } from './components'
+
+const { ACTION_TYPES } = RONIN_GAMBIT
+
 interface PropTypes {
-  setMatchedEnemy: (arg0: IAgent<GameState>) => void
+  handleMatch: (arg0: IAgent<GameState>, arg1: number) => void
   hasGameStarted: boolean
   videoType: string
   handleVideoEnd: () => void
@@ -22,10 +22,8 @@ interface PropTypes {
   gameState: InternalGameState
 }
 
-const { VIDEO_TYPES, ACTION_TYPES } = RONIN_GAMBIT
-
 const GamePlay = ({
-  setMatchedEnemy,
+  handleMatch,
   hasGameStarted,
   videoType,
   handleVideoEnd,
@@ -36,29 +34,6 @@ const GamePlay = ({
   handleActionLock,
   gameState,
 }: PropTypes) => {
-  const idleVideoRef = useRef<HTMLVideoElement>(null)
-  const winVideoRef = useRef<HTMLVideoElement>(null)
-  const loseVideoRef = useRef<HTMLVideoElement>(null)
-  const tieVideoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    if (videoType === VIDEO_TYPES.Win) {
-      if (winVideoRef && winVideoRef.current) {
-        winVideoRef.current.play()
-      }
-    } else if (videoType === VIDEO_TYPES.Lose) {
-      if (loseVideoRef && loseVideoRef.current) {
-        loseVideoRef.current.play()
-      }
-    } else if (videoType === VIDEO_TYPES.Tie) {
-      if (tieVideoRef && tieVideoRef.current) {
-        tieVideoRef.current.play()
-      }
-    }
-  }, [videoType])
-
-  const videoWidth = window.screen.width
-  const videoHeight = window.screen.height
   const isActionChosen = action.type.length > 0 ? true : false
   const isActionLocked = action.isLocked
   const isWaitingForEnemyMove = false
@@ -68,49 +43,9 @@ const GamePlay = ({
       className='w-screen h-screen fixed top-0 left-0 right-0 z-30 bg-black flex flex-col items-center justify-start'
       id='game-play'
     >
-      {!hasGameStarted ? <IntroScreen setMatchedEnemy={setMatchedEnemy} /> : null}
+      {!hasGameStarted ? <IntroScreen handleMatch={handleMatch} /> : null}
 
-      <video
-        autoPlay
-        ref={idleVideoRef}
-        muted
-        loop
-        width={videoWidth}
-        height={videoHeight}
-        className={`${videoType !== VIDEO_TYPES.Idle ? 'z-0' : 'z-10'} absolute`}
-      >
-        <source src={idleVideo} type='video/mp4'></source>
-      </video>
-
-      <video
-        ref={winVideoRef}
-        width={videoWidth}
-        height={videoHeight}
-        className={`${videoType !== VIDEO_TYPES.Win ? 'z-0' : 'z-10'} absolute`}
-        onEnded={handleVideoEnd}
-      >
-        <source src={winVideo} type='video/mp4'></source>
-      </video>
-
-      <video
-        ref={loseVideoRef}
-        width={videoWidth}
-        height={videoHeight}
-        className={`${videoType !== VIDEO_TYPES.Lose ? 'z-0' : 'z-10'} absolute`}
-        onEnded={handleVideoEnd}
-      >
-        <source src={loseVideo} type='video/mp4'></source>
-      </video>
-
-      <video
-        ref={tieVideoRef}
-        width={videoWidth}
-        height={videoHeight}
-        className={`${videoType !== VIDEO_TYPES.Tie ? 'z-0' : 'z-10'} absolute`}
-        onEnded={handleVideoEnd}
-      >
-        <source src={tieVideo} type='video/mp4'></source>
-      </video>
+      <Videos videoType={videoType} handleVideoEnd={handleVideoEnd} />
 
       {/* Show Enemy Health */}
       {hasGameStarted ? (
