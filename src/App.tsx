@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThirdwebProvider } from '@thirdweb-dev/react'
-import { Sepolia } from "@thirdweb-dev/chains";
+import { Sepolia } from '@thirdweb-dev/chains'
 
 import { Home, RoninsGambit, NotFound } from 'pages'
 import { ScrollToTop } from 'components/base'
@@ -9,7 +9,16 @@ import { Header, Footer } from 'components/ui'
 
 function App() {
   return (
-    <ThirdwebProvider activeChain={{...Sepolia,rpc:["https://eth-sepolia.public.blastapi.io","https://rpc2.sepolia.org","https://eth-sepolia.public.blastapi.io"]}}>
+    <ThirdwebProvider
+      activeChain={{
+        ...Sepolia,
+        rpc: [
+          'https://eth-sepolia.public.blastapi.io',
+          'https://rpc2.sepolia.org',
+          'https://eth-sepolia.public.blastapi.io',
+        ],
+      }}
+    >
       <Router>
         <ScrollToTop />
         <Header />
