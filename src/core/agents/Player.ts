@@ -11,6 +11,7 @@ export default class Player implements IAgent<GameState> {
   private onMoveSelected: ((move: PlayerMove) => void) | undefined
   private privateState: PvtState | undefined = undefined
   private pvtStateHash: PvtStateHash = 0
+  public onPlayersMove: (() => void)| undefined
 
   public async getNextState(gameState: GameState): Promise<{
     newPubState: PubState
@@ -122,15 +123,21 @@ export default class Player implements IAgent<GameState> {
           console.warn('%cproof generation failed!!!', 'color: red; font-size: 20px;', error)
         }
       }
+      if(this.onPlayersMove) this.onPlayersMove();
     })
   }
 
   public selectMove(move: PlayerMove): void {
+    console.log('%c Player: moveSelected '+move,  'color: red; font-size: 15px;')
     if (this.onMoveSelected) {
       this.onMoveSelected(move)
     } else {
       console.error("onMoveSelected is undefined !! not agent's turn")
     }
+  }
+
+  public isPlayersTurn(): boolean {
+    return this.onMoveSelected ? true : false
   }
 
   public getPrivateState(): PvtState {

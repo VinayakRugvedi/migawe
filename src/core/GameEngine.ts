@@ -9,13 +9,15 @@ class GameEngine {
   private status: GameEngineStatus
   private gameLogic: IGameLogic<GameState>
   private gameState: GameState
-  private onStateChange: (newState: GameState) => void
+  onStateChange: (newState: GameState) => void
 
-  constructor(gameLogic: IGameLogic<GameState>, onStateChange: (newState: GameState) => void) {
+  constructor(gameLogic: IGameLogic<GameState>) {
     this.gameLogic = gameLogic
     this.status = GameEngineStatus.NotRunning
     this.gameState = {} as GameState
-    this.onStateChange = onStateChange
+    this.onStateChange=()=>{
+      console.log("unhandled state change");
+    }
   }
   /**
    * @param agents An array of agents. the first agent starts the game.
@@ -77,7 +79,7 @@ class GameEngine {
         state.pvtStateHash[currAgentId] = newPvtStateHash
         state.step = currStep + 1
         this.gameState = state
-        this.onStateChange(state)
+        this.onStateChange(state);
       }
       // so that the other agent can get the final state/ final move
       // *Only works for 2 agents

@@ -2,7 +2,9 @@ import { Signer, ethers } from 'ethers'
 import Peer, { DataConnection } from 'peerjs'
 import { RONIN_GAMBIT } from 'utils/constants'
 
-class MatchMaker {
+export interface MatchMakerResponse { conn: DataConnection; playerId: 0 | 1 }
+
+export default class MatchMaker {
   peer: Peer
   proxyWallet: ethers.Wallet
   constructor(debug: 0 | 1 | 2 | 3 = 0) {
@@ -25,11 +27,18 @@ class MatchMaker {
     wager: number,
     signer: Signer,
     validUntil: number,
-  ): Promise<{ conn: DataConnection; playerId: 0 | 1 }> {
+    onChallengePosted:(response:any)=>void,
+    onTimeout:()=>void,
+  ): Promise<MatchMakerResponse> {
     return new Promise((resolve, reject) => {
+      const timer=setTimeout(() => {
+        onTimeout();
+      },100*(validUntil-Math.floor(Date.now() / 1000)))
+      
       let connected = false
       // call match making server
-      this.getMatchMackerServerResponse(wager, signer, validUntil).then(async (response) => {
+      this.getMatchMakerServerResponse(wager, signer, validUntil).then(async (response) => {
+        onChallengePosted(response);
         console.log('response', response)
         if (response.wait) {
           console.log('waiting for opponent')
@@ -43,6 +52,7 @@ class MatchMaker {
             connected = true
             console.log('Connected to opponent ID', connection.peer)
             resolve({ conn: connection, playerId: 0 })
+            clearTimeout(timer)
           })
           // TODO:
         } else {
@@ -57,17 +67,21 @@ class MatchMaker {
             connected = true
             console.log('connected with:', opponentProxyAddr)
             resolve({ conn: connection, playerId: 1 })
+            clearTimeout(timer)
           })
           connection.on('error', (err) => {
             reject(err)
             console.error('peer connection error: ' + err)
           })
         }
+      }).catch((error) => {
+        console.log("userRejectedMatchRequest",error);
+        reject()
       })
     })
   }
 
-  private async getMatchMackerServerResponse(
+  private async getMatchMakerServerResponse(
     wager: number,
     signer: Signer,
     validUntil: number,
@@ -95,4 +109,3 @@ class MatchMaker {
       })
   }
 }
-export default MatchMaker

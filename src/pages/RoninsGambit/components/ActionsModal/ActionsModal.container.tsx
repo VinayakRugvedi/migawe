@@ -1,36 +1,56 @@
-import { useAddress, useContractRead, useContract, useContractWrite } from '@thirdweb-dev/react'
+import { useAddress,useContractRead,useContract, useContractWrite, useSigner} from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
-import { CONTRACTS } from 'utils/constants'
-
+import {CONTRACTS} from 'utils/contants'
+import {useState } from 'react'
+import MatchMaker, { MatchMakerResponse } from './MatchMaker'
 interface PropTypes {
   showModal: boolean
   handleOnClose: () => void
-  handleGameStart: () => void
+  handleOnConnection:(response:MatchMakerResponse)=>void
 }
 
-const ActionsModalContainer = ({ showModal, handleOnClose, handleGameStart }: PropTypes) => {
-  const userAddress = useAddress()
+const matchMaker = new MatchMaker(0);
+
+const ActionsModalContainer = ({ showModal, handleOnClose,handleOnConnection}: PropTypes) => {
+  const userAddress = useAddress() 
   //userAddress is undefined when wallet is not connected
   //at this time we face some error in useContractRead
-  const { data: erc20Contract } = useContract(CONTRACTS.erc20Address, CONTRACTS.erc20ABI)
-  const { data: tokenName } = useContractRead(erc20Contract, 'symbol')
+  const {data: erc20Contract} = useContract(CONTRACTS.erc20Address, CONTRACTS.erc20ABI)
+  const { data:tokenName} = useContractRead(erc20Contract, "symbol");
   const { data: walletContract } = useContract(CONTRACTS.gameWalletAddress, CONTRACTS.gameWalletABI)
-  const {
-    data: deposit,
-    isLoading,
-    error,
-  } = useContractRead(walletContract, 'deposits', [userAddress])
-  const { mutateAsync } = useContractWrite(walletContract, 'deposit')
+  const { data:deposit} = useContractRead(walletContract, "deposits",[userAddress]);
+  const { mutateAsync:depositToken} =useContractWrite(walletContract, "deposit");
 
-  const userBalance = deposit ? Number(deposit.toString()) / 10 ** 18 : -1
-  const minimumBalanceToPlay = 10
-  const needToPay = minimumBalanceToPlay - userBalance
+  const userBalance = deposit ? Number(deposit.toString())/10**18:undefined;
+  const minimumBalanceToPlay=10;
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
 
-  const handleTopup = async () => {
-    console.log('handleTopup')
-    console.log('needToPay', needToPay)
-    await mutateAsync({ args: [(needToPay * 10 ** 18).toString()] })
+  const topUpWallet = async () => {
+    if(userBalance && userBalance >= minimumBalanceToPlay){
+      const needToPay=minimumBalanceToPlay-userBalance;
+      await depositToken({ args: [(needToPay*10**18).toString()] });
+    }
+  }
+  const signer = useSigner()
+  const wager = 1e17;
+  const validUntil = Math.floor(Date.now() / 1000) + 60 * 100;
+  const [userMatchRequestStatus,setUserMatchRequestStatus] = useState<"accept"|"reject"|"timeout"|undefined>(undefined);
+  const [enableSigner, setEnableSigner] = useState(true)
+
+  const signMatchRequest = async () => {
+    setEnableSigner(false);
+    if (!signer) return
+      const onTimeout = () => {
+        setUserMatchRequestStatus("reject");
+      }
+      const onChallengePosted = () => {
+        setUserMatchRequestStatus("accept");
+      }
+      matchMaker.findMatch(wager,signer,validUntil,
+      onChallengePosted,
+      onTimeout)
+      .then((response)=>handleOnConnection(response))//opponent has accepted the match request
+      .catch(_=>{setUserMatchRequestStatus("reject");setEnableSigner(true);})
   }
 
   return (
@@ -38,12 +58,17 @@ const ActionsModalContainer = ({ showModal, handleOnClose, handleGameStart }: Pr
       showModal={showModal}
       handleOnClose={handleOnClose}
       isWalletConnected={isWalletConnected}
+
       userBalance={userBalance}
       minimumBalanceToPlay={minimumBalanceToPlay}
-      needToPay={needToPay}
       tokenName={tokenName}
-      handleTopup={handleTopup}
-      handleGameStart={handleGameStart}
+      topUpWallet={topUpWallet} 
+
+      enableSigner={enableSigner}
+      setEnableSigner={setEnableSigner}
+      userMatchRequestStatus={userMatchRequestStatus}
+      setUserMatchRequestStatus={setUserMatchRequestStatus}
+      signMatchRequest={signMatchRequest}
     />
   )
 }

@@ -23,7 +23,6 @@
 
 *::-webkit-scrollbar-track {
   background: hsl(var(--p));
-  border-radius: 5px;
 }
 
 *::-webkit-scrollbar-thumb {

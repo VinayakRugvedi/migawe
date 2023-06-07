@@ -1,44 +1,40 @@
 import { useState } from 'react'
-
 import { GamePlay } from 'pages'
 import RoninsGambit from './RoninsGambit'
+import { DataConnection } from 'peerjs'
+
+export interface OpponentInfo{
+  isReady:boolean
+  type:"cpu"|"network"
+  connection:DataConnection|undefined
+  playerId:0|1
+}
+
 
 const RoninsGambitContainer = () => {
+  const [opponentInfo,setOpponentInfo] = useState<OpponentInfo>({isReady:false,type:"network",connection:undefined,playerId:0})
   const [showModal, setShowModal] = useState(false)
-  const [showGamePlay, setShowGamePlay] = useState(false)
-  const [canPlayWithAi, setCanPlayWithAi] = useState(false)
-
   const handleOnOpen = () => {
     setShowModal(true)
   }
-
   const handleOnClose = () => {
     setShowModal(false)
   }
 
-  const handleGameStart = () => {
-    setShowGamePlay(true)
-  }
-
-  const handleGameStartWithAi = () => {
-    setCanPlayWithAi(true)
-    handleGameStart()
-  }
-
+  if(opponentInfo.isReady === false) 
+    return (
+    <RoninsGambit
+    showModal={showModal}
+    handleOnOpen={handleOnOpen}
+    handleOnClose={handleOnClose}
+    setOpponentInfo={setOpponentInfo}
+    />
+    )
   return (
-    <>
-      {showGamePlay ? (
-        <GamePlay setShowGamePlay={setShowGamePlay} canPlayWithAi={canPlayWithAi} />
-      ) : (
-        <RoninsGambit
-          showModal={showModal}
-          handleOnOpen={handleOnOpen}
-          handleOnClose={handleOnClose}
-          handleGameStart={handleGameStart}
-          handleGameStartWithAi={handleGameStartWithAi}
-        />
-      )}
-    </>
+  <GamePlay 
+  opponentInfo={opponentInfo}
+  setOpponentInfo={setOpponentInfo}
+  />
   )
 }
 
