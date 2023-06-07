@@ -21,10 +21,9 @@ const Header = () => {
         </Link>
         <div className='flex items-center'>
           <Link className='mr-6 font-normal hover:text-primary' to='/ronins-gambit'>
-            Let&apos;s Play
+            Game
           </Link>
           <ThirdWebConnectWalletButton />
-          {/* <button className='btn'>Connect Wallet</button> */}
         </div>
       </nav>
     </header>
