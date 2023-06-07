@@ -77,7 +77,7 @@ const RoninsGambit = ({
           </div>
 
           <div className='mt-8 mb-8'>
-            <button className='btn btn-wide mr-4' onClick={handleGameStart}>
+            <button className='btn btn-wide mr-4' onClick={handleOnOpen}>
               Play Now
             </button>
             <button className='btn btn-outline' onClick={handleGameStartWithAi}>
