@@ -1,4 +1,4 @@
-import { useAddress,useContractRead,useContract, useContractWrite, useSigner} from '@thirdweb-dev/react'
+import { useAddress,useContractRead,useContract, useContractWrite, useSigner, useSDK} from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
 import {CONTRACTS} from 'utils/constants'
 import {useState } from 'react'
@@ -12,6 +12,7 @@ interface PropTypes {
 const matchMaker = new MatchMaker(0);
 
 const ActionsModalContainer = ({ showModal, handleOnClose,handleOnConnection}: PropTypes) => {
+  const sdk=useSDK();
   const userAddress = useAddress() 
   //userAddress is undefined when wallet is not connected
   //at this time we face some error in useContractRead
@@ -22,7 +23,7 @@ const ActionsModalContainer = ({ showModal, handleOnClose,handleOnConnection}: P
   const { mutateAsync:depositToken} =useContractWrite(walletContract, "deposit");
 
   const userBalance = deposit ? Number(deposit.toString())/10**18:undefined;
-  const minimumBalanceToPlay=10;
+  const minimumBalanceToPlay=1;
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
 
   const topUpWallet = async () => {
@@ -40,13 +41,15 @@ const ActionsModalContainer = ({ showModal, handleOnClose,handleOnConnection}: P
   const signMatchRequest = async () => {
     setEnableSigner(false);
     if (!signer) return
+    if (!sdk) return
+    //proceed only if we have signer and sdk
       const onTimeout = () => {
         setUserMatchRequestStatus("reject");
       }
       const onChallengePosted = () => {
         setUserMatchRequestStatus("accept");
       }
-      matchMaker.findMatch(wager,signer,validUntil,
+      matchMaker.findMatch(sdk,wager,signer,validUntil,
       onChallengePosted,
       onTimeout)
       .then((response)=>handleOnConnection(response))//opponent has accepted the match request

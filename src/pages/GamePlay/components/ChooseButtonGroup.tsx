@@ -3,7 +3,6 @@ interface PropTypes {
     handleChoice: (choice:0|1|2) => void;
 }
 const ChooseButtonGroup = ({choice,handleChoice}:PropTypes) => {
-    console.log("player choice from GroupButton",choice);
     const disabled=choice!=undefined;
     const iconClassNames="pointer-events-none";
     const groupClassNames = (id:0|1|2)=> {

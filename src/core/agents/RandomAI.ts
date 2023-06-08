@@ -1,14 +1,17 @@
+import { ethers } from 'ethers'
 import { snarkjs } from '../snark'
 import type { IAgent, GameState, PubState, PvtStateHash, PvtState } from '../types'
 export default class RandomAI implements IAgent<GameState> {
   private privateState!: PvtState
   private pvtStateHash: PvtStateHash = 0
+  private proxyWallet = ethers.Wallet.createRandom()
 
   public async getNextState(gameState: GameState): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash
     proof: any
     publicSignals: any
+    stateSign: string
   }> {
     return new Promise((resolve) => {
       // resolve after 1 second timeout
@@ -103,6 +106,11 @@ export default class RandomAI implements IAgent<GameState> {
             newPvtStateHash: agentId === 0 ? this.pvtStateHash : 0,
             proof: proof,
             publicSignals: publicSignals,
+            stateSign: await this.proxyWallet.signMessage(
+              ethers.utils.arrayify(ethers.utils.solidityKeccak256(
+                ['uint256', 'uint256', 'uint256', 'uint256'],
+                [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]])
+              )),
           })
         } catch (error) {
           console.warn('%cproof generation failed!!!', 'color: red; font-size: 20px;', error)

@@ -8,6 +8,7 @@ import RandomAI from 'core/agents/RandomAI'
 import NetworkedAgent from 'core/agents/NetworkedAgent'
 import { DataConnection } from 'peerjs'
 import GamePlayUI from './GameplayUI'
+import { useSDK } from '@thirdweb-dev/react'
 
 interface PropTypes {
   opponentInfo:OpponentInfo
@@ -22,9 +23,10 @@ export type Outcome = "win"|"loose"|"tie"
 const gameEngine= new GameEngine(new GameLogic())
 
 const GamePlayContainer = ({opponentInfo,setOpponentInfo}: PropTypes) => {
+  const sdk=useSDK();
   // console.log('%c GamePlayContainer', 'background: #222; color: #bada55');
   const {type,connection,playerId} = opponentInfo
-  const player= new Player();
+  const player= new Player(opponentInfo.proxyWallet);
   let opponent:IAgent<GameState>;
   switch (type) {
     case "network":
@@ -38,10 +40,10 @@ const GamePlayContainer = ({opponentInfo,setOpponentInfo}: PropTypes) => {
   }
   switch (playerId) {
     case 0:
-      gameEngine.startGame([player,opponent]);
+      sdk && gameEngine.startGame([player,opponent],sdk);
       break;
     case 1:
-      gameEngine.startGame([opponent,player]);
+      sdk && gameEngine.startGame([opponent,player],sdk);
       break;
     default:
       console.error("invalid player id");

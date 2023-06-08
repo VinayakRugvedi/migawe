@@ -25,7 +25,6 @@ const ActionsModal = ({ showModal, handleOnClose,
   userMatchRequestStatus,setUserMatchRequestStatus,
   topUpWallet,enableSigner,setEnableSigner,signMatchRequest }: PropTypes) => {
   const userHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false; 
-
   //template variables
   let modalCloseDisabled=false;
   let modalHeader= null;
@@ -55,7 +54,9 @@ const ActionsModal = ({ showModal, handleOnClose,
     modalAction=
     <button disabled={!enableSigner} 
     onClick={signMatchRequest}
-    className='btn'>Sign to Post Challenge</button>
+    className='btn'>
+      Sign to Post Challenge
+    </button>
   }
   if(userMatchRequestStatus=="timeout"){
     modalHeader="Challenge Timeout"
@@ -84,8 +85,8 @@ const ActionsModal = ({ showModal, handleOnClose,
     modalAction=<span>Wait for Someone to Accept Your Challenge</span>
   }
   //user does not have enough balance
-  if (!userHasEnoughBalance && userBalance) {
-    const needToPay=minimumBalanceToPlay-userBalance;
+  if (!userHasEnoughBalance) {
+    const needToPay=minimumBalanceToPlay-(userBalance?userBalance:0);
       modalContent = "Top-up your Game Wallet"
       modalContent=
       <>

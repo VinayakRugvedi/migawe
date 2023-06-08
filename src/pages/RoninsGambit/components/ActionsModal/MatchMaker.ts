@@ -1,8 +1,13 @@
+import { ThirdwebSDK, useContract } from '@thirdweb-dev/react';
 import { Signer, ethers } from 'ethers'
 import Peer, { DataConnection } from 'peerjs'
-import { RONIN_GAMBIT } from 'utils/constants'
+import { CONTRACTS, RONIN_GAMBIT } from 'utils/constants'
 
-export interface MatchMakerResponse { conn: DataConnection; playerId: 0 | 1 }
+export interface MatchMakerResponse { 
+  proxyWallet: ethers.Wallet
+  conn: DataConnection;
+  playerId: 0 | 1 
+}
 
 export default class MatchMaker {
   peer: Peer
@@ -24,6 +29,7 @@ export default class MatchMaker {
    * @param validUntil the time until the game request is valid
    */
   findMatch(
+    sdk:ThirdwebSDK,
     wager: number,
     signer: Signer,
     validUntil: number,
@@ -49,24 +55,31 @@ export default class MatchMaker {
               return
             }
             // TODO verifiy onChain that opponent is the one we want to play with
+
+            // RIGHT NOW... WE TRUST THE PLAYERS
             connected = true
             console.log('Connected to opponent ID', connection.peer)
-            resolve({ conn: connection, playerId: 0 })
+            resolve({ conn: connection, playerId: 0, proxyWallet: this.proxyWallet })
             clearTimeout(timer)
           })
-          // TODO:
         } else {
+          //call startGame onChain before connecting to opponent
+          const playerProxyAddr=this.proxyWallet.address;
           const opponentAddr = response.opponent.addr
           const opponentProxyAddr = response.opponent.proxyAddr
           const opponentValidUntil = response.opponent.validUntil
           const opponentSign = response.opponent.sign
-          // TODO: call startGame onChain before connecting to opponent
+
+          const rpcGameContract = await sdk.getContract(CONTRACTS.rpcGameAddress, CONTRACTS.rpcGameABI);
+          await rpcGameContract.call("startGame",[opponentAddr,opponentProxyAddr,playerProxyAddr,wager.toString(),opponentValidUntil,opponentSign]);
+          console.log("MM: startGame called");
+          //
 
           const connection = this.peer.connect(opponentProxyAddr, { reliable: true })
           connection.on('open', () => {
             connected = true
             console.log('connected with:', opponentProxyAddr)
-            resolve({ conn: connection, playerId: 1 })
+            resolve({ conn: connection, playerId: 1,proxyWallet: this.proxyWallet })
             clearTimeout(timer)
           })
           connection.on('error', (err) => {
