@@ -1,6 +1,7 @@
-import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThirdwebProvider } from '@thirdweb-dev/react'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import { Home, RoninsGambit, NotFound } from 'pages'
 import { ScrollToTop } from 'components/base'
@@ -28,6 +29,18 @@ function App() {
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer />
+        <ToastContainer
+          position='top-right'
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='dark'
+        />
       </Router>
     </ThirdwebProvider>
   )
