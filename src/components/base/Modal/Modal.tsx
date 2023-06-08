@@ -1,3 +1,5 @@
+import React from 'react'
+
 interface PropTypes {
   isOpen: boolean
   hideCloseIcon?: boolean
@@ -5,8 +7,6 @@ interface PropTypes {
   children: React.ReactNode
   rootClassNames: string
 }
-
-// TODO: Get rid of document.body.style.overflow
 
 const Modal = ({ isOpen, hideCloseIcon, onCloseHandler, children, rootClassNames }: PropTypes) => {
   if (isOpen) {

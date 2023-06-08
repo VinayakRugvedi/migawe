@@ -107,10 +107,13 @@ export default class RandomAI implements IAgent<GameState> {
             proof: proof,
             publicSignals: publicSignals,
             stateSign: await this.proxyWallet.signMessage(
-              ethers.utils.arrayify(ethers.utils.solidityKeccak256(
-                ['uint256', 'uint256', 'uint256', 'uint256'],
-                [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]])
-              )),
+              ethers.utils.arrayify(
+                ethers.utils.solidityKeccak256(
+                  ['uint256', 'uint256', 'uint256', 'uint256'],
+                  [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]],
+                ),
+              ),
+            ),
           })
         } catch (error) {
           console.warn('%cproof generation failed!!!', 'color: red; font-size: 20px;', error)

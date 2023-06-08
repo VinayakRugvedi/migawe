@@ -11,11 +11,11 @@ const RONIN_GAMBIT = {
 }
 
 const CONTRACTS = {
-  rpcGameAddress:'0x872D426073311D6e92003744E7097bAdDE98b182',
+  rpcGameAddress: '0x872D426073311D6e92003744E7097bAdDE98b182',
   rpcGameABI: rpcGameABI,
   gameWalletAddress: '39bc12763882A3959E8BFf8A41c24f0381BCBF52',
   gameWalletABI: gameWalletABI,
-  erc20Address: 'a69bD215aB75BDf55d4DAB9734c74fea212D7f4C',//TODO: get from gameWallet contract
+  erc20Address: 'a69bD215aB75BDf55d4DAB9734c74fea212D7f4C', //TODO: get from gameWallet contract
   erc20ABI: erc20ABI,
 }
 

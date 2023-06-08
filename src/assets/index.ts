@@ -8,5 +8,5 @@ export {
   heroSectionSecondaryIllustartion,
   gameTitleIllustration,
   Logo512,
-  gameRules
+  gameRules,
 }

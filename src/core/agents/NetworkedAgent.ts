@@ -9,7 +9,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
     this.conn = conn
 
     conn.on('data', (msg: any) => {
-      console.log('%c NetworkAgent: msg '+msg,  'color: gray; font-size: 15px;')
+      console.log('%c NetworkAgent: msg ' + msg, 'color: gray; font-size: 15px;')
       if (this.onMsgReceive) {
         this.onMsgReceive(JSON.parse(msg.toString()))
       } else {
@@ -22,7 +22,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
     gameState: GameState,
     prevProof: any,
     prevPublicSignals: any,
-    prevStateSign: string
+    prevStateSign: string,
   ): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash

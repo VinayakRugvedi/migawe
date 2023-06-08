@@ -4,7 +4,7 @@ interface IAgent<GameState> {
     gameState: GameState,
     prevProof?: any,
     prevpublicSignals?: any,
-    prevStateSign?: string
+    prevStateSign?: string,
   ): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash
