@@ -8,7 +8,7 @@ const UI = {
 
 const RONIN_GAMBIT = {
   START_HEALTH: 5,
-  MATCH_MAKER_URL: 'http://simple-mm.cyclic.app/',
+  MATCH_MAKER_URL: 'https://simple-mm.cyclic.app/',
 }
 
 const CONTRACTS = {
