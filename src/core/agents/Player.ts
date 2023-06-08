@@ -1,6 +1,8 @@
 import type { IAgent, GameState, PvtStateHash, PubState, PvtState } from '../types'
 import { snarkjs } from '../snark'
 import { ethers } from 'ethers'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
+import { CONTRACTS } from 'utils/constants'
 
 enum PlayerMove {
   Attack = 0,
@@ -12,14 +14,22 @@ export default class Player implements IAgent<GameState> {
   private onMoveSelected: ((move: PlayerMove) => void) | undefined
   private privateState: PvtState | undefined = undefined
   private pvtStateHash: PvtStateHash = 0
-  public onPlayersMove: (() => void) | undefined
   private proxyWallet: ethers.Wallet
+  private sdk: ThirdwebSDK | undefined
+  public onPlayersMove: (() => void) | undefined
+  public onResquestedForFinalizeGame: (() => void) | undefined
 
-  constructor(proxyWallet: ethers.Wallet) {
+  constructor(proxyWallet: ethers.Wallet, sdk: ThirdwebSDK | undefined = undefined) {
     this.proxyWallet = proxyWallet
+    this.sdk = sdk
   }
 
-  public async getNextState(gameState: GameState): Promise<{
+  public async getNextState(
+    gameState: GameState,
+    prevProof: any,
+    prevPublicSignals: any,
+    prevStateSign: string,
+  ): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash
     proof: any
@@ -113,12 +123,12 @@ export default class Player implements IAgent<GameState> {
             `%c proofGeneration took ${(time / 1000).toFixed(5)} sec`,
             'color: blue; font-size: 15px;',
           )
-          // console.log(
-          //   `%c generated proof:`,
-          //   "color: aqua; font-size: 15px;",
-          //   { proof },
-          //   { publicSignals }
-          // );
+          console.log(
+            `%c generated proof:`,
+            'color: aqua; font-size: 15px;',
+            { proof },
+            { publicSignals },
+          )
 
           resolve({
             newPubState: pubState,
@@ -129,11 +139,36 @@ export default class Player implements IAgent<GameState> {
               ethers.utils.arrayify(
                 ethers.utils.solidityKeccak256(
                   ['uint256', 'uint256', 'uint256', 'uint256'],
-                  [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]],
+                  [
+                    publicSignals.at(-4).toString(),
+                    publicSignals.at(-3).toString(),
+                    publicSignals.at(-2).toString(),
+                    publicSignals.at(-1).toString(),
+                  ],
                 ),
               ),
             ),
           })
+          // if Player has won call finaliseGame On-chain
+          if (pubState.Health[(agentId + 1) % 2] === 0 && this.sdk !== undefined) {
+            try {
+              console.log(
+                '%c Player: finalizing game',
+                'color: white; font-size: 15px; background-color: red;',
+              )
+              const rpcGameContract = await this.sdk.getContract(
+                CONTRACTS.rpcGameAddress,
+                CONTRACTS.rpcGameABI,
+              )
+              const { a, b, c } = extractFromProof(proof)
+              if (this.onResquestedForFinalizeGame) {
+                this.onResquestedForFinalizeGame()
+              }
+              await rpcGameContract.call('finalizeGame', [prevStateSign, a, b, c])
+            } catch (error) {
+              console.warn('%c finalizing game failed!!!', 'color: red; font-size: 20px;', error)
+            }
+          }
         } catch (error) {
           console.warn('%cproof generation failed!!!', 'color: red; font-size: 20px;', error)
         }
@@ -157,5 +192,16 @@ export default class Player implements IAgent<GameState> {
 
   public getPrivateState(): PvtState {
     return this.privateState ? this.privateState : { move: 3 }
+  }
+}
+
+const extractFromProof = (proof: any) => {
+  return {
+    a: [proof.pi_a[0], proof.pi_a[1]],
+    b: [
+      [proof.pi_b[0][1], proof.pi_b[0][0]],
+      [proof.pi_b[1][1], proof.pi_b[1][0]],
+    ],
+    c: [proof.pi_c[0], proof.pi_c[1]],
   }
 }

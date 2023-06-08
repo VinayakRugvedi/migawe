@@ -27,24 +27,27 @@ const GamePlayContainer = ({ opponentInfo, setOpponentInfo }: PropTypes) => {
   const sdk = useSDK()
   // console.log('%c GamePlayContainer', 'background: #222; color: #bada55');
   const { type, connection, playerId } = opponentInfo
-  const player = new Player(opponentInfo.proxyWallet)
+  // const player = new Player(opponentInfo.proxyWallet, sdk)
+  let player: Player
   let opponent: IAgent<GameState>
   switch (type) {
     case 'network':
       opponent = new NetworkedAgent(connection as DataConnection)
-      break
-    case 'cpu':
-      opponent = new RandomAI()
+      player = new Player(opponentInfo.proxyWallet, sdk)
+      if (!sdk) {
+        console.error('sdk is undefined')
+      }
       break
     default:
       opponent = new RandomAI()
+      player = new Player(opponentInfo.proxyWallet)
   }
   switch (playerId) {
     case 0:
-      sdk && gameEngine.startGame([player, opponent], sdk)
+      gameEngine.startGame([player, opponent])
       break
     case 1:
-      sdk && gameEngine.startGame([opponent, player], sdk)
+      gameEngine.startGame([opponent, player])
       break
     default:
       console.error('invalid player id')

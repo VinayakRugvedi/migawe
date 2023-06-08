@@ -3,6 +3,7 @@ import erc20ABI from './erc20ABI.json'
 import rpcGameABI from './rpcGameABI.json'
 const UI = {
   HeaderHeightInPx: 125,
+  tokenName: 'TST',
 }
 
 const RONIN_GAMBIT = {
@@ -11,7 +12,7 @@ const RONIN_GAMBIT = {
 }
 
 const CONTRACTS = {
-  rpcGameAddress: '0x872D426073311D6e92003744E7097bAdDE98b182',
+  rpcGameAddress: '0x201E31373572B54a293873663ba3F79A648589ef',
   rpcGameABI: rpcGameABI,
   gameWalletAddress: '39bc12763882A3959E8BFf8A41c24f0381BCBF52',
   gameWalletABI: gameWalletABI,
