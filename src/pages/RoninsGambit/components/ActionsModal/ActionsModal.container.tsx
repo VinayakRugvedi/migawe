@@ -1,6 +1,6 @@
 import { useAddress,useContractRead,useContract, useContractWrite, useSigner} from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
-import {CONTRACTS} from 'utils/contants'
+import {CONTRACTS} from 'utils/constants'
 import {useState } from 'react'
 import MatchMaker, { MatchMakerResponse } from './MatchMaker'
 interface PropTypes {
