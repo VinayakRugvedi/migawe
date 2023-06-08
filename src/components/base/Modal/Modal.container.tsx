@@ -7,15 +7,27 @@ interface PropTypes {
   handleOnClose: () => void
   hideCloseIcon?: boolean
   children: React.ReactNode
+  rootClassNames?: string
 }
 
-const ModalContainer = ({ isOpen, handleOnClose, hideCloseIcon, children }: PropTypes) => {
+const ModalContainer = ({
+  isOpen,
+  handleOnClose,
+  hideCloseIcon,
+  children,
+  rootClassNames = '',
+}: PropTypes) => {
   const onCloseHandler = () => {
     handleOnClose()
   }
 
   return (
-    <Modal isOpen={isOpen} hideCloseIcon={hideCloseIcon} onCloseHandler={onCloseHandler}>
+    <Modal
+      isOpen={isOpen}
+      hideCloseIcon={hideCloseIcon}
+      onCloseHandler={onCloseHandler}
+      rootClassNames={rootClassNames}
+    >
       {children}
     </Modal>
   )
