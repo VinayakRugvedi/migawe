@@ -140,10 +140,10 @@ export default class Player implements IAgent<GameState> {
                 ethers.utils.solidityKeccak256(
                   ['uint256', 'uint256', 'uint256', 'uint256'],
                   [
-                    publicSignals[6].toString(),
-                    publicSignals[7].toString(),
-                    publicSignals[8].toString(),
-                    publicSignals[9].toString(),
+                    publicSignals.at(-4).toString(),
+                    publicSignals.at(-3).toString(),
+                    publicSignals.at(-2).toString(),
+                    publicSignals.at(-1).toString(),
                   ],
                 ),
               ),
