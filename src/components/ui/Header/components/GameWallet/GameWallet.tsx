@@ -36,7 +36,7 @@ const GameWallet = ({
         handleOnClose={handleModalClose}
         rootClassNames='absolute w-screen h-screen'
       >
-        {showModal ? <ActionsContent /> : null}
+        {showModal ? <ActionsContent handleModalClose={handleModalClose} /> : null}
       </Modal>
     </>
   )

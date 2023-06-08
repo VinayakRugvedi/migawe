@@ -1,44 +1,110 @@
 interface PropTypes {
   userBalance: number
-  minimumBalanceToPlay: number
+  minimumBalance: number
   needToPay: number
   tokenName: string
-  handleApproveAndTopup: () => void
+  allowanceValue: number
+  isAllowanceApprovalRequired: boolean
+  handleApprove: () => void
+  handleDeposit: () => void
   activeTabType: 'deposit' | 'withdraw'
   handleTabChange: (arg0: 'deposit' | 'withdraw') => void
+  depositAmount: number
+  handleDepositAmount: (arg0: React.ChangeEvent<HTMLInputElement>) => void
+  validationError: string
+  isLoading: boolean
+  isError: boolean
 }
 
 const ActionsContent = ({
   userBalance,
-  minimumBalanceToPlay,
+  minimumBalance,
   tokenName,
+  isAllowanceApprovalRequired,
+  allowanceValue,
   needToPay,
-  handleApproveAndTopup,
+  handleApprove,
+  handleDeposit,
   activeTabType,
   handleTabChange,
+  depositAmount,
+  handleDepositAmount,
+  validationError,
+  isLoading,
+  isError,
 }: PropTypes) => {
-  const doesUserHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false
+  const doesUserHasEnoughBalance = userBalance && userBalance >= minimumBalance ? true : false
+
+  const isValidationErrorPresent = validationError.length > 0 ? true : false
   let depositContent = null,
     withdrawContent = null
 
   if (activeTabType === 'deposit') {
     depositContent = (
-      <div>
-        <h4 className='text-md font-bold mt-2 text-left'>Deposit</h4>
-        <p className='mt-2 text-left'>
-          This is an upcoming feature. Please give us some time until we ship.
+      <div className='flex flex-col items-center justify-center'>
+        <h4 className='text-md font-bold mt-2 self-start'>Deposit</h4>
+        <p className='text-xs font-medium self-start'>
+          Your approved allowance is {allowanceValue} {tokenName}
         </p>
+        <div className='mt-2 text-left'>
+          {isAllowanceApprovalRequired ? (
+            <span>You need to approve the allowance first and then deposit</span>
+          ) : (
+            <div className='form-control w-full max-w-xs font-medium'>
+              <label className='label'>
+                <span className='label-text'>Please enter the amount you want to deposit</span>
+                {/* <span className='label-text-alt'>Top Right label</span> */}
+              </label>
+              <input
+                type='number'
+                placeholder='Amount here...'
+                className='input input-bordered w-full max-w-xs'
+                value={depositAmount}
+                onChange={handleDepositAmount}
+              />
+              <label className='label'>
+                <span className='label-text-alt'>
+                  Min: {minimumBalance} {tokenName}
+                </span>
+                <span className='label-text-alt'>
+                  Max: {allowanceValue} {tokenName}
+                </span>
+              </label>
+              <label className={`label pt-0 ${isValidationErrorPresent ? '' : 'invisible'}`}>
+                <span className='label-text-alt text-primary'>
+                  {isValidationErrorPresent ? validationError : '-'}
+                </span>
+              </label>
+            </div>
+          )}
+        </div>
+        {isAllowanceApprovalRequired ? (
+          <button className='btn brn-wide mt-4 justify-center' onClick={handleApprove}>
+            Approve
+          </button>
+        ) : (
+          <button className='btn mt-4 justify-center' onClick={handleDeposit} disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Deposit'}
+          </button>
+        )}
       </div>
     )
   } else if (activeTabType === 'withdraw') {
     withdrawContent = (
-      <div>
-        <h4 className='text-md font-bold mt-2 text-left'>Withdraw</h4>
+      <div className='flex flex-col items-center justify-center'>
+        <h4 className='text-md font-bold mt-2 self-start'>Withdraw</h4>
         <p className='mt-2 text-left'>
-          This is an upcoming feature.
-          <br />
-          Please give us some time until we ship.
+          This is an upcoming feature. Meanwhile you can consider withdrawing from Etherscan. Please
+          click on the button below to be redirected.
         </p>
+        <a
+          className='btn btn-wide mt-4 justify-center'
+          href='https://sepolia.etherscan.io/address/0xa69bd215ab75bdf55d4dab9734c74fea212d7f4c#writeContract'
+          target='_black'
+          rel='noopener noreferrer'
+        >
+          Withdraw
+        </a>
       </div>
     )
   }
@@ -53,7 +119,9 @@ const ActionsContent = ({
           <div className='stat-value'>
             {userBalance} {tokenName}
           </div>
-          {/* <div className='stat-desc'>21% more than last month</div> */}
+          <div className='stat-desc mt-1'>
+            Min balance: {minimumBalance} {tokenName}
+          </div>
         </div>
       </div>
       <div className='tabs tabs-boxed mt-8'>
