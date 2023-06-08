@@ -123,12 +123,12 @@ export default class Player implements IAgent<GameState> {
             `%c proofGeneration took ${(time / 1000).toFixed(5)} sec`,
             'color: blue; font-size: 15px;',
           )
-          // console.log(
-          //   `%c generated proof:`,
-          //   "color: aqua; font-size: 15px;",
-          //   { proof },
-          //   { publicSignals }
-          // );
+          console.log(
+            `%c generated proof:`,
+            'color: aqua; font-size: 15px;',
+            { proof },
+            { publicSignals },
+          )
 
           resolve({
             newPubState: pubState,
@@ -139,7 +139,12 @@ export default class Player implements IAgent<GameState> {
               ethers.utils.arrayify(
                 ethers.utils.solidityKeccak256(
                   ['uint256', 'uint256', 'uint256', 'uint256'],
-                  [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]],
+                  [
+                    publicSignals[6].toString(),
+                    publicSignals[7].toString(),
+                    publicSignals[8].toString(),
+                    publicSignals[9].toString(),
+                  ],
                 ),
               ),
             ),
