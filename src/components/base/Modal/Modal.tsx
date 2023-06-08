@@ -8,21 +8,28 @@ interface PropTypes {
 }
 
 const Modal = ({ isOpen, hideCloseIcon, onCloseHandler, children }: PropTypes) => {
-  if(isOpen){
+  if (isOpen) {
     //disable scroll
-    document.body.style.overflow = 'hidden';
-  }else{
+    document.body.style.overflow = 'hidden'
+  } else {
     //enable scroll
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = 'auto'
   }
   return (
     <>
-      <div className={`modal transition-colors ${isOpen ? 'modal-open' : ''} ${hideCloseIcon?' bg-black bg-opacity-80':''}`} >
+      <div
+        className={`modal transition-colors ${isOpen ? 'modal-open' : ''} ${
+          hideCloseIcon ? ' bg-black bg-opacity-80' : ''
+        }`}
+      >
         <div className='modal-box relative'>
           {!hideCloseIcon && (
-          <label className='btn btn-sm btn-circle absolute right-2 top-2' onClick={onCloseHandler}>
-            ✕
-          </label>
+            <label
+              className='btn btn-sm btn-circle absolute right-2 top-2'
+              onClick={onCloseHandler}
+            >
+              ✕
+            </label>
           )}
           {children}
         </div>

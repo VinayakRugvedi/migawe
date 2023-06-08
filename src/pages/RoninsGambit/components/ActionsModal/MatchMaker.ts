@@ -1,12 +1,12 @@
-import { ThirdwebSDK, useContract } from '@thirdweb-dev/react';
+import { ThirdwebSDK, useContract } from '@thirdweb-dev/react'
 import { Signer, ethers } from 'ethers'
 import Peer, { DataConnection } from 'peerjs'
 import { CONTRACTS, RONIN_GAMBIT } from 'utils/constants'
 
-export interface MatchMakerResponse { 
+export interface MatchMakerResponse {
   proxyWallet: ethers.Wallet
-  conn: DataConnection;
-  playerId: 0 | 1 
+  conn: DataConnection
+  playerId: 0 | 1
 }
 
 export default class MatchMaker {
@@ -29,68 +29,80 @@ export default class MatchMaker {
    * @param validUntil the time until the game request is valid
    */
   findMatch(
-    sdk:ThirdwebSDK,
+    sdk: ThirdwebSDK,
     wager: number,
     signer: Signer,
     validUntil: number,
-    onChallengePosted:(response:any)=>void,
-    onTimeout:()=>void,
+    onChallengePosted: (response: any) => void,
+    onTimeout: () => void,
   ): Promise<MatchMakerResponse> {
     return new Promise((resolve, reject) => {
-      const timer=setTimeout(() => {
-        onTimeout();
-      },100*(validUntil-Math.floor(Date.now() / 1000)))
-      
+      const timer = setTimeout(() => {
+        onTimeout()
+      }, 100 * (validUntil - Math.floor(Date.now() / 1000)))
+
       let connected = false
       // call match making server
-      this.getMatchMakerServerResponse(wager, signer, validUntil).then(async (response) => {
-        onChallengePosted(response);
-        console.log('response', response)
-        if (response.wait) {
-          console.log('waiting for opponent')
-          this.peer.on('connection', (connection) => {
-            if (connected) {
-              // this can happen when a 3rd player tries to connect
-              console.warn('Already connected to an opponent')
-              return
-            }
-            // TODO verifiy onChain that opponent is the one we want to play with
+      this.getMatchMakerServerResponse(wager, signer, validUntil)
+        .then(async (response) => {
+          onChallengePosted(response)
+          console.log('response', response)
+          if (response.wait) {
+            console.log('waiting for opponent')
+            this.peer.on('connection', (connection) => {
+              if (connected) {
+                // this can happen when a 3rd player tries to connect
+                console.warn('Already connected to an opponent')
+                return
+              }
+              // TODO verifiy onChain that opponent is the one we want to play with
 
-            // RIGHT NOW... WE TRUST THE PLAYERS
-            connected = true
-            console.log('Connected to opponent ID', connection.peer)
-            resolve({ conn: connection, playerId: 0, proxyWallet: this.proxyWallet })
-            clearTimeout(timer)
-          })
-        } else {
-          //call startGame onChain before connecting to opponent
-          const playerProxyAddr=this.proxyWallet.address;
-          const opponentAddr = response.opponent.addr
-          const opponentProxyAddr = response.opponent.proxyAddr
-          const opponentValidUntil = response.opponent.validUntil
-          const opponentSign = response.opponent.sign
+              // RIGHT NOW... WE TRUST THE PLAYERS
+              connected = true
+              console.log('Connected to opponent ID', connection.peer)
+              resolve({ conn: connection, playerId: 0, proxyWallet: this.proxyWallet })
+              clearTimeout(timer)
+            })
+          } else {
+            //call startGame onChain before connecting to opponent
+            const playerProxyAddr = this.proxyWallet.address
+            const opponentAddr = response.opponent.addr
+            const opponentProxyAddr = response.opponent.proxyAddr
+            const opponentValidUntil = response.opponent.validUntil
+            const opponentSign = response.opponent.sign
 
-          const rpcGameContract = await sdk.getContract(CONTRACTS.rpcGameAddress, CONTRACTS.rpcGameABI);
-          await rpcGameContract.call("startGame",[opponentAddr,opponentProxyAddr,playerProxyAddr,wager.toString(),opponentValidUntil,opponentSign]);
-          console.log("MM: startGame called");
-          //
+            const rpcGameContract = await sdk.getContract(
+              CONTRACTS.rpcGameAddress,
+              CONTRACTS.rpcGameABI,
+            )
+            await rpcGameContract.call('startGame', [
+              opponentAddr,
+              opponentProxyAddr,
+              playerProxyAddr,
+              wager.toString(),
+              opponentValidUntil,
+              opponentSign,
+            ])
+            console.log('MM: startGame called')
+            //
 
-          const connection = this.peer.connect(opponentProxyAddr, { reliable: true })
-          connection.on('open', () => {
-            connected = true
-            console.log('connected with:', opponentProxyAddr)
-            resolve({ conn: connection, playerId: 1,proxyWallet: this.proxyWallet })
-            clearTimeout(timer)
-          })
-          connection.on('error', (err) => {
-            reject(err)
-            console.error('peer connection error: ' + err)
-          })
-        }
-      }).catch((error) => {
-        console.log("userRejectedMatchRequest",error);
-        reject()
-      })
+            const connection = this.peer.connect(opponentProxyAddr, { reliable: true })
+            connection.on('open', () => {
+              connected = true
+              console.log('connected with:', opponentProxyAddr)
+              resolve({ conn: connection, playerId: 1, proxyWallet: this.proxyWallet })
+              clearTimeout(timer)
+            })
+            connection.on('error', (err) => {
+              reject(err)
+              console.error('peer connection error: ' + err)
+            })
+          }
+        })
+        .catch((error) => {
+          console.log('userRejectedMatchRequest', error)
+          reject()
+        })
     })
   }
 

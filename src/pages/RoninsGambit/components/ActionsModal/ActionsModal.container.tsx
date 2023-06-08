@@ -1,59 +1,70 @@
-import { useAddress,useContractRead,useContract, useContractWrite, useSigner, useSDK} from '@thirdweb-dev/react'
+import {
+  useAddress,
+  useContractRead,
+  useContract,
+  useContractWrite,
+  useSigner,
+  useSDK,
+} from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
-import {CONTRACTS} from 'utils/constants'
-import {useState } from 'react'
+import { CONTRACTS } from 'utils/constants'
+import { useState } from 'react'
 import MatchMaker, { MatchMakerResponse } from './MatchMaker'
 interface PropTypes {
   showModal: boolean
   handleOnClose: () => void
-  handleOnConnection:(response:MatchMakerResponse)=>void
+  handleOnConnection: (response: MatchMakerResponse) => void
 }
 
-const matchMaker = new MatchMaker(0);
+const matchMaker = new MatchMaker(0)
 
-const ActionsModalContainer = ({ showModal, handleOnClose,handleOnConnection}: PropTypes) => {
-  const sdk=useSDK();
-  const userAddress = useAddress() 
+const ActionsModalContainer = ({ showModal, handleOnClose, handleOnConnection }: PropTypes) => {
+  const sdk = useSDK()
+  const userAddress = useAddress()
   //userAddress is undefined when wallet is not connected
   //at this time we face some error in useContractRead
-  const {data: erc20Contract} = useContract(CONTRACTS.erc20Address, CONTRACTS.erc20ABI)
-  const { data:tokenName} = useContractRead(erc20Contract, "symbol");
+  const { data: erc20Contract } = useContract(CONTRACTS.erc20Address, CONTRACTS.erc20ABI)
+  const { data: tokenName } = useContractRead(erc20Contract, 'symbol')
   const { data: walletContract } = useContract(CONTRACTS.gameWalletAddress, CONTRACTS.gameWalletABI)
-  const { data:deposit} = useContractRead(walletContract, "deposits",[userAddress]);
-  const { mutateAsync:depositToken} =useContractWrite(walletContract, "deposit");
+  const { data: deposit } = useContractRead(walletContract, 'deposits', [userAddress])
+  const { mutateAsync: depositToken } = useContractWrite(walletContract, 'deposit')
 
-  const userBalance = deposit ? Number(deposit.toString())/10**18:undefined;
-  const minimumBalanceToPlay=1;
+  const userBalance = deposit ? Number(deposit.toString()) / 10 ** 18 : undefined
+  const minimumBalanceToPlay = 1
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
 
   const topUpWallet = async () => {
-    if(userBalance && userBalance >= minimumBalanceToPlay){
-      const needToPay=minimumBalanceToPlay-userBalance;
-      await depositToken({ args: [(needToPay*10**18).toString()] });
+    if (userBalance && userBalance >= minimumBalanceToPlay) {
+      const needToPay = minimumBalanceToPlay - userBalance
+      await depositToken({ args: [(needToPay * 10 ** 18).toString()] })
     }
   }
   const signer = useSigner()
-  const wager = 1e17;
-  const validUntil = Math.floor(Date.now() / 1000) + 60 * 100;
-  const [userMatchRequestStatus,setUserMatchRequestStatus] = useState<"accept"|"reject"|"timeout"|undefined>(undefined);
+  const wager = 1e17
+  const validUntil = Math.floor(Date.now() / 1000) + 60 * 100
+  const [userMatchRequestStatus, setUserMatchRequestStatus] = useState<
+    'accept' | 'reject' | 'timeout' | undefined
+  >(undefined)
   const [enableSigner, setEnableSigner] = useState(true)
 
   const signMatchRequest = async () => {
-    setEnableSigner(false);
+    setEnableSigner(false)
     if (!signer) return
     if (!sdk) return
     //proceed only if we have signer and sdk
-      const onTimeout = () => {
-        setUserMatchRequestStatus("reject");
-      }
-      const onChallengePosted = () => {
-        setUserMatchRequestStatus("accept");
-      }
-      matchMaker.findMatch(sdk,wager,signer,validUntil,
-      onChallengePosted,
-      onTimeout)
-      .then((response)=>handleOnConnection(response))//opponent has accepted the match request
-      .catch(_=>{setUserMatchRequestStatus("reject");setEnableSigner(true);})
+    const onTimeout = () => {
+      setUserMatchRequestStatus('reject')
+    }
+    const onChallengePosted = () => {
+      setUserMatchRequestStatus('accept')
+    }
+    matchMaker
+      .findMatch(sdk, wager, signer, validUntil, onChallengePosted, onTimeout)
+      .then((response) => handleOnConnection(response)) //opponent has accepted the match request
+      .catch((_) => {
+        setUserMatchRequestStatus('reject')
+        setEnableSigner(true)
+      })
   }
 
   return (
@@ -61,12 +72,10 @@ const ActionsModalContainer = ({ showModal, handleOnClose,handleOnConnection}: P
       showModal={showModal}
       handleOnClose={handleOnClose}
       isWalletConnected={isWalletConnected}
-
       userBalance={userBalance}
       minimumBalanceToPlay={minimumBalanceToPlay}
       tokenName={tokenName}
-      topUpWallet={topUpWallet} 
-
+      topUpWallet={topUpWallet}
       enableSigner={enableSigner}
       setEnableSigner={setEnableSigner}
       userMatchRequestStatus={userMatchRequestStatus}

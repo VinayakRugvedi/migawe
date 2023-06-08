@@ -12,7 +12,7 @@ export default class Player implements IAgent<GameState> {
   private onMoveSelected: ((move: PlayerMove) => void) | undefined
   private privateState: PvtState | undefined = undefined
   private pvtStateHash: PvtStateHash = 0
-  public onPlayersMove: (() => void)| undefined
+  public onPlayersMove: (() => void) | undefined
   private proxyWallet: ethers.Wallet
 
   constructor(proxyWallet: ethers.Wallet) {
@@ -126,21 +126,24 @@ export default class Player implements IAgent<GameState> {
             proof: proof,
             publicSignals: publicSignals,
             stateSign: await this.proxyWallet.signMessage(
-              ethers.utils.arrayify(ethers.utils.solidityKeccak256(
-                ['uint256', 'uint256', 'uint256', 'uint256'],
-                [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]])
-              )),
+              ethers.utils.arrayify(
+                ethers.utils.solidityKeccak256(
+                  ['uint256', 'uint256', 'uint256', 'uint256'],
+                  [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]],
+                ),
+              ),
+            ),
           })
         } catch (error) {
           console.warn('%cproof generation failed!!!', 'color: red; font-size: 20px;', error)
         }
       }
-      if(this.onPlayersMove) this.onPlayersMove();
+      if (this.onPlayersMove) this.onPlayersMove()
     })
   }
 
   public selectMove(move: PlayerMove): void {
-    console.log('%c Player: moveSelected '+move,  'color: red; font-size: 15px;')
+    console.log('%c Player: moveSelected ' + move, 'color: red; font-size: 15px;')
     if (this.onMoveSelected) {
       this.onMoveSelected(move)
     } else {

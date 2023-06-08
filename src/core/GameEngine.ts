@@ -17,19 +17,19 @@ class GameEngine {
     this.gameLogic = gameLogic
     this.status = GameEngineStatus.NotRunning
     this.gameState = {} as GameState
-    this.onStateChange=()=>{
-      console.log("unhandled state change");
+    this.onStateChange = () => {
+      console.log('unhandled state change')
     }
   }
   /**
    * @param agents An array of agents. the first agent starts the game.
    */
-  public async startGame(agents: IAgent<GameState>[], sdk:ThirdwebSDK) {
+  public async startGame(agents: IAgent<GameState>[], sdk: ThirdwebSDK) {
     this.gameState = { ...this.gameLogic.getInitialState() }
     try {
       //////////////// Game loop
       let state = this.gameState
-      let proof, publicSignals, stateSign;
+      let proof, publicSignals, stateSign
       while (!this.gameLogic.isFinalState(state)) {
         // console.log("%c current GameSate", "color: brown;", state);
         const currStep = state.step
@@ -41,12 +41,8 @@ class GameEngine {
         //   currAgent,
         // });
         let newPubState, newPvtStateHash
-        ;({ newPubState, newPvtStateHash, proof, publicSignals, stateSign } = await currAgent.getNextState(
-          state,
-          proof,
-          publicSignals,
-          stateSign
-        ))
+        ;({ newPubState, newPvtStateHash, proof, publicSignals, stateSign } =
+          await currAgent.getNextState(state, proof, publicSignals, stateSign))
         this.status = GameEngineStatus.Running
 
         /*************************************************/
@@ -83,7 +79,7 @@ class GameEngine {
         state.pvtStateHash[currAgentId] = newPvtStateHash
         state.step = currStep + 1
         this.gameState = state
-        this.onStateChange(state);
+        this.onStateChange(state)
       }
       // so that the other agent can get the final state/ final move
       // *Only works for 2 agents
@@ -95,9 +91,8 @@ class GameEngine {
     this.status = GameEngineStatus.Completed
 
     // calling finalize game On-chain
-    const rpcGameContract = await sdk.getContract(CONTRACTS.rpcGameAddress, CONTRACTS.rpcGameABI);
-    await rpcGameContract.call("finalizeGame",[]);
-
+    const rpcGameContract = await sdk.getContract(CONTRACTS.rpcGameAddress, CONTRACTS.rpcGameABI)
+    await rpcGameContract.call('finalizeGame', [])
   }
 
   public getGameStateStore(): GameState {

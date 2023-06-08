@@ -9,4 +9,14 @@ import normalMusic from './music/normal.mp3'
 import intenseMusic from './music/intense.mp3'
 import fillMusic from './music/shakuhachi.mp3'
 
-export { idleVideo, winVideo, looseVideo, tieVideo, introSequenceImage, introSequenceMusic, normalMusic, intenseMusic, fillMusic }
+export {
+  idleVideo,
+  winVideo,
+  looseVideo,
+  tieVideo,
+  introSequenceImage,
+  introSequenceMusic,
+  normalMusic,
+  intenseMusic,
+  fillMusic,
+}

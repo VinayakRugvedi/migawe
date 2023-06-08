@@ -1,25 +1,36 @@
 import { GiBroadsword, GiPlayButton } from 'react-icons/gi'
-import { gameTitleIllustration,gameRules } from 'assets'
+import { gameTitleIllustration, gameRules } from 'assets'
 
 import { ActionsModal } from './components'
 import { MatchMakerResponse } from './components/ActionsModal/MatchMaker'
 import { OpponentInfo } from './RoninsGambit.container'
 import { ethers } from 'ethers'
 
-
 interface PropTypes {
   showModal: boolean
   handleOnOpen: () => void
   handleOnClose: () => void
-  setOpponentInfo:React.Dispatch<OpponentInfo>
+  setOpponentInfo: React.Dispatch<OpponentInfo>
 }
 
-const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose,setOpponentInfo }: PropTypes) => {
+const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo }: PropTypes) => {
   const handlePlayRandomAI = () => {
-    setOpponentInfo({ isReady: true, type: "cpu", connection: undefined, playerId: 0, proxyWallet: ethers.Wallet.createRandom() })
+    setOpponentInfo({
+      isReady: true,
+      type: 'cpu',
+      connection: undefined,
+      playerId: 0,
+      proxyWallet: ethers.Wallet.createRandom(),
+    })
   }
-  const handleOnConnection = (response:MatchMakerResponse) => {
-    setOpponentInfo({ isReady: true, type: "network", connection: response.conn, playerId: response.playerId, proxyWallet: response.proxyWallet })
+  const handleOnConnection = (response: MatchMakerResponse) => {
+    setOpponentInfo({
+      isReady: true,
+      type: 'network',
+      connection: response.conn,
+      playerId: response.playerId,
+      proxyWallet: response.proxyWallet,
+    })
   }
   return (
     <main className='mt-[120px] py-4 mx-auto max-w-7xl mb-8'>
@@ -41,7 +52,7 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose,setOpponentInfo }
             Every fight is a round and you win the battle if you{' '}
             <span className='text-primary font-medium'>win 5 rounds</span>.
             <div className='text-xl'>
-              You and the enemy are allowed to execute one of the{' '}<br/>
+              You and the enemy are allowed to execute one of the <br />
               <span className='text-primary font-medium'>3 sword techniques</span> namely:{' '}
               <span className='text-primary font-medium'>Tiger, Turtle, and Eagle</span>
             </div>
@@ -49,7 +60,7 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose,setOpponentInfo }
 
           <div className='mt-8 mb-8 flex gap-4'>
             <button className='btn btn-wide' onClick={handleOnOpen}>
-              Play Now 
+              Play Now
             </button>
             <button className='btn btn-outline' onClick={handlePlayRandomAI}>
               Play Against CPU
@@ -59,15 +70,11 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose,setOpponentInfo }
           <div className='card w-96 bg-primary/20 shadow-xl mt-4'>
             <div className='card-body'>
               <h2 className='card-title'>Rules</h2>
-                <img
-                  src={gameRules}
-                  alt='Game_Title_Image'
-                  className='rounded-2xl'
-                />
+              <img src={gameRules} alt='Game_Title_Image' className='rounded-2xl' />
               <div className='card p-1 bg-primary/20 text-center uppercase font-medium'>
                 Rest results in a tie
               </div>
-              </div>
+            </div>
           </div>
 
           <div className='divider'></div>
@@ -126,7 +133,11 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose,setOpponentInfo }
         </div>
       </section>
 
-      <ActionsModal showModal={showModal} handleOnClose={handleOnClose} handleOnConnection={handleOnConnection} />
+      <ActionsModal
+        showModal={showModal}
+        handleOnClose={handleOnClose}
+        handleOnConnection={handleOnConnection}
+      />
     </main>
   )
 }
