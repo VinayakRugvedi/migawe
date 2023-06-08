@@ -5,41 +5,24 @@ interface PropTypes {
   handleTimerEnd: () => void
 }
 
+
 const Timer = ({ durationInSeconds, handleTimerEnd }: PropTypes) => {
-  const [secondsLeft, setSecondsLeft] = useState(formatNumber(durationInSeconds))
-
+  const [secondsLeft, setSecondsLeft] = useState(durationInSeconds)
   useEffect(() => {
-    const duration = durationInSeconds
-    const endTime = new Date()
-    endTime.setSeconds(endTime.getSeconds() + duration)
-    let seconds = duration
-
-    const interval = setInterval(() => {
-      seconds--
-      const newSecondsValue = formatNumber(seconds)
-      if (seconds === 0) {
-        clearInterval(interval)
-        onTimerEnd()
-      }
-      setSecondsLeft(newSecondsValue)
-    }, 1000)
-
-    return () => {
-      clearInterval(interval)
+    if (secondsLeft == 0) {
+      handleTimerEnd()
     }
-  }, [])
+    const timerout=setTimeout(()=>setSecondsLeft(secondsLeft-1),1000)
+    return () => {
+      clearTimeout(timerout)
+    }
+  }, [secondsLeft])
 
-  const onTimerEnd = () => {
-    handleTimerEnd()
-  }
-
-  function formatNumber(number: number) {
-    return number.toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false,
-    })
-  }
-  return <span>{secondsLeft}</span>
+  return (
+    <span className="countdown">
+        <span style={{"--value":secondsLeft} as any}></span>
+    </span>
+  )
 }
 
 export default Timer

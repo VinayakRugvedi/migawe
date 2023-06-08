@@ -1,5 +1,6 @@
 import type { IAgent, GameState, PvtStateHash, PubState, PvtState } from '../types'
 import { snarkjs } from '../snark'
+import { ethers } from 'ethers'
 
 enum PlayerMove {
   Attack = 0,
@@ -11,12 +12,19 @@ export default class Player implements IAgent<GameState> {
   private onMoveSelected: ((move: PlayerMove) => void) | undefined
   private privateState: PvtState | undefined = undefined
   private pvtStateHash: PvtStateHash = 0
+  public onPlayersMove: (() => void)| undefined
+  private proxyWallet: ethers.Wallet
+
+  constructor(proxyWallet: ethers.Wallet) {
+    this.proxyWallet = proxyWallet
+  }
 
   public async getNextState(gameState: GameState): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash
     proof: any
     publicSignals: any
+    stateSign: string
   }> {
     return new Promise((resolve) => {
       this.onMoveSelected = async (move: PlayerMove) => {
@@ -117,20 +125,31 @@ export default class Player implements IAgent<GameState> {
             newPvtStateHash: agentId === 0 ? this.pvtStateHash : 0,
             proof: proof,
             publicSignals: publicSignals,
+            stateSign: await this.proxyWallet.signMessage(
+              ethers.utils.arrayify(ethers.utils.solidityKeccak256(
+                ['uint256', 'uint256', 'uint256', 'uint256'],
+                [publicSignals[6], publicSignals[7], publicSignals[8], publicSignals[9]])
+              )),
           })
         } catch (error) {
           console.warn('%cproof generation failed!!!', 'color: red; font-size: 20px;', error)
         }
       }
+      if(this.onPlayersMove) this.onPlayersMove();
     })
   }
 
   public selectMove(move: PlayerMove): void {
+    console.log('%c Player: moveSelected '+move,  'color: red; font-size: 15px;')
     if (this.onMoveSelected) {
       this.onMoveSelected(move)
     } else {
       console.error("onMoveSelected is undefined !! not agent's turn")
     }
+  }
+
+  public isPlayersTurn(): boolean {
+    return this.onMoveSelected ? true : false
   }
 
   public getPrivateState(): PvtState {

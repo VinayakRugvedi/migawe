@@ -9,7 +9,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
     this.conn = conn
 
     conn.on('data', (msg: any) => {
-      // console.log("NetworkedAgent: data received: " + msg);
+      console.log('%c NetworkAgent: msg '+msg,  'color: gray; font-size: 15px;')
       if (this.onMsgReceive) {
         this.onMsgReceive(JSON.parse(msg.toString()))
       } else {
@@ -22,11 +22,13 @@ export default class NetworkedAgent implements IAgent<GameState> {
     gameState: GameState,
     prevProof: any,
     prevPublicSignals: any,
+    prevStateSign: string
   ): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash
     proof: any
     publicSignals: any
+    stateSign: string
   }> {
     // extract PubState from gameState
     const agentId = gameState.step % 2
@@ -41,6 +43,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
         pvtStateHash: gameState?.pvtStateHash[(agentId + 1) % 2],
         proof: prevProof,
         publicSignals: prevPublicSignals,
+        stateSign: prevStateSign,
       }),
     )
 
@@ -52,6 +55,7 @@ export default class NetworkedAgent implements IAgent<GameState> {
           newPvtStateHash: msg.pvtStateHash,
           proof: msg.proof,
           publicSignals: msg.publicSignals,
+          stateSign: msg.stateSign,
         })
       }
     })

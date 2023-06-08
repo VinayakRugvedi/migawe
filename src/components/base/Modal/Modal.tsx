@@ -1,5 +1,3 @@
-import { Children } from 'react'
-
 interface PropTypes {
   isOpen: boolean
   hideCloseIcon?: boolean
@@ -8,14 +6,32 @@ interface PropTypes {
   rootClassNames: string
 }
 
+// TODO: Get rid of document.body.style.overflow
+
 const Modal = ({ isOpen, hideCloseIcon, onCloseHandler, children, rootClassNames }: PropTypes) => {
+  if (isOpen) {
+    //disable scroll
+    document.body.style.overflow = 'hidden'
+  } else {
+    //enable scroll
+    document.body.style.overflow = 'auto'
+  }
   return (
     <>
-      <div className={`modal ${isOpen ? 'modal-open' : ''} ${rootClassNames}`}>
+      <div
+        className={`modal transition-colors ${isOpen ? 'modal-open' : ''} ${rootClassNames} ${
+          hideCloseIcon ? ' bg-black bg-opacity-80' : ''
+        }`}
+      >
         <div className='modal-box relative'>
-          <label className='btn btn-sm btn-circle absolute right-2 top-2' onClick={onCloseHandler}>
-            ✕
-          </label>
+          {!hideCloseIcon && (
+            <label
+              className='btn btn-sm btn-circle absolute right-2 top-2'
+              onClick={onCloseHandler}
+            >
+              ✕
+            </label>
+          )}
           {children}
         </div>
       </div>

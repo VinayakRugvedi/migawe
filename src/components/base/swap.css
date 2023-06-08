@@ -1,0 +1,17 @@
+.swap-fly-in .swap-on,
+.swap-fly-in .swap-indeterminate,
+.swap-fly-in input:indeterminate ~ .swap-on {
+  @apply translate-y-1/2 opacity-100;
+}
+
+.swap-fly-in input:checked ~ .swap-off,
+.swap-fly-in.swap-active .swap-off,
+.swap-fly-in input:indeterminate ~ .swap-off {
+  @apply  translate-y-1/2 opacity-100;
+}
+
+.swap-fly-in input:checked ~ .swap-on,
+.swap-fly-in.swap-active .swap-on,
+.swap-fly-in input:indeterminate ~ .swap-indeterminate {
+  @apply translate-y-0 opacity-100;
+}

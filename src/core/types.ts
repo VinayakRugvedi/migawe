@@ -4,11 +4,13 @@ interface IAgent<GameState> {
     gameState: GameState,
     prevProof?: any,
     prevpublicSignals?: any,
+    prevStateSign?: string
   ): Promise<{
     newPubState: PubState
     newPvtStateHash: PvtStateHash
     proof: any // TODO: define this type
     publicSignals: any // TODO: redundant, as can be extracted from PubState or vice versa
+    stateSign: string
   }>
 }
 
