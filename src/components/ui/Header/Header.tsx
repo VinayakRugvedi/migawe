@@ -24,7 +24,7 @@ const Header = () => {
           <div className='mr-12'>
             <GameWallet />
           </div>
-          <Link className='mr-12 font-normal uppercase hover:text-primary' to='/ronins-gambit'>
+          <Link className='mr-12 font-medium uppercase hover:text-primary' to='/ronins-gambit'>
             Game
           </Link>
           <ThirdWebConnectWalletButton />

@@ -19,7 +19,7 @@ const GameWallet = ({
   return (
     <>
       <button
-        className={`btn btn-ghost flex flex-col items-center justify-center ${
+        className={`btn btn-ghost flex flex-col items-center justify-center font-medium ${
           !isWalletConnected ? 'tooltip tooltip-bottom' : ''
         }`}
         data-tip='Connect your wallet to access'
