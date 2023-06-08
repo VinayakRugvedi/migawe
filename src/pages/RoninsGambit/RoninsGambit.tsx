@@ -5,6 +5,7 @@ import { ActionsModal } from './components'
 import { MatchMakerResponse } from './components/ActionsModal/MatchMaker'
 import { OpponentInfo } from './RoninsGambit.container'
 import { ethers } from 'ethers'
+import { UI } from 'utils/constants'
 
 interface PropTypes {
   showModal: boolean
@@ -42,15 +43,17 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
           <h3 className='text-5xl font-medium'>The Ronin&apos;s Gambit</h3>
 
           <div className='text-xl mt-8'>
-            This is a combat game inspired by the classic rock paper scissors.
+            Prepare for an epic duel as you embrace the path of the samurai, and delve into the
+            world of ancient combat. Select wisely from three distinct fighting styles, each
+            embodying unique strengths and weaknesses, forging your destiny in the realm of
+            warriors.
             <br />
-            You are the chosen samurai and your job is to defeat the enemy samurai in order to save
-            your squad.
+            Step into this world of fully <strong>on-chain gaming</strong>, where your legacy will
+            transcend time, eternally woven into the tapestry of digital existence.
           </div>
 
           <div className='mt-8 text-xl'>
-            Every fight is a round and you win the battle if you{' '}
-            <span className='text-primary font-medium'>win 5 rounds</span>.
+            The duel ends when one legend dies{' '}
             <div className='text-xl'>
               You and the enemy are allowed to execute one of the <br />
               <span className='text-primary font-medium'>3 sword techniques</span> namely:{' '}
@@ -89,9 +92,10 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
                     <h2 className='card-title'>Step 1: Top-up Pool</h2>
                   </div>
                   <div>
-                    As a starter, you will be asked to transfer a minimum of 1USDT into our top-up
-                    pool. Consider this as a security deposit. Futhermore, this top-up pool will be
-                    used to setup the reward pool of every game.
+                    As a starter, you will need a minimum deposit of 10 {UI.tokenName} in your game
+                    Wallet, you can withdraw it anytime you want.
+                    <br />
+                    Futhermore, your reward will get added to your game Wallet each time you win.
                   </div>
                 </div>
               </div>
@@ -109,8 +113,8 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
                     <h2 className='card-title'>Step 2: Reward Pool</h2>
                   </div>
                   <div>
-                    Every time you start a game, you have to transfer 0.2USDT into the reward pool
-                    (from top-up pool) which will set the reward pool&apos;s total value to 0.4USDT.
+                    Every time you start a game, It will cost you 1 {UI.tokenName} to play. The
+                    amount collected will be added to the reward pool for the winners to claim.
                   </div>
                 </div>
               </div>

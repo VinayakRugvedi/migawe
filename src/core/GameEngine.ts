@@ -4,7 +4,6 @@ import * as init_vk from '../assets/init_vk.json'
 import * as moveA_vk from '../assets/moveA_vk.json'
 import * as moveB_vk from '../assets/moveB_vk.json'
 import { snarkjs } from './snark'
-import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { CONTRACTS } from 'utils/constants'
 
 class GameEngine {
@@ -24,7 +23,7 @@ class GameEngine {
   /**
    * @param agents An array of agents. the first agent starts the game.
    */
-  public async startGame(agents: IAgent<GameState>[], sdk: ThirdwebSDK) {
+  public async startGame(agents: IAgent<GameState>[]) {
     this.gameState = { ...this.gameLogic.getInitialState() }
     try {
       //////////////// Game loop
@@ -46,6 +45,7 @@ class GameEngine {
         this.status = GameEngineStatus.Running
 
         /*************************************************/
+        // Verifications
         this.status = GameEngineStatus.WaitingForProofVerification
         // TODO verify stateSign, newPubState and publicSignals matches
         let verification_key
@@ -89,10 +89,6 @@ class GameEngine {
       console.error(error)
     }
     this.status = GameEngineStatus.Completed
-
-    // calling finalize game On-chain
-    const rpcGameContract = await sdk.getContract(CONTRACTS.rpcGameAddress, CONTRACTS.rpcGameABI)
-    await rpcGameContract.call('finalizeGame', [])
   }
 
   public getGameStateStore(): GameState {

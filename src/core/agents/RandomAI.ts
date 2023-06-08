@@ -31,7 +31,7 @@ export default class RandomAI implements IAgent<GameState> {
 
         //////////////////////////////////////////
         // GAME LOGIC
-        const move = Math.floor(Math.random() * 1) as 0 | 1 | 2
+        const move = Math.floor(Math.random() * 3) as 0 | 1 | 2
         console.log('%c RandomAI: move selected: ' + move, 'color: red; font-size: 15px;')
         if (agentId === 0) {
           // 0's turn
