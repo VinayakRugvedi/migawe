@@ -164,7 +164,13 @@ export default class Player implements IAgent<GameState> {
               if (this.onResquestedForFinalizeGame) {
                 this.onResquestedForFinalizeGame()
               }
-              await rpcGameContract.call('finalizeGame', [prevStateSign, a, b, c])
+              await rpcGameContract.call('finalizeGame', [
+                prevStateSign,
+                a,
+                b,
+                c,
+                publicSignals.map((x: { toString: () => any }) => x.toString()),
+              ])
             } catch (error) {
               console.warn('%c finalizing game failed!!!', 'color: red; font-size: 20px;', error)
             }
