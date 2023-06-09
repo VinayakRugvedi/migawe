@@ -14,7 +14,7 @@ const RONIN_GAMBIT = {
 }
 
 const CONTRACTS = {
-  rpsGameAddress: '0xBf0E4084b81e5788A0d1DB94A2B97A91b82B4f78',
+  rpsGameAddress: '0xAeb51E9c9dC8B86D2D886235c18606811e44ba06',
   rpsGameABI: rpsGameABI,
   gameWalletAddress: '39bc12763882A3959E8BFf8A41c24f0381BCBF52',
   gameWalletABI: gameWalletABI,

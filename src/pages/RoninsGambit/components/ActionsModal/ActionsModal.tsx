@@ -5,6 +5,7 @@ import { IoIosTime } from 'react-icons/io'
 
 import { Modal, Timer } from 'components/base'
 import { ThirdWebConnectWalletButton } from 'components/ui'
+import { UI } from 'utils/constants'
 
 interface PropTypes {
   showModal: boolean
@@ -35,6 +36,7 @@ const ActionsModal = ({
   setEnableSigner,
   signMatchRequest,
 }: PropTypes) => {
+  
   const userHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false
   //template variables
   let modalCloseDisabled = false
@@ -53,7 +55,7 @@ const ActionsModal = ({
       <br />
       You will be charged&nbsp;
       <b>
-        {minimumBalanceToPlay} {tokenName}
+        {UI.WAGER_AMOUNT} {tokenName}
       </b>
       &nbsp; in order to setup the reward pool.
     </>
@@ -123,7 +125,7 @@ const ActionsModal = ({
     )
   }
   //user does not have enough balance
-  if (userHasEnoughBalance) {
+  if (!userHasEnoughBalance) {
     const needToPay = minimumBalanceToPlay - (userBalance ? userBalance : 0)
     modalHeader = 'Top-up your Game Wallet'
     modalContent = (
