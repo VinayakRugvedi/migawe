@@ -32,7 +32,7 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
   const fillMusicRef = useRef<HTMLAudioElement>(null)
   const handleAudio = (gameData: GameData) => {
     if (gameData.playerHealth <= 3) {
-      normalMusicRef.current?.pause()
+      if(normalMusicRef.current) normalMusicRef.current.volume=0.4;
       intenseMusicRef.current?.play()
     }
     if (gameData.playerHealth <= 1) {
@@ -46,7 +46,7 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
       normalMusicRef.current?.play()
     })
     return () => {
-      if(normalMusicRef.current) normalMusicRef.current.volume = 0.4
+      normalMusicRef.current?.pause()
       normalMusicRef.current?.removeEventListener('ended', () => {
         normalMusicRef.current?.play()
       })

@@ -18,29 +18,26 @@ const LeaderBoard = ({ leaderboard }: PropTypes) => {
         <div className='text-xl font-medium'>
           Top 5 players will receive bonus rewards at the end of each week. Stay tuned!
         </div>
-        <div className='shadow-xl rounded-md overflow-x-auto'>
-          <table className='table rounded-md w-full mt-4'>
-            <thead>
-              <tr>
-                <th style={{ position: 'relative' }}>Rank</th>
-                <th className='overflow-ellipsis'>Address</th>
-                <th>Wins</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaderboardFiltered.map((player, index) => (
-                <tr key={index}>
-                  <td className='font-medium'>
-                    <div className='badge'>{index + 1}</div>
-                  </td>
-                  <td className='overflow-ellipsis'>{player.address}</td>
-                  <td className='font-medium'>{player.wins?.toString() || 'loading...'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <div className='shadow-xl rounded-md overflow-x-auto mt-8'>
+            <div className="flex flex-col">
+              <div className="flex bg-base-100 bg-neutral/20">
+                <div className="w-[25%] p-2 text-center font-bold">Rank</div>
+                <div className="w-[50%] p-2 text-center font-bold">Address</div>
+                <div className="w-[25%] p-2 text-center font-bold">Wins</div>
+              </div>
+                  {leaderboardFiltered.map((player, index) => {
+                    return (
+                      <div className="flex " key={index}>
+                        <div className="w-[25%] p-2 text-center">{index + 1}</div>
+                        <div className="w-[50%] p-2 text-center overflow-hidden overflow-ellipsis">{player.address}</div>
+                        <div className="w-[25%] p-2 text-center">{player.wins?.toString()||"loading..."}</div>
+                      </div>
+                    )
+                  })
+                }
+            </div>
+         </div>
+    </div>  
     </div>
   )
 }
