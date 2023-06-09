@@ -3,20 +3,20 @@ import styles from './HeroSection.module.css'
 
 const HeroSection = () => {
   return (
-    <section className='pt-[115px] w-screen h-screen relative'>
+    <section className='pt-[120px] w-screen min-h-screen relative px-8'>
       <div className='mx-auto max-w-screen-2xl'>
-        <h3 className='text-9xl font-bold text-center'>The Ronin&apos;s Gambit</h3>
+        <h3 className='text-5xl md:text-9xl font-bold text-center'>The Ronin&apos;s Gambit</h3>
         <p className='font-bold text-center'>
           Presenting <span className='italic'>MIGAWE&apos;s</span> First Game
         </p>
-        <h4 className='text-4xl font-medium mt-16 max-w-2xl'>
+        <h4 className='text-xl md:text-4xl font-medium mt-8 md:mt-16 max-w-2xl'>
           Play this simple, elegant and rewarding combat game inspired by the classic rock paper
           scissors.
         </h4>
 
-        <div className='mt-8 flex flex-col items-start'>
-          <div className='grid grid-cols-2 auto-rows-auto mb-8'>
-            <div className='card w-96 bg-base-100 shadow-xl bg-primary/20 mr-8'>
+        <div className='mt-8 flex flex-col items-center md:items-start'>
+          <div className='grid grid-cols-1 md:grid-cols-2 auto-rows-auto mb-8 gap-8'>
+            <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-primary/20'>
               <div className='card-body'>
                 <h2 className='card-title'>Setup Reward and Win</h2>
                 <p>
@@ -26,7 +26,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20'>
+            <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
               <div className='card-body'>
                 <div className='flex justify-between items-center'>
                   <h2 className='card-title'>Branded Game</h2>
@@ -40,8 +40,8 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <div className='grid grid-cols-2 auto-rows-auto'>
-            <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20 mr-8'>
+          <div className='grid grid-cols-1 md:grid-cols-2 auto-rows-auto gap-8'>
+            <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
               <div className='card-body'>
                 <div className='flex justify-between items-center'>
                   <h2 className='card-title'>Plug and Play</h2>
@@ -55,7 +55,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className='card w-96 bg-base-100 shadow-xl bg-neutral/20'>
+            <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
               <div className='card-body'>
                 <div className='flex justify-between items-center'>
                   <h2 className='card-title'>Migawe&apos;s Ecosystem</h2>
@@ -72,12 +72,12 @@ const HeroSection = () => {
       </div>
       <img
         src={heroSectionPrimaryIllustartion}
-        className={`${styles['slide-in-from-bottom-right']} absolute top-0 right-0 mix-blend-color-burn`}
+        className={`${styles['slide-in-from-bottom-right']} absolute top-0 right-0 mix-blend-soft-light 2xl:mix-blend-color-burn `}
       />
 
       <img
         src={heroSectionSecondaryIllustartion}
-        className={`${styles['slide-in-from-top-left']} absolute left-40 top-20 mix-blend-overlay`}
+        className={`${styles['slide-in-from-top-left']} absolute left-40 top-20 mix-blend-overlay hidden 2xl:block`}
       />
     </section>
   )
