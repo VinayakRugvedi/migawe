@@ -1,10 +1,9 @@
 interface PropTypes {
   userBalance: number
   minimumBalance: number
-  needToPay: number
   tokenName: string
+  balanceValue: number
   allowanceValue: number
-  isAllowanceApprovalRequired: boolean
   handleApprove: () => void
   handleDeposit: () => void
   activeTabType: 'deposit' | 'withdraw'
@@ -20,9 +19,8 @@ const ActionsContent = ({
   userBalance,
   minimumBalance,
   tokenName,
-  isAllowanceApprovalRequired,
+  balanceValue,
   allowanceValue,
-  needToPay,
   handleApprove,
   handleDeposit,
   activeTabType,
@@ -42,15 +40,13 @@ const ActionsContent = ({
   if (activeTabType === 'deposit') {
     depositContent = (
       <div className='flex flex-col items-center justify-center'>
-        <h4 className='text-md font-bold mt-2 self-start'>Deposit</h4>
+        <h4 className='text-lg font-bold mt-2 self-start'>Deposit</h4>
         <p className='text-xs font-medium self-start'>
-          Your approved allowance is {allowanceValue} {tokenName}
+          Approved <span className=" font-bold">{allowanceValue} {tokenName} </span>
         </p>
         <div className='mt-2 text-left'>
-          {isAllowanceApprovalRequired ? (
-            <span>You need to approve the allowance first and then deposit</span>
-          ) : (
-            <div className='form-control w-full max-w-xs font-medium'>
+            <div
+            className='form-control w-full max-w-xs font-medium'>
               <label className='label'>
                 <span className='label-text'>Please enter the amount you want to deposit</span>
                 {/* <span className='label-text-alt'>Top Right label</span> */}
@@ -59,15 +55,15 @@ const ActionsContent = ({
                 type='number'
                 placeholder='Amount here...'
                 className='input input-bordered w-full max-w-xs'
+                min={0}
+                max={balanceValue}
                 value={depositAmount}
                 onChange={handleDepositAmount}
               />
               <label className='label'>
+                <span className='label-text'></span>
                 <span className='label-text-alt'>
-                  Min: {minimumBalance} {tokenName}
-                </span>
-                <span className='label-text-alt'>
-                  Max: {allowanceValue} {tokenName}
+                 you have {balanceValue} {tokenName}
                 </span>
               </label>
               <label className={`label pt-0 ${isValidationErrorPresent ? '' : 'invisible'}`}>
@@ -75,24 +71,24 @@ const ActionsContent = ({
                   {isValidationErrorPresent ? validationError : '-'}
                 </span>
               </label>
+              {depositAmount>allowanceValue?
+              (<button className='btn btn-wide mt-4 justify-center mx-auto'  onClick={handleApprove}  disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Approve'}
+              </button>):
+              (
+                <button className='btn btn-wide mt-4 justify-center mx-auto'  onClick={handleDeposit}  disabled={isLoading || depositAmount==0}>
+              {isLoading ? 'Loading...' : 'Deposit'}
+              </button>
+              )}
+              
             </div>
-          )}
         </div>
-        {isAllowanceApprovalRequired ? (
-          <button className='btn brn-wide mt-4 justify-center' onClick={handleApprove}>
-            Approve
-          </button>
-        ) : (
-          <button className='btn mt-4 justify-center' onClick={handleDeposit} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Deposit'}
-          </button>
-        )}
       </div>
     )
   } else if (activeTabType === 'withdraw') {
     withdrawContent = (
       <div className='flex flex-col items-center justify-center'>
-        <h4 className='text-md font-bold mt-2 self-start'>Withdraw</h4>
+        <h4 className='text-lg font-bold mt-2 self-start'>Withdraw</h4>
         <p className='mt-2 text-left'>
           This is an upcoming feature. Meanwhile you can consider withdrawing from Etherscan. Please
           click on the button below to be redirected.

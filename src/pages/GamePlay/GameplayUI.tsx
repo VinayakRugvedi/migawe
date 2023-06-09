@@ -1,6 +1,6 @@
 import ChooseButtonGroup from './components/ChooseButtonGroup'
 import HitPoints from './components/HitPoints'
-import { useEffect, useRef, useState } from 'react'
+import { JSXElementConstructor, useEffect, useRef, useState } from 'react'
 import { Scene } from './GamePlay'
 import { GameData } from './GamePlay.container'
 import { normalMusic, intenseMusic, fillMusic } from 'game-play-assets'
@@ -46,7 +46,7 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
       normalMusicRef.current?.play()
     })
     return () => {
-      normalMusicRef.current?.pause()
+      if(normalMusicRef.current) normalMusicRef.current.volume = 0.4
       normalMusicRef.current?.removeEventListener('ended', () => {
         normalMusicRef.current?.play()
       })
@@ -66,8 +66,7 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
 
   let showChoiceTimeout: NodeJS.Timeout
   const [showChoice, setShowChoice] = useState(true)
-
-  const [msg, setMsg] = useState<string | null>(null)
+  const [msg, setMsg] = useState<JSX.Element | null>(null)
   useEffect(() => {
     const onSceneChange = (e: any) => {
       const newScene = e.detail as Scene
@@ -79,11 +78,24 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
         healthTimeout = setTimeout(() => {
           handleAudio(gameData)
           if (gameData.playerHealth <= 0) {
-            setMsg('You Loose')
-            handleOnEnd()
-          } else if (gameData.opponentHealth <= 0) {
-            setMsg('You Win')
-            handleOnEnd()
+            const looseMsg=<div className='text-9xl '>You loose</div>;
+            setShowChoice(false)
+            countdownTimeout && clearTimeout(countdownTimeout)
+            setCountdown(-1);
+            setTimeout(() => {
+              setMsg(looseMsg)
+            }, 1000 * 2);
+          } else if (gameData.opponentHealth <=0) {
+            const winMsg=<>
+            <div className='text-9xl '>You Win!</div>
+            {gameData.finalizeMsg}
+            </>;
+            setShowChoice(false)
+            countdownTimeout && clearTimeout(countdownTimeout)
+            setCountdown(-1);
+            setTimeout(() => {
+              setMsg(winMsg)
+            }, 1000 * 2);
           }
           setPlayerHealth(gameData.playerHealth)
           setOpponentHealth(gameData.opponentHealth)
@@ -132,8 +144,14 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
   }, [countdown])
 
   return (
-    <div className='absolute inset-0 w-full h-full text-white z-30'>
-      <div className='absolute bottom-0 translate-y-4  w-full grid place-items-center'>
+    <div className='absolute inset-0 w-full h-full text-white z-30'
+    onClick={() => {
+      if(msg){
+        handleOnEnd()
+      }
+    }}
+    >
+      <div className='absolute bottom-0 translate-y-4  w-full grid place-items-center '>
         <div className={`swap swap-fly-in  ${showChoice ? 'swap-active' : ''} `}>
           <div className='swap-on duration-[1s] '>
             <ChooseButtonGroup choice={playerChoice} handleChoice={handlePlayerChoice} />
@@ -171,11 +189,12 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
       </div>
       <div
         className={`absolute inset-0 flex justify-center items-center pointer-events-none text-8xl font-bold swap ${
-          msg ? 'swap-active' : ''
-        }`}
+          msg ? 'swap-active bg-black' : ''
+        } duration-1000 `}
       >
-        <div className='swap-on'>
-          <div className='text-9xl'>{msg}</div>
+        <div className='swap-on text-center opacity-60'>
+          {msg}
+          <div className='text-4xl mt-2 cursor-pointer'>click to continue</div>
         </div>
       </div>
       <div className='hidden'>

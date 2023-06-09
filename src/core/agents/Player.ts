@@ -20,6 +20,7 @@ export default class Player implements IAgent<GameState> {
   public onResquestedForFinalizeGame: (() => void) | undefined
 
   constructor(proxyWallet: ethers.Wallet, sdk: ThirdwebSDK | undefined = undefined) {
+    console.log('Player constructor');
     this.proxyWallet = proxyWallet
     this.sdk = sdk
   }
@@ -156,15 +157,15 @@ export default class Player implements IAgent<GameState> {
                 '%c Player: finalizing game',
                 'color: white; font-size: 15px; background-color: red;',
               )
-              const rpcGameContract = await this.sdk.getContract(
-                CONTRACTS.rpcGameAddress,
-                CONTRACTS.rpcGameABI,
+              const rpsGameContract = await this.sdk.getContract(
+                CONTRACTS.rpsGameAddress,
+                CONTRACTS.rpsGameABI,
               )
               const { a, b, c } = extractFromProof(proof)
               if (this.onResquestedForFinalizeGame) {
                 this.onResquestedForFinalizeGame()
               }
-              await rpcGameContract.call('finalizeGame', [
+              await rpsGameContract.call('finalizeGame', [
                 prevStateSign,
                 a,
                 b,

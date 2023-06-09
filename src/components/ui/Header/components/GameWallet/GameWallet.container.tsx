@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAddress } from '@thirdweb-dev/react'
 
 import GameWallet from './GameWallet'
@@ -16,6 +16,12 @@ const GameWalletContainer = () => {
   const handleModalClose = () => {
     setShowModal(false)
   }
+  useEffect(() => {
+    window.addEventListener('topUpWallet', handleModalOpen)
+    return () => {
+      window.removeEventListener('topUpWallet', handleModalOpen)
+    }
+  }, [])
 
   return (
     <GameWallet

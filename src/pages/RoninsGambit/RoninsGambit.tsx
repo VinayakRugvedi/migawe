@@ -1,7 +1,7 @@
 import { GiBroadsword, GiPlayButton } from 'react-icons/gi'
 import { gameTitleIllustration, gameRules } from 'assets'
 
-import { ActionsModal } from './components'
+import { ActionsModal, LeaderBoard } from './components'
 import { MatchMakerResponse } from './components/ActionsModal/MatchMaker'
 import { OpponentInfo } from './RoninsGambit.container'
 import { ethers } from 'ethers'
@@ -128,12 +128,13 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
           </div>
         </div>
 
-        <div className='px-4 place-self-end'>
+        <div className='px-4'>
           <img
             src={gameTitleIllustration}
             alt='Game_Title_Image'
             className='rounded-2xl mix-blend-multiply'
           />
+          <LeaderBoard/>
         </div>
       </section>
 

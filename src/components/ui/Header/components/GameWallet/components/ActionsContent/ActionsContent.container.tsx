@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { useAddress, useContractRead, useContract, useContractWrite } from '@thirdweb-dev/react'
-import { ToastContainer, toast } from 'react-toastify'
+import { useAddress, useContractRead, useContract, useContractWrite, useBalance, NATIVE_TOKEN_ADDRESS } from '@thirdweb-dev/react'
+import {toast } from 'react-toastify'
 
 import { CONTRACTS } from 'utils/constants'
 import ActionsContent from './ActionsContent'
+import { UI } from 'utils/constants'
 
-const MINIMUM_BALANCE = 10
-const MINIMUM_DEPOSIT = 10
+const MINIMUM_BALANCE = UI.MINIMUM_BALANCE
+const MINIMUM_DEPOSIT = 0// you can't deposit less than 0
 
 interface PropTypes {
   handleModalClose: () => void
@@ -33,17 +34,17 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
     isLoading: depositIsLoading,
     error: depositIsError,
   } = useContractRead(gameWalletContract, 'deposits', [userAddress])
-  const userBalance = deposit ? Number(deposit.toString()) / 10 ** 18 : 0
+  const userDeposit = deposit ? Number(deposit.toString()) / 10 ** 18 : 0
 
   const {
     data: allowance,
     isLoading: allowanceIsLoading,
     error: allowanceIsError,
   } = useContractRead(erc20Contract, 'allowance', [userAddress, CONTRACTS.gameWalletAddress])
-  const allowanceValue = allowance ? Number(allowance.toString()) / 10 ** 18 : 0
 
-  const isAllowanceApprovalRequired = allowanceValue >= 0 ? false : true
-  const needToPay = MINIMUM_BALANCE - userBalance
+  const { data:balance} = useContractRead(erc20Contract, 'balanceOf', [userAddress])
+  const balanceValue = balance ? Number(balance.toString()) / 10 ** 18 : 0
+  const allowanceValue = allowance ? Number(allowance.toString()) / 10 ** 18 : 0
 
   const { mutateAsync: depositAsync } = useContractWrite(gameWalletContract, 'deposit')
   const { mutateAsync: approveAsync } = useContractWrite(erc20Contract, 'approve')
@@ -54,7 +55,7 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
     setValidationError('')
 
     await approveAsync({
-      args: [CONTRACTS.gameWalletAddress, (needToPay * 10 ** 18).toString()],
+      args: [CONTRACTS.gameWalletAddress, (10**20).toString()],
     })
       .then((response) => {
         console.log(response, 'Allowance Approval Response')
@@ -75,20 +76,22 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
       setValidationError('Enter a valid amount.')
       return
     }
-    if (depositAmount < MINIMUM_DEPOSIT) {
-      setValidationError(`Deposit can't be less than ${MINIMUM_DEPOSIT} ${tokenName}`)
+    if (depositAmount > balanceValue) {
+      setValidationError(
+        `Deposit can't be greater than your balance (${balanceValue} ${tokenName})`,
+      )
       return
     }
     if (depositAmount > allowanceValue) {
       setValidationError(
-        `Deposit can't be greater than your allowance(${MINIMUM_DEPOSIT} ${tokenName})`,
+        `You need to approve more! You have approved (${allowanceValue} ${tokenName})`,
       )
       return
     }
 
     setIsLoading(true)
     setValidationError('')
-    await depositAsync({ args: [(needToPay * 10 ** 18).toString()] })
+    await depositAsync({ args: [(depositAmount * 10 ** 18).toString()] })
       .then((response) => {
         console.log(response, 'Deposit Response')
         toast.success(`Successfully deposited ${depositAmount} ${tokenName}.`)
@@ -115,12 +118,11 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
   return (
     <>
       <ActionsContent
-        userBalance={userBalance}
+        userBalance={userDeposit}
         minimumBalance={MINIMUM_BALANCE}
-        needToPay={needToPay}
         tokenName={tokenName}
+        balanceValue={balanceValue}
         allowanceValue={allowanceValue}
-        isAllowanceApprovalRequired={isAllowanceApprovalRequired}
         handleApprove={handleApprove}
         handleDeposit={handleDeposit}
         activeTabType={activeTabType}

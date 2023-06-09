@@ -2,7 +2,6 @@ import {
   useAddress,
   useContractRead,
   useContract,
-  useContractWrite,
   useSigner,
   useSDK,
 } from '@thirdweb-dev/react'
@@ -27,18 +26,11 @@ const ActionsModalContainer = ({ showModal, handleOnClose, handleOnConnection }:
   const { data: tokenName } = useContractRead(erc20Contract, 'symbol')
   const { data: walletContract } = useContract(CONTRACTS.gameWalletAddress, CONTRACTS.gameWalletABI)
   const { data: deposit } = useContractRead(walletContract, 'deposits', [userAddress])
-  const { mutateAsync: depositToken } = useContractWrite(walletContract, 'deposit')
 
   const userBalance = deposit ? Number(deposit.toString()) / 10 ** 18 : undefined
   const minimumBalanceToPlay = 1
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
 
-  const topUpWallet = async () => {
-    if (userBalance && userBalance >= minimumBalanceToPlay) {
-      const needToPay = minimumBalanceToPlay - userBalance
-      await depositToken({ args: [(needToPay * 10 ** 18).toString()] })
-    }
-  }
   const signer = useSigner()
   const wager = 1e17
   const validUntil = Math.floor(Date.now() / 1000) + 60 * 100
@@ -46,7 +38,10 @@ const ActionsModalContainer = ({ showModal, handleOnClose, handleOnConnection }:
     'accept' | 'reject' | 'timeout' | undefined
   >(undefined)
   const [enableSigner, setEnableSigner] = useState(true)
-
+  const topUpWallet = async () => {
+    handleOnClose();
+    window.dispatchEvent(new CustomEvent('topUpWallet'))
+  }
   const signMatchRequest = async () => {
     setEnableSigner(false)
     if (!signer) return

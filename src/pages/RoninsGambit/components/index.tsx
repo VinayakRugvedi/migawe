@@ -1,3 +1,3 @@
 import ActionsModal from './ActionsModal/ActionsModal.container'
-
-export { ActionsModal }
+import LeaderBoard from './LeaderBoard/LeaderBoard.container'
+export { ActionsModal,LeaderBoard }
