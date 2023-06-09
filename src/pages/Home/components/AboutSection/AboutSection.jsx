@@ -14,8 +14,8 @@ const AboutSection = () => {
           </p>
 
           <div className='mt-8'>
-            <h4 className='text-2xl font-medium'>How is it an addictive setup?</h4>
-            <p className='italic font-medium'>
+            <h4 className='text-2xl font-medium text-primary'>How is it an addictive setup?</h4>
+            <p className='italic font-medium text-primary'>
               A player can choose to play either native games or branded games.
             </p>
             <p className='text-md md:text-xl mt-2'>
@@ -28,13 +28,13 @@ const AboutSection = () => {
               20%)
             </p>
             <p className='italic font-medium'>
-              The deducted 20% is added to our stakeholders pool, which is basically our revenue and
-              is used to support development, reward the community, to encourage loyalty, etc.
+              The deducted 20% is added to our treasure pool, which is basically our revenue and is
+              used to support development, reward the community, to encourage loyalty, etc.
             </p>
           </div>
 
           <div className='mt-8'>
-            <h4 className='text-2xl font-medium'>How are brands and users united?</h4>
+            <h4 className='text-2xl font-medium text-primary'>How are brands and users united?</h4>
             <p className='text-md md:text-xl mt-2'>
               Brands can select a game and brand it, from transforming the entire game environment
               to configuring the flow and reward pool(s), thereby aligning with their branding and
@@ -47,8 +47,10 @@ const AboutSection = () => {
           </div>
 
           <div className='mt-8'>
-            <h4 className='text-2xl font-medium'>How is engagement enhanced on dApps?</h4>
-            <p className='italic font-medium'>We call this plug and play</p>
+            <h4 className='text-2xl font-medium text-primary'>
+              How is engagement enhanced on dApps?
+            </h4>
+            <p className='italic font-medium text-primary'>We call this plug and play</p>
             <p className='text-md md:text-xl mt-2'>
               dApps can pick any of the native games and plug it on their platform. dApp operators
               will have control over configuring the game flow, reward pool(s), and establishing
@@ -72,9 +74,11 @@ const AboutSection = () => {
           </div>
 
           <div className='mt-16 flex flex-col justify-center'>
-            <h4 className='text-2xl font-medium'>Can I be a part of Migawe&apos;s ecosystem?</h4>
-            <p className='italic font-medium'>We will never say NO</p>
-            <p className='text-md md:text-xl mt-2'>
+            <h4 className='text-2xl font-medium text-secondary-focus'>
+              Can I be a part of Migawe&apos;s ecosystem?
+            </h4>
+            <p className='italic font-medium text-secondary-focus'>We will never say NO</p>
+            <p className='text-md md:text-xl mt-2 text-secondary-focus'>
               Migawe allows brands and game studios to easily become part of the ecosystem by
               leveraging its infrastructure and system models.
             </p>

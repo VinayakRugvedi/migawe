@@ -59,7 +59,7 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
           </div>
 
           <div className='mt-8 text-md md:text-xl'>
-            The duel ends when one legend dies{' '}
+            The duel ends when one legend dies.
             <div className='text-md md:text-xl'>
               You and the enemy are allowed to execute one of the&nbsp;
               <span className='text-primary font-medium'>3 sword techniques</span> namely:{' '}

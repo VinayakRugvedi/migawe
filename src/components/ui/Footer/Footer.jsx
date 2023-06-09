@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { FaGithub } from 'react-icons/fa'
+import { GrMail } from 'react-icons/gr'
 
 const GITHUB_REPO_LINK = 'https://github.com/VinayakRugvedi/migawe/tree/develop'
 
@@ -11,8 +12,11 @@ const Footer = () => {
         <p>Copyright © 2023 - All right reserved</p>
       </div>
       <div className='grid-flow-col gap-4 md:place-self-center md:justify-self-end'>
-        <Link to={GITHUB_REPO_LINK} target='_blank' rel='noopener' className='text-2xl'>
+        <Link to={GITHUB_REPO_LINK} target='_blank' rel='noopener' className='text-2xl mr-4'>
           <FaGithub />
+        </Link>
+        <Link to='mailto:info@migawe.xyz' className='text-2xl'>
+          <GrMail />
         </Link>
       </div>
     </footer>
