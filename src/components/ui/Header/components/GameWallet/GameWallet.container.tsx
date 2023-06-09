@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAddress } from '@thirdweb-dev/react'
 
 import GameWallet from './GameWallet'
@@ -7,7 +7,6 @@ const GameWalletContainer = () => {
   const [showModal, setShowModal] = useState(false)
   const walletAddress = useAddress()
   const isWalletConnected = walletAddress && walletAddress.length > 0 ? true : false
-
   const handleModalOpen = () => {
     if (!isWalletConnected) return
     setShowModal(true)
@@ -16,6 +15,12 @@ const GameWalletContainer = () => {
   const handleModalClose = () => {
     setShowModal(false)
   }
+  useEffect(() => {
+    window.addEventListener('topUpWallet', handleModalOpen)
+    return () => {
+      window.removeEventListener('topUpWallet', handleModalOpen)
+    }
+  })
 
   return (
     <GameWallet

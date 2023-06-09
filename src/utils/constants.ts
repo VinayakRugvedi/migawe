@@ -1,9 +1,11 @@
 import gameWalletABI from './gameWalletABI.json'
 import erc20ABI from './erc20ABI.json'
-import rpcGameABI from './rpcGameABI.json'
+import rpsGameABI from './rpsGameABI.json'
 const UI = {
   HeaderHeightInPx: 125,
   tokenName: 'TST',
+  MINIMUM_BALANCE:10,
+  WAGER_AMOUNT:1
 }
 
 const RONIN_GAMBIT = {
@@ -12,12 +14,14 @@ const RONIN_GAMBIT = {
 }
 
 const CONTRACTS = {
-  rpcGameAddress: '0x201E31373572B54a293873663ba3F79A648589ef',
-  rpcGameABI: rpcGameABI,
+  rpsGameAddress: '0xBf0E4084b81e5788A0d1DB94A2B97A91b82B4f78',
+  rpsGameABI: rpsGameABI,
   gameWalletAddress: '39bc12763882A3959E8BFf8A41c24f0381BCBF52',
   gameWalletABI: gameWalletABI,
   erc20Address: 'a69bD215aB75BDf55d4DAB9734c74fea212D7f4C', //TODO: get from gameWallet contract
   erc20ABI: erc20ABI,
 }
+
+
 
 export { UI, RONIN_GAMBIT, CONTRACTS }

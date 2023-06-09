@@ -9,13 +9,6 @@ interface PropTypes {
 }
 
 const Modal = ({ isOpen, hideCloseIcon, onCloseHandler, children, rootClassNames }: PropTypes) => {
-  if (isOpen) {
-    //disable scroll
-    document.body.style.overflow = 'hidden'
-  } else {
-    //enable scroll
-    document.body.style.overflow = 'auto'
-  }
   return (
     <>
       <div

@@ -123,7 +123,7 @@ const ActionsModal = ({
   //user does not have enough balance
   if (!userHasEnoughBalance) {
     const needToPay = minimumBalanceToPlay - (userBalance ? userBalance : 0)
-    modalContent = 'Top-up your Game Wallet'
+    modalHeader = 'Top-up your Game Wallet'
     modalContent = (
       <>
         Please top-up your game wallet.
@@ -138,11 +138,23 @@ const ActionsModal = ({
         <b>
           {userBalance} {tokenName}
         </b>
-        &nbsp; and you need&nbsp;
-        <b>
-          {needToPay} {tokenName}
-        </b>
-        &nbsp; more.
+        . You need {needToPay} {tokenName} more.
+        <br />
+        <span className=' leading-10'>
+          {' '}
+          You can mint {tokenName} tokens using&nbsp;
+          <a
+            href={
+              'https://sepolia.etherscan.io/address/0xa69bd215ab75bdf55d4dab9734c74fea212d7f4c#writeContract'
+            }
+            className='link text-primary-focus'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            etherscan
+          </a>
+          .
+        </span>
       </>
     )
     modalIcon = <GiPiggyBank />

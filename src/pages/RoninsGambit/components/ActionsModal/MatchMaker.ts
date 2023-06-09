@@ -71,11 +71,11 @@ export default class MatchMaker {
             const opponentValidUntil = response.opponent.validUntil
             const opponentSign = response.opponent.sign
 
-            const rpcGameContract = await sdk.getContract(
-              CONTRACTS.rpcGameAddress,
-              CONTRACTS.rpcGameABI,
+            const rpsGameContract = await sdk.getContract(
+              CONTRACTS.rpsGameAddress,
+              CONTRACTS.rpsGameABI,
             )
-            await rpcGameContract.call('startGame', [
+            await rpsGameContract.call('startGame', [
               opponentAddr,
               opponentProxyAddr,
               playerProxyAddr,

@@ -16,6 +16,7 @@ interface PropTypes {
   setOpponentInfo: (opponentInfo: OpponentInfo) => void
 }
 export type GameData = {
+  finalizeMsg: JSX.Element;
   playerHealth: number
   opponentHealth: number
 }
@@ -53,6 +54,7 @@ const GamePlayContainer = ({ opponentInfo, setOpponentInfo }: PropTypes) => {
       console.error('invalid player id')
   }
   const gameData = {
+    finalizeMsg: type=='network'?<div className='text-5xl text-red-600'>Sign on chain to claim your prize!</div>:<></>,
     playerHealth: 5,
     opponentHealth: 5,
   }
@@ -99,8 +101,7 @@ const GamePlayContainer = ({ opponentInfo, setOpponentInfo }: PropTypes) => {
     }
   }
   const handleOnEnd = () => {
-    setTimeout(() => {
-      handlePlayerMove(0) //this is needed to trigger the onPlayersMove callback
+      handlePlayerMove(0)
       setOpponentInfo({
         isReady: false,
         type: 'network',
@@ -108,7 +109,6 @@ const GamePlayContainer = ({ opponentInfo, setOpponentInfo }: PropTypes) => {
         playerId: 0,
         proxyWallet: ethers.Wallet.createRandom(),
       })
-    }, 3000)
   }
   return (
     <div className='absolute inset-0 overflow-hidden'>
