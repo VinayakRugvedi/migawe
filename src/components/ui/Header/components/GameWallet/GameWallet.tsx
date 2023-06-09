@@ -19,16 +19,16 @@ const GameWallet = ({
   return (
     <>
       <button
-        className={`btn btn-ghost flex flex-col items-center justify-center font-medium ${
-          !isWalletConnected ? 'tooltip tooltip-bottom' : ''
+        className={`btn btn-ghost font-medium ${
+          !isWalletConnected ? 'tooltip tooltip-right md:tooltip-bottom' : ''
         }`}
         data-tip='Connect your wallet to access'
         onClick={handleModalOpen}
       >
-        <span className='text-2xl'>
+        <span className='text-2xl flex flex-col items-center justify-center'>
           <GiWallet />
+          <span className='text-xs uppercase'>Game Wallet</span>
         </span>
-        <h6 className='text-xs uppercase'>Game Wallet</h6>
       </button>
 
       <Modal

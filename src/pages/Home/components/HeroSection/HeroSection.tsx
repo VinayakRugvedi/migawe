@@ -3,7 +3,7 @@ import styles from './HeroSection.module.css'
 
 const HeroSection = () => {
   return (
-    <section className='pt-[120px] w-screen min-h-screen relative px-8'>
+    <section className='pt-[95px] md:pt-[120px] w-screen min-h-screen relative px-8'>
       <div className='mx-auto max-w-screen-2xl'>
         <h3 className='text-5xl md:text-9xl font-bold text-center'>The Ronin&apos;s Gambit</h3>
         <p className='font-bold text-center'>
