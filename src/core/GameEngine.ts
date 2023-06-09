@@ -83,7 +83,7 @@ class GameEngine {
       }
       // so that the other agent can get the final state/ final move
       // *Only works for 2 agents
-      agents[state.step % 2].getNextState(state, proof, publicSignals)
+      agents[state.step % 2].getNextState(state, proof, publicSignals, stateSign)
     } catch (error) {
       this.status = GameEngineStatus.NotRunning
       console.error(error)
