@@ -45,13 +45,15 @@ const ActionsModal = ({
   modalIcon = <FaFileSignature />
   modalContent = (
     <>
-      You are ready to start challenging other players. Click the button below to sign.
+      You are all set to challenge other players.
       <br />
-      You will be charged{' '}
+      Please click on the button below to sign.
+      <br />
+      You will be charged&nbsp;
       <b>
         {minimumBalanceToPlay} {tokenName}
       </b>
-      .
+      &nbsp; in order to setup the reward pool.
     </>
   )
   modalAction = (
@@ -61,11 +63,13 @@ const ActionsModal = ({
   )
   //user rejected sign match request
   if (userMatchRequestStatus == 'reject') {
-    modalHeader = 'Must Sign a Match Request'
+    modalHeader = 'Signing Match Request is Mandatory'
     modalIcon = <FaFileSignature />
     modalContent = (
       <>
-        You must sign a match request. Click the button below to sign.
+        You must sign the match request in order to play.
+        <br />
+        Please click on the button below to sign and continue.
         <br />
       </>
     )
@@ -76,12 +80,13 @@ const ActionsModal = ({
     )
   }
   if (userMatchRequestStatus == 'timeout') {
-    modalHeader = 'Challenge Timeout'
+    modalHeader = 'Challenge Timed Out; Retry'
     modalIcon = <IoIosTime />
     modalContent = (
       <>
-        Your last challenge has ended. Please try again.
+        Your challenge has expired. Please click on the button below to try again.
         <br />
+        <span className='italic'>Note: You will have to sign the match request again.</span>
       </>
     )
     modalAction = (
@@ -92,23 +97,28 @@ const ActionsModal = ({
   }
   if (userMatchRequestStatus == 'accept') {
     modalCloseDisabled = true
-    modalHeader = 'Challenge Posted'
+    modalHeader = 'Challenge Posted!'
     modalIcon = <GiStarsStack />
     modalContent = (
       <>
-        Your challenge is now active for &nbsp;
-        <Timer
-          durationInSeconds={60}
-          handleTimerEnd={() => {
-            setUserMatchRequestStatus('timeout')
-            setEnableSigner(true)
-          }}
-        />
-        &nbsp;secs.
+        Your challenge has been successfully posted and will be{' '}
+        <b>
+          active for&nbsp;
+          <Timer
+            durationInSeconds={60}
+            handleTimerEnd={() => {
+              setUserMatchRequestStatus('timeout')
+              setEnableSigner(true)
+            }}
+          />
+          &nbsp;secs.
+        </b>
         <br />
       </>
     )
-    modalAction = <span>Wait for Someone to Accept Your Challenge</span>
+    modalAction = (
+      <span className='italic text-center'>Please wait until someone accepts your challenge</span>
+    )
   }
   //user does not have enough balance
   if (!userHasEnoughBalance) {
@@ -116,14 +126,23 @@ const ActionsModal = ({
     modalContent = 'Top-up your Game Wallet'
     modalContent = (
       <>
-        Please top-up your game wallet. You game wallet should have a minimum balance of{' '}
-        {minimumBalanceToPlay} {tokenName} to start playing games.
+        Please top-up your game wallet.
+        <br />
+        Your game wallet should have a{' '}
+        <b>
+          minimum balance of {minimumBalanceToPlay} {tokenName}
+        </b>
+        &nbsp; to start playing the game.
         <br />
         Your currrent balance is{' '}
         <b>
           {userBalance} {tokenName}
         </b>
-        . You need {needToPay} {tokenName} more.
+        &nbsp; and you need&nbsp;
+        <b>
+          {needToPay} {tokenName}
+        </b>
+        &nbsp; more.
       </>
     )
     modalIcon = <GiPiggyBank />
@@ -141,7 +160,7 @@ const ActionsModal = ({
 
   if (!isWalletConnected) {
     modalHeader = 'Connect Wallet'
-    modalContent = 'Please connect your wallet to start playing games.'
+    modalContent = 'Please connect your wallet to start playing the game.'
     modalIcon = <GiWallet />
     modalAction = <ThirdWebConnectWalletButton />
   }
@@ -150,8 +169,8 @@ const ActionsModal = ({
     <Modal isOpen={showModal} handleOnClose={handleOnClose} hideCloseIcon={modalCloseDisabled}>
       <div className='flex items-center justify-center flex-col py-2 '>
         <h4 className='text-lg font-bold mt-2 self-start'>{modalHeader}</h4>
-        <div className='text-7xl my-2'>{modalIcon}</div>
-        <p className='text-center mb-4 px-4'>{modalContent}</p>
+        <div className='text-7xl my-4'>{modalIcon}</div>
+        <p className='text-center mb-6 px-4'>{modalContent}</p>
         {modalAction}
       </div>
     </Modal>
