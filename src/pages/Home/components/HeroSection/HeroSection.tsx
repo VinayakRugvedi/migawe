@@ -63,7 +63,8 @@ const HeroSection = () => {
                 </div>
                 <p>
                   No matter if you are a brand or a gaming studio, you can easily leverage
-                  Migawe&apos;s infrastructure and thoughts to publish your game.
+                  Migawe&apos;s infratructure and system models to publish your game and let others
+                  consume it.
                 </p>
               </div>
             </div>
