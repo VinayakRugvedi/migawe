@@ -5,6 +5,7 @@
 The current stable version of the product is [live here!](https://www.migawe.xyz/)
 
 **NOTE: The complete stable production code is present at the develop branch. [Switch to develop branch if you haven't](https://github.com/VinayakRugvedi/migawe/tree/develop)**
+
 _We are in the process of sorting a few stuff and merging the code from develop to master_
 
 ## Introduction
