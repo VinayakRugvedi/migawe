@@ -1,46 +1,43 @@
-# Getting Started with Create React App
+# Migawe
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Migawe uniquely combines games, rewards, branding, and engagement enhancement for dApps to drive web3 adoption, unite brands and users, and create a thriving ecosystem
 
-## Available Scripts
+The current stable version of the product is [live here!](https://www.migawe.xyz/)
 
-In the project directory, you can run:
+**NOTE: The complete stable production code is present at the develop branch. [Switch to develop branch if you haven't](https://github.com/VinayakRugvedi/migawe/tree/develop)**
+_We are in the process of sorting a few stuff and merging the code from develop to master_
 
-### `npm start`
+## Introduction
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**This repository contains the frontend code of https://www.migawe.xyz/**
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+If you are specifically interested in checking out how smart contracts are being integrated, you can checkout the following sections of code:
 
-### `npm test`
+1. [Game Wallet Implementation](https://github.com/VinayakRugvedi/migawe/tree/develop/src/components/ui/Header/components/GameWallet)
+2. [Wallet Actions Implementation](https://github.com/VinayakRugvedi/migawe/tree/develop/src/pages/RoninsGambit/components/ActionsModal)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We are using [ThirdWeb React SDK](https://portal.thirdweb.com/react)
 
-### `npm run build`
+### Other resources
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The following are the resources which make this product complete and functional:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. [Smart Contract Development](https://github.com/Raunaque97/RPS_Game_Contracts)
+2. [Match Making Server](https://github.com/Raunaque97/SimpleMatchMaker)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Running it locally
 
-### `npm run eject`
+Follow the steps mentioned below:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. Clone this repository
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Checkout to develop branch
+   `git checkout develop`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+3. Install dependencies
+   `npm install`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+4. Start the application
+   `npm run start`
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+5. Open `localhost:3000` on your browser
