@@ -118,7 +118,7 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
   }, [])
 
   const handlePlayerChoice = (choice: 0 | 1 | 2) => {
-    console.log('player choice', choice)
+    // console.log('player choice', choice)
     handlePlayerMove(choice)
     //to make the choice buttons disabled
     setPlayerChoice(choice)

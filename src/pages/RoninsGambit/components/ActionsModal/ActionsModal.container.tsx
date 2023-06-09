@@ -6,7 +6,7 @@ import {
   useSDK,
 } from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
-import { CONTRACTS } from 'utils/constants'
+import { CONTRACTS, UI } from 'utils/constants'
 import { useState } from 'react'
 import MatchMaker, { MatchMakerResponse } from './MatchMaker'
 interface PropTypes {
@@ -28,7 +28,7 @@ const ActionsModalContainer = ({ showModal, handleOnClose, handleOnConnection }:
   const { data: deposit } = useContractRead(walletContract, 'deposits', [userAddress])
 
   const userBalance = deposit ? Number(deposit.toString()) / 10 ** 18 : undefined
-  const minimumBalanceToPlay = 1
+  const minimumBalanceToPlay = UI.MINIMUM_BALANCE
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
 
   const signer = useSigner()

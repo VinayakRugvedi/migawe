@@ -4,14 +4,6 @@ import { BigNumber } from "ethers";
 import { useEffect } from "react";
 import { CONTRACTS } from "utils/constants";
 
-const dummyData=[
-    {address: '0x39bc12763882A3959E8BFf8A41c24f0381BCBF52', wins: "50"},
-    {address: '0x39bc12763882A3959E8BFf8A41c24f0381BCBF52', wins: "15"},
-    {address: '0x39bc12763882A3959E8BFf8A41c24f0381BCBF52', wins: "10"},
-    {address: '0x39bc12763882A3959E8BFf8A41c24f0381BCBF52', wins: "9"},
-    {address: '0x39bc12763882A3959E8BFf8A41c24f0381BCBF52', wins: "2"},
-]
-
 interface PropTypes {
     addresses: Array<string>
 }
@@ -25,7 +17,7 @@ const Wins = ({addresses}:PropTypes) => {
         {address: addresses[3], wins: useContractRead(rpsGameContract, 'currTournamentScore',[addresses[3]]).data as BigNumber},
         {address: addresses[4], wins: useContractRead(rpsGameContract, 'currTournamentScore',[addresses[4]]).data as BigNumber},
     ]
-    console.log(leaderboard);
+    // console.log(leaderboard);
     return <LeaderBoard leaderboard={leaderboard} />;
 }
 

@@ -8,7 +8,7 @@ interface PropTypes {
 }
 
 const LeaderBoard = ({ leaderboard } : PropTypes) => {
-    const leaderboardPadded = leaderboard.concat(Array(5).fill({address: 'loading...', wins: 'loading...'})).slice(0, 5); 
+    const leaderboardFiltered = leaderboard.filter((player) => player.address !== "0x0000000000000000000000000000000000000000"); 
     return (
         <div className='mt-8 w-full'>
             <h4 className='text-2xl font-medium'>LeaderBoards</h4>
@@ -23,7 +23,7 @@ const LeaderBoard = ({ leaderboard } : PropTypes) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {leaderboardPadded.map((player, index) => (
+                            {leaderboardFiltered.map((player, index) => (
                                 <tr key={index}>
                                     <td>{index+1}</td>
                                     <td className=" overflow-ellipsis">{player.address}</td>

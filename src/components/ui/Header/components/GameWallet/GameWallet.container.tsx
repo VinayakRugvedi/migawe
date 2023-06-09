@@ -7,7 +7,6 @@ const GameWalletContainer = () => {
   const [showModal, setShowModal] = useState(false)
   const walletAddress = useAddress()
   const isWalletConnected = walletAddress && walletAddress.length > 0 ? true : false
-
   const handleModalOpen = () => {
     if (!isWalletConnected) return
     setShowModal(true)
@@ -21,7 +20,7 @@ const GameWalletContainer = () => {
     return () => {
       window.removeEventListener('topUpWallet', handleModalOpen)
     }
-  }, [])
+  })
 
   return (
     <GameWallet

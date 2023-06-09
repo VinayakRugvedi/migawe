@@ -95,7 +95,7 @@ const ActionsContent = ({
         </p>
         <a
           className='btn btn-wide mt-4 justify-center'
-          href='https://sepolia.etherscan.io/address/0xa69bd215ab75bdf55d4dab9734c74fea212d7f4c#writeContract'
+          href='https://sepolia.etherscan.io/address/0x39bc12763882A3959E8BFf8A41c24f0381BCBF52#writeContract'
           target='_black'
           rel='noopener noreferrer'
         >

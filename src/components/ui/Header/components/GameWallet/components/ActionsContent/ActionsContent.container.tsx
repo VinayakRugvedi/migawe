@@ -58,7 +58,7 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
       args: [CONTRACTS.gameWalletAddress, (10**20).toString()],
     })
       .then((response) => {
-        console.log(response, 'Allowance Approval Response')
+        // console.log(response, 'Allowance Approval Response')
         toast.success('Successfully approved the allowance. Continue to Deposit')
       })
       .catch((error) => {
@@ -93,7 +93,7 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
     setValidationError('')
     await depositAsync({ args: [(depositAmount * 10 ** 18).toString()] })
       .then((response) => {
-        console.log(response, 'Deposit Response')
+        // console.log(response, 'Deposit Response')
         toast.success(`Successfully deposited ${depositAmount} ${tokenName}.`)
         handleModalClose()
       })
