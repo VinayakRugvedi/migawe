@@ -141,11 +141,11 @@ const GamePlayUI = ({ gameData, handlePlayerMove, handleOnEnd }: PropTypes) => {
         </div>
       </div>
       {/* player0 hitpoints */}
-      <div className='absolute bottom-8 right-8 pointer-events-none'>
+      <div className='absolute bottom-[25%] md:bottom-8 right-8 pointer-events-none'>
         <HitPoints hitPoints={playerHealth} maxHitPoints={5} flip />
       </div>
       {/* player1 hitpoints */}
-      <div className='absolute top-8 left-8 pointer-events-none'>
+      <div className='absolute top-[25%] md:top-8 left-8 pointer-events-none'>
         <HitPoints hitPoints={opponentHealth} maxHitPoints={5} flip={false} />
       </div>
       <div
