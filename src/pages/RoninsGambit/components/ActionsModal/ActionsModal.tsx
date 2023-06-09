@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
 import { GiWallet, GiPiggyBank, GiStarsStack } from 'react-icons/gi'
 import { FaFileSignature } from 'react-icons/fa'
 import { IoIosTime } from 'react-icons/io'
+
 import { Modal, Timer } from 'components/base'
 import { ThirdWebConnectWalletButton } from 'components/ui'
 
@@ -101,7 +103,7 @@ const ActionsModal = ({
     modalIcon = <GiStarsStack />
     modalContent = (
       <>
-        Your challenge has been successfully posted and will be{' '}
+        Your challenge has been successfully posted and will be&nbsp;
         <b>
           active for&nbsp;
           <Timer
@@ -121,7 +123,7 @@ const ActionsModal = ({
     )
   }
   //user does not have enough balance
-  if (!userHasEnoughBalance) {
+  if (userHasEnoughBalance) {
     const needToPay = minimumBalanceToPlay - (userBalance ? userBalance : 0)
     modalHeader = 'Top-up your Game Wallet'
     modalContent = (
@@ -138,23 +140,24 @@ const ActionsModal = ({
         <b>
           {userBalance} {tokenName}
         </b>
-        . You need {needToPay} {tokenName} more.
+        &nbsp; and you need{' '}
+        <b>
+          {needToPay} {tokenName} more
+        </b>
+        .
         <br />
-        <span className=' leading-10'>
-          {' '}
-          You can mint {tokenName} tokens using&nbsp;
-          <a
-            href={
-              'https://sepolia.etherscan.io/address/0xa69bd215ab75bdf55d4dab9734c74fea212d7f4c#writeContract'
-            }
+        <div className='mt-6 italic'>
+          Note: You can mint {tokenName} tokens using&nbsp;
+          <Link
+            to='https://sepolia.etherscan.io/address/0xa69bd215ab75bdf55d4dab9734c74fea212d7f4c#writeContract'
             className='link text-primary-focus'
             target='_blank'
             rel='noopener noreferrer'
           >
             etherscan
-          </a>
+          </Link>
           .
-        </span>
+        </div>
       </>
     )
     modalIcon = <GiPiggyBank />

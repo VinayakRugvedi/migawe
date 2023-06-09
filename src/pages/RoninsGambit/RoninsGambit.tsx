@@ -133,7 +133,7 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
           </div>
         </div>
 
-        <div className='px-4'>
+        <div className='px-8'>
           <img
             src={gameTitleIllustration}
             alt='Game_Title_Image'
