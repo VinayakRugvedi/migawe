@@ -40,7 +40,11 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
           <div className='italic'>
             <span className='font-medium'>MIGAWE</span> Presents,
           </div>
-          <h3 className='text-4xl md:text-5xl font-medium'>The Ronin&apos;s Gambit</h3>
+          <div>
+            <h3 className='text-4xl md:text-5xl font-medium'>The Ronin&apos;s Gambit</h3>
+            <span className='badge mr-2 badge-secondary font-medium'>on chain</span>
+            <span className='badge badge-secondary font-medium'>p2p</span>
+          </div>
 
           <div className='text-md md:text-xl mt-8'>
             Prepare for an epic duel as you embrace the path of the samurai, and delve into the

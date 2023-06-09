@@ -28,7 +28,7 @@ const HeroSection = () => {
 
             <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
               <div className='card-body'>
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center flex-wrap'>
                   <h2 className='card-title'>Branded Game</h2>
                   <div className='badge'>coming soon</div>
                 </div>
@@ -43,7 +43,7 @@ const HeroSection = () => {
           <div className='grid grid-cols-1 md:grid-cols-2 auto-rows-auto gap-8'>
             <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
               <div className='card-body'>
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center flex-wrap'>
                   <h2 className='card-title'>Plug and Play</h2>
                   <div className='badge'>coming soon</div>
                 </div>
@@ -57,7 +57,7 @@ const HeroSection = () => {
 
             <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
               <div className='card-body'>
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center flex-wrap'>
                   <h2 className='card-title'>Migawe&apos;s Ecosystem</h2>
                   <div className='badge'>coming soon</div>
                 </div>
