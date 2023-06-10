@@ -3,6 +3,7 @@ import { useAddress } from '@thirdweb-dev/react'
 
 import GameWallet from './GameWallet'
 
+// TODO: Get rid of window.addEventListener
 const GameWalletContainer = () => {
   const [showModal, setShowModal] = useState(false)
   const walletAddress = useAddress()
