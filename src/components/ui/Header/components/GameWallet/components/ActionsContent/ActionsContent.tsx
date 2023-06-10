@@ -42,46 +42,54 @@ const ActionsContent = ({
       <div className='flex flex-col items-center justify-center'>
         <h4 className='text-lg font-bold mt-2 self-start'>Deposit</h4>
         <p className='text-xs font-medium self-start'>
-          Approved <span className=" font-bold">{allowanceValue} {tokenName} </span>
+          Your approved allowance is:&nbsp;
+          <span className=' font-bold'>
+            {allowanceValue} {tokenName}{' '}
+          </span>
         </p>
         <div className='mt-2 text-left'>
-            <div
-            className='form-control w-full max-w-xs font-medium'>
-              <label className='label'>
-                <span className='label-text'>Please enter the amount you want to deposit</span>
-                {/* <span className='label-text-alt'>Top Right label</span> */}
-              </label>
-              <input
-                type='number'
-                placeholder='Amount here...'
-                className='input input-bordered w-full max-w-xs'
-                min={0}
-                max={balanceValue}
-                value={depositAmount}
-                onChange={handleDepositAmount}
-              />
-              <label className='label'>
-                <span className='label-text'></span>
-                <span className='label-text-alt'>
-                 you have {balanceValue} {tokenName}
-                </span>
-              </label>
-              <label className={`label pt-0 ${isValidationErrorPresent ? '' : 'invisible'}`}>
-                <span className='label-text-alt text-primary'>
-                  {isValidationErrorPresent ? validationError : '-'}
-                </span>
-              </label>
-              {depositAmount>allowanceValue?
-              (<button className='btn btn-wide mt-4 justify-center mx-auto'  onClick={handleApprove}  disabled={isLoading}>
-              {isLoading ? 'Loading...' : 'Approve'}
-              </button>):
-              (
-                <button className='btn btn-wide mt-4 justify-center mx-auto'  onClick={handleDeposit}  disabled={isLoading || depositAmount==0}>
-              {isLoading ? 'Loading...' : 'Deposit'}
+          <div className='form-control w-full max-w-xs font-medium'>
+            <label className='label'>
+              <span className='label-text'>Please enter the amount you want to deposit</span>
+            </label>
+            <input
+              type='number'
+              placeholder='Amount here...'
+              className='input input-bordered w-full max-w-xs'
+              min={0}
+              max={balanceValue}
+              value={depositAmount}
+              onChange={handleDepositAmount}
+            />
+            <label className='label'>
+              <span className='label-text'></span>
+              <span className='label-text-alt'>
+                You have {balanceValue} {tokenName}
+              </span>
+            </label>
+            <label className={`label pt-0 ${isValidationErrorPresent ? '' : 'invisible'}`}>
+              <span className='label-text-alt text-primary'>
+                {isValidationErrorPresent ? validationError : '-'}
+              </span>
+            </label>
+            {depositAmount > allowanceValue ? (
+              <button
+                className='btn btn-wide mt-4 justify-center mx-auto'
+                onClick={handleApprove}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : 'Approve'}
               </button>
-              )}
-              
-            </div>
+            ) : (
+              <button
+                className='btn btn-wide mt-4 justify-center mx-auto'
+                onClick={handleDeposit}
+                disabled={isLoading || depositAmount == 0}
+              >
+                {isLoading ? 'Loading...' : 'Deposit'}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     )
