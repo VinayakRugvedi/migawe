@@ -1,4 +1,6 @@
-import { Logo512 } from 'assets'
+import { Link } from 'react-router-dom'
+
+import { gameFightSceneIllustration, Logo512 } from 'assets'
 
 const AboutSection = () => {
   return (
@@ -82,6 +84,26 @@ const AboutSection = () => {
               Migawe allows brands and game studios to easily become part of the ecosystem by
               leveraging its infrastructure and system models.
             </p>
+          </div>
+
+          <div className='card card-compact card-bordered w-full md:w-96 mt-16 bg-base-100 shadow-xl pb-10'>
+            <figure>
+              <img
+                src={gameFightSceneIllustration}
+                alt='Ronin_Gambit_Fight_Image'
+                className='mix-blend-multiply drop-shadow-[0_0px_12px_hsl(var(--p))]'
+              />
+            </figure>
+            <div className='card-body'>
+              <h2 className='card-title'>What&apos; stopping you legend?</h2>
+              <p>
+                Please click on the button below to land on the game page. May the force be with
+                you!
+              </p>
+              <Link to='ronins-gambit' className='btn btn-sm btn-neutral mt-2'>
+                Let&apos;s Go
+              </Link>
+            </div>
           </div>
         </div>
       </div>

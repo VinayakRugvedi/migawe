@@ -1,10 +1,11 @@
-import { GiBroadsword, GiPlayButton } from 'react-icons/gi'
-import { gameTitleIllustration, gameRules } from 'assets'
+import { Link } from 'react-router-dom'
+import { GiBroadsword, GiPlayButton, GiBarbedArrow } from 'react-icons/gi'
+import { ethers } from 'ethers'
 
+import { gameTitleIllustration, gameRules } from 'assets'
 import { ActionsModal, LeaderBoard } from './components'
 import { MatchMakerResponse } from './components/ActionsModal/MatchMaker'
 import { OpponentInfo } from './RoninsGambit.container'
-import { ethers } from 'ethers'
 import { UI } from 'utils/constants'
 
 interface PropTypes {
@@ -34,7 +35,18 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
     })
   }
   return (
-    <main className='overflow-x-hidden mt-[90px] md:mt-[120px] py-4 mx-auto max-w-7xl mb-16'>
+    <main className='overflow-x-hidden mt-[90px] md:mt-[120px] md:py-4 mx-auto max-w-7xl mb-16'>
+      <Link
+        to='/'
+        className='text-primary block px-8 mb-4 md:mb-8 text-sm hover:text-primary-focus'
+      >
+        <span className='flex items-center justify-start'>
+          <span className='mr-2 rotate-[135deg]'>
+            <GiBarbedArrow />
+          </span>
+          <span>Back to home</span>
+        </span>
+      </Link>
       <section className='mb-8 grid grid-cols-1 xl:grid-cols-2 gap-12'>
         <div className='px-8'>
           <div className='italic'>
