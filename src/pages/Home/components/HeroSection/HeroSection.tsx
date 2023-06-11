@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import { heroSectionPrimaryIllustartion, heroSectionSecondaryIllustartion } from 'assets'
 import styles from './HeroSection.module.css'
 
@@ -23,6 +25,9 @@ const HeroSection = () => {
                   For every game, setup the value of the reward pool which will be shared by the
                   players. Winner takes all minus 20%.
                 </p>
+                <Link className='btn btn-sm mt-2 btn-primary' to='ronins-gambit'>
+                  Take me to the game
+                </Link>
               </div>
             </div>
 
