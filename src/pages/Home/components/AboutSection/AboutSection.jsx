@@ -95,7 +95,7 @@ const AboutSection = () => {
               />
             </figure>
             <div className='card-body'>
-              <h2 className='card-title'>What&apos; stopping you legend?</h2>
+              <h2 className='card-title'>What&apos;s stopping you legend?</h2>
               <p>
                 Please click on the button below to land on the game page. May the force be with
                 you!
