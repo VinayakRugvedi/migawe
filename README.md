@@ -23,8 +23,10 @@ We are using [ThirdWeb React SDK](https://portal.thirdweb.com/react)
 
 The following are the resources which make this product complete and functional:
 
-1. [Smart Contract Development](https://github.com/Raunaque97/RPS_Game_Contracts)
-2. [Match Making Server](https://github.com/Raunaque97/SimpleMatchMaker)
+1. [Game Contract Development](https://github.com/Raunaque97/RPS_Game_Contracts)
+2. [Game Logic & zk circuits Development] (https://github.com/Raunaque97/RPS_svelte)
+3. [Match Making Server](https://github.com/Raunaque97/SimpleMatchMaker)
+
 
 ## Running it locally
 
