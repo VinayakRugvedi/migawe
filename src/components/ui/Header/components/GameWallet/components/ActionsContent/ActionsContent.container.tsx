@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { useAddress, useContractRead, useContract, useContractWrite, useBalance, NATIVE_TOKEN_ADDRESS } from '@thirdweb-dev/react'
-import {toast } from 'react-toastify'
+import { useAddress, useContractRead, useContract, useContractWrite } from '@thirdweb-dev/react'
+import { toast } from 'react-toastify'
 
 import { CONTRACTS } from 'utils/constants'
 import ActionsContent from './ActionsContent'
 import { UI } from 'utils/constants'
 
 const MINIMUM_BALANCE = UI.MINIMUM_BALANCE
-const MINIMUM_DEPOSIT = 0// you can't deposit less than 0
+const MINIMUM_DEPOSIT = 0 // you can't deposit less than 0
 
 interface PropTypes {
   handleModalClose: () => void
@@ -42,7 +42,7 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
     error: allowanceIsError,
   } = useContractRead(erc20Contract, 'allowance', [userAddress, CONTRACTS.gameWalletAddress])
 
-  const { data:balance} = useContractRead(erc20Contract, 'balanceOf', [userAddress])
+  const { data: balance } = useContractRead(erc20Contract, 'balanceOf', [userAddress])
   const balanceValue = balance ? Number(balance.toString()) / 10 ** 18 : 0
   const allowanceValue = allowance ? Number(allowance.toString()) / 10 ** 18 : 0
 
@@ -55,7 +55,7 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
     setValidationError('')
 
     await approveAsync({
-      args: [CONTRACTS.gameWalletAddress, (10**20).toString()],
+      args: [CONTRACTS.gameWalletAddress, (10 ** 20).toString()],
     })
       .then((response) => {
         // console.log(response, 'Allowance Approval Response')
@@ -76,15 +76,19 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
       setValidationError('Enter a valid amount.')
       return
     }
+    if (depositAmount === 0) {
+      setValidationError("Deposit amount can't be 0.")
+      return
+    }
     if (depositAmount > balanceValue) {
       setValidationError(
-        `Deposit can't be greater than your balance (${balanceValue} ${tokenName})`,
+        `Deposit amount can't be greater than your current balance of ${balanceValue} ${tokenName}`,
       )
       return
     }
     if (depositAmount > allowanceValue) {
       setValidationError(
-        `You need to approve more! You have approved (${allowanceValue} ${tokenName})`,
+        `You need to approve more! You have currently approved ${allowanceValue} ${tokenName}`,
       )
       return
     }
@@ -131,7 +135,6 @@ const ActionsContentContainer = ({ handleModalClose }: PropTypes) => {
         handleDepositAmount={handleDepositAmount}
         validationError={validationError}
         isLoading={isLoading}
-        isError={isError}
       />
     </>
   )

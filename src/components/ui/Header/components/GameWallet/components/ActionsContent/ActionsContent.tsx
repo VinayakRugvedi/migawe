@@ -12,7 +12,6 @@ interface PropTypes {
   handleDepositAmount: (arg0: React.ChangeEvent<HTMLInputElement>) => void
   validationError: string
   isLoading: boolean
-  isError: boolean
 }
 
 const ActionsContent = ({
@@ -29,7 +28,6 @@ const ActionsContent = ({
   handleDepositAmount,
   validationError,
   isLoading,
-  isError,
 }: PropTypes) => {
   const doesUserHasEnoughBalance = userBalance && userBalance >= minimumBalance ? true : false
 
@@ -62,7 +60,6 @@ const ActionsContent = ({
               onChange={handleDepositAmount}
             />
             <label className='label'>
-              <span className='label-text'></span>
               <span className='label-text-alt'>
                 You have {balanceValue} {tokenName}
               </span>
@@ -84,7 +81,7 @@ const ActionsContent = ({
               <button
                 className='btn btn-wide mt-4 justify-center mx-auto'
                 onClick={handleDeposit}
-                disabled={isLoading || depositAmount == 0}
+                disabled={isLoading}
               >
                 {isLoading ? 'Loading...' : 'Deposit'}
               </button>
