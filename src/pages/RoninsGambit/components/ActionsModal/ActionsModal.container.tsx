@@ -4,6 +4,7 @@ import {
   useContract,
   useSigner,
   useSDK,
+  useNetworkMismatch,
 } from '@thirdweb-dev/react'
 import ActionsModal from './ActionsModal'
 import { CONTRACTS, UI } from 'utils/constants'
@@ -30,6 +31,7 @@ const ActionsModalContainer = ({ showModal, handleOnClose, handleOnConnection }:
   const userBalance = deposit ? Number(deposit.toString()) / 10 ** 18 : undefined
   const minimumBalanceToPlay = UI.MINIMUM_BALANCE
   const isWalletConnected = userAddress && userAddress.length > 0 ? true : false
+  const isNetworkMismatched = useNetworkMismatch()
 
   const signer = useSigner()
   const wager = 1e17
@@ -39,7 +41,7 @@ const ActionsModalContainer = ({ showModal, handleOnClose, handleOnConnection }:
   >(undefined)
   const [enableSigner, setEnableSigner] = useState(true)
   const topUpWallet = async () => {
-    handleOnClose();
+    handleOnClose()
     window.dispatchEvent(new CustomEvent('topUpWallet'))
   }
   const signMatchRequest = async () => {
@@ -67,6 +69,7 @@ const ActionsModalContainer = ({ showModal, handleOnClose, handleOnConnection }:
       showModal={showModal}
       handleOnClose={handleOnClose}
       isWalletConnected={isWalletConnected}
+      isNetworkMismatched={isNetworkMismatched}
       userBalance={userBalance}
       minimumBalanceToPlay={minimumBalanceToPlay}
       tokenName={tokenName}
