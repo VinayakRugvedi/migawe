@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useAddress } from '@thirdweb-dev/react'
+import { useAddress, useNetworkMismatch } from '@thirdweb-dev/react'
 
 import GameWallet from './GameWallet'
 
@@ -8,6 +8,7 @@ const GameWalletContainer = () => {
   const [showModal, setShowModal] = useState(false)
   const walletAddress = useAddress()
   const isWalletConnected = walletAddress && walletAddress.length > 0 ? true : false
+  const isNetworkMismatched = useNetworkMismatch()
   const handleModalOpen = () => {
     if (!isWalletConnected) return
     setShowModal(true)
@@ -25,6 +26,7 @@ const GameWalletContainer = () => {
 
   return (
     <GameWallet
+      isNetworkMismatched={isNetworkMismatched}
       isWalletConnected={isWalletConnected}
       showModal={showModal}
       handleModalOpen={handleModalOpen}

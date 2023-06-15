@@ -6,11 +6,13 @@ import { IoIosTime } from 'react-icons/io'
 import { Modal, Timer } from 'components/base'
 import { ThirdWebConnectWalletButton } from 'components/ui'
 import { UI } from 'utils/constants'
+import { useNetwork, ChainId } from '@thirdweb-dev/react'
 
 interface PropTypes {
   showModal: boolean
   handleOnClose: () => void
   isWalletConnected: boolean
+  isNetworkMismatched: boolean
   userBalance: number | undefined
   minimumBalanceToPlay: number
   tokenName: string
@@ -26,6 +28,7 @@ const ActionsModal = ({
   showModal,
   handleOnClose,
   isWalletConnected,
+  isNetworkMismatched,
   userBalance,
   minimumBalanceToPlay,
   tokenName,
@@ -36,7 +39,6 @@ const ActionsModal = ({
   setEnableSigner,
   signMatchRequest,
 }: PropTypes) => {
-  
   const userHasEnoughBalance = userBalance && userBalance >= minimumBalanceToPlay ? true : false
   //template variables
   let modalCloseDisabled = false
@@ -44,6 +46,7 @@ const ActionsModal = ({
   let modalContent = null
   let modalIcon = null
   let modalAction = null
+  const [, switchNetwork] = useNetwork()
 
   modalHeader = 'Post a Challenge'
   modalIcon = <FaFileSignature />
@@ -96,6 +99,21 @@ const ActionsModal = ({
     modalAction = (
       <button onClick={signMatchRequest} className='btn'>
         Post Challenge
+      </button>
+    )
+  }
+  if (isNetworkMismatched) {
+    modalHeader = 'Switch to Sepolia Testnet'
+    modalIcon = <GiWallet />
+    modalContent = <>Please switch to Sepolia Testnet to play.</>
+    modalAction = (
+      <button
+        onClick={() => {
+          if (switchNetwork) switchNetwork(11155111)
+        }}
+        className='btn'
+      >
+        Switch to Sepolia
       </button>
     )
   }
