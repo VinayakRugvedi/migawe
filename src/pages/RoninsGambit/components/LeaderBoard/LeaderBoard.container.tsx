@@ -1,6 +1,6 @@
 import LeaderBoard from './LeaderBoard'
 import { useContract, useContractRead } from '@thirdweb-dev/react'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { useEffect } from 'react'
 import { CONTRACTS } from 'utils/constants'
 
@@ -10,6 +10,20 @@ interface PropTypes {
 
 const Wins = ({ addresses }: PropTypes) => {
   const { contract: rpsGameContract } = useContract(CONTRACTS.rpsGameAddress, CONTRACTS.rpsGameABI)
+  const { contract: gameWalletContract } = useContract(
+    CONTRACTS.gameWalletAddress,
+    CONTRACTS.gameWalletABI,
+  )
+  const { data: lastUpkeepTime } = useContractRead(rpsGameContract, 'lastUpkeepTime')
+  const { data: interval } = useContractRead(rpsGameContract, 'interval')
+  const endTime =
+    lastUpkeepTime && interval
+      ? ((lastUpkeepTime as BigNumber).toNumber() + (interval as BigNumber).toNumber()) * 1000
+      : undefined
+
+  const { data: treasuryAddress } = useContractRead(rpsGameContract, 'treasuryAddr')
+  const { data: treasuryBal } = useContractRead(gameWalletContract, 'deposits', [treasuryAddress])
+  const rewardPool = treasuryBal ? ethers.utils.formatUnits(treasuryBal, 18) : undefined
   const leaderboard = [
     {
       address: addresses[0],
@@ -38,7 +52,7 @@ const Wins = ({ addresses }: PropTypes) => {
     },
   ]
   // console.log(leaderboard);
-  return <LeaderBoard leaderboard={leaderboard} />
+  return <LeaderBoard leaderboard={leaderboard} endTime={endTime} rewardPool={rewardPool} />
 }
 
 const LeaderBoardContainer = () => {
