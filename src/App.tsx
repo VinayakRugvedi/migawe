@@ -1,12 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThirdwebProvider } from '@thirdweb-dev/react'
+import { Sepolia } from '@thirdweb-dev/chains'
+
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { Home, RoninsGambit, NotFound } from 'pages'
 import { ScrollToTop } from 'components/base'
 import { Header, Footer } from 'components/ui'
-import { Sepolia } from '@thirdweb-dev/chains'
+
+import { inject } from '@vercel/analytics'
+inject()
 
 function App() {
   return (

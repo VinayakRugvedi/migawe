@@ -12,6 +12,7 @@
     "@types/node": "^16.18.28",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "@vercel/analytics": "^1.0.1",
     "daisyui": "^2.51.6",
     "dayjs": "^1.11.8",
     "ethers": "^5.7.2",
