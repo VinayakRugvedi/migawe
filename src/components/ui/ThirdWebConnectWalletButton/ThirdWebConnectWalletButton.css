@@ -8,7 +8,9 @@
   height: 3rem !important;
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important;
-  border-radius: var(--rounded-btn, 0.5rem) !important;
+  /* border-radius: var(--rounded-btn, 0.5rem) !important; */
+  /* * --rounded-btn is not available in valentineDark theme */
+  border-radius: 1.9rem !important;
 
   --tw-border-opacity: 1;
   border-color: hsl(var(--n) / var(--tw-border-opacity)) !important;
