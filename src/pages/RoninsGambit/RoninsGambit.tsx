@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { GiBroadsword, GiPlayButton, GiBarbedArrow } from 'react-icons/gi'
 import { ethers } from 'ethers'
@@ -5,6 +6,7 @@ import { ethers } from 'ethers'
 import { gameTitleIllustration, gameRules } from 'assets'
 import { ActionsModal, LeaderBoard } from './components'
 import { MatchMakerResponse } from './components/ActionsModal/MatchMaker'
+import { ThemeContext } from 'contexts'
 import { OpponentInfo } from './RoninsGambit.container'
 import { UI } from 'utils/constants'
 
@@ -16,6 +18,9 @@ interface PropTypes {
 }
 
 const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo }: PropTypes) => {
+  const { theme } = useContext(ThemeContext)
+  const isLightTheme = theme === 'valentine' ? true : false
+
   const handlePlayRandomAI = () => {
     setOpponentInfo({
       isReady: true,
@@ -80,10 +85,10 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
           </div>
 
           <div className='mt-8 mb-8 flex gap-4'>
-            <button className='btn md:btn-wide' onClick={handleOnOpen}>
+            <button className='btn md:btn-wide rounded-3xl' onClick={handleOnOpen}>
               Play Now
             </button>
-            <button className='btn btn-outline' onClick={handlePlayRandomAI}>
+            <button className='btn btn-outline rounded-3xl' onClick={handlePlayRandomAI}>
               Play Against CPU
             </button>
           </div>
@@ -104,7 +109,7 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
             <h4 className='text-2xl font-medium'>Getting Started</h4>
 
             <div className='flex flex-col md:flex-row items-center mt-8'>
-              <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20 mb-6 md:mb-0'>
+              <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-secondary/20 mb-6 md:mb-0'>
                 <div className='card-body'>
                   <div className='flex justify-between items-center'>
                     <h2 className='card-title'>Step 1: Top-up Game Wallet</h2>
@@ -128,7 +133,7 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
             </div>
 
             <div className='flex flex-col md:flex-row items-center mt-8'>
-              <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20 mb-6 md:mb-0'>
+              <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-secondary/20 mb-6 md:mb-0'>
                 <div className='card-body'>
                   <div className='flex justify-between items-center'>
                     <h2 className='card-title'>Step 2: Reward Pool</h2>
@@ -153,7 +158,9 @@ const RoninsGambit = ({ showModal, handleOnOpen, handleOnClose, setOpponentInfo 
           <img
             src={gameTitleIllustration}
             alt='Game_Title_Image'
-            className='rounded-2xl mix-blend-multiply'
+            className={`rounded-2xl ${
+              isLightTheme ? 'mix-blend-multiply' : 'mix-blend-plus-lighter	'
+            }`}
           />
           <LeaderBoard />
         </div>

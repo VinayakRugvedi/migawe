@@ -1,9 +1,14 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
+import { ThemeContext } from 'contexts'
 import { heroSectionPrimaryIllustartion, heroSectionSecondaryIllustartion } from 'assets'
 import styles from './HeroSection.module.css'
 
 const HeroSection = () => {
+  const { theme } = useContext(ThemeContext)
+  const isLightTheme = theme === 'valentine' ? true : false
+
   return (
     <section className='pt-[95px] md:pt-[120px] w-screen min-h-screen relative px-8'>
       <div className='mx-auto max-w-screen-2xl'>
@@ -31,7 +36,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
+            <div className='card w-full md:w-96 shadow-xl bg-secondary/20'>
               <div className='card-body'>
                 <div className='flex justify-between items-center flex-wrap'>
                   <h2 className='card-title'>Branded Game</h2>
@@ -46,7 +51,7 @@ const HeroSection = () => {
           </div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 auto-rows-auto gap-8'>
-            <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
+            <div className='card w-full md:w-96 shadow-xl bg-secondary/20'>
               <div className='card-body'>
                 <div className='flex justify-between items-center flex-wrap'>
                   <h2 className='card-title'>Plug and Play</h2>
@@ -60,7 +65,7 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <div className='card w-full md:w-96 bg-base-100 shadow-xl bg-neutral/20'>
+            <div className='card w-full md:w-96 shadow-xl bg-secondary/20'>
               <div className='card-body'>
                 <div className='flex justify-between items-center flex-wrap'>
                   <h2 className='card-title'>Migawe&apos;s Ecosystem</h2>
@@ -78,12 +83,18 @@ const HeroSection = () => {
       </div>
       <img
         src={heroSectionPrimaryIllustartion}
-        className={`${styles['slide-in-from-bottom-right']} absolute top-0 right-0 mix-blend-soft-light 2xl:mix-blend-color-burn `}
+        className={`${
+          styles['slide-in-from-bottom-right']
+        } absolute top-0 right-0 mix-blend-soft-light ${
+          isLightTheme ? '2xl:mix-blend-color-burn' : '2xl:mix-blend-color-dodge'
+        }`}
       />
 
       <img
         src={heroSectionSecondaryIllustartion}
-        className={`${styles['slide-in-from-top-left']} absolute left-40 top-20 mix-blend-overlay hidden 2xl:block`}
+        className={`${styles['slide-in-from-top-left']} absolute left-40 top-20 ${
+          isLightTheme ? 'mix-blend-overlay' : 'mix-blend-soft-light'
+        } mix-blend-overlay hidden 2xl:block`}
       />
     </section>
   )

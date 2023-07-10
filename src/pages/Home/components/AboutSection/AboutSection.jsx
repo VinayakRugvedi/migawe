@@ -1,9 +1,14 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Logo512 } from 'components/base'
-import { gameFightSceneIllustration, Logo512Dark } from 'assets'
+import { gameFightSceneIllustration } from 'assets'
+import { ThemeContext } from 'contexts'
 
 const AboutSection = () => {
+  const { theme } = useContext(ThemeContext)
+  const isLightTheme = theme === 'valentine' ? true : false
+
   return (
     <section className='mx-auto max-w-7xl mt-16 px-8'>
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-16'>
@@ -88,7 +93,7 @@ const AboutSection = () => {
               <img
                 src={gameFightSceneIllustration}
                 alt='Ronin_Gambit_Fight_Image'
-                className='mix-blend-multiply drop-shadow-[0_0px_12px_hsl(var(--p))]'
+                className={`${isLightTheme ? 'mix-blend-multiply' : ''}`}
               />
             </figure>
             <div className='card-body'>
@@ -97,7 +102,7 @@ const AboutSection = () => {
                 Please click on the button below to land on the game page. May the force be with
                 you!
               </p>
-              <Link to='ronins-gambit' className='btn btn-sm btn-neutral mt-2'>
+              <Link to='ronins-gambit' className='btn btn-sm btn-neutral rounded-2xl mt-2'>
                 Let&apos;s Go
               </Link>
             </div>
