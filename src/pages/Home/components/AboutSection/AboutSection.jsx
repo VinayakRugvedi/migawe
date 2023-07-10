@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 
-import { gameFightSceneIllustration, Logo512 } from 'assets'
+import { Logo512 } from 'components/base'
+import { gameFightSceneIllustration, Logo512Dark } from 'assets'
 
 const AboutSection = () => {
   return (
@@ -64,11 +65,7 @@ const AboutSection = () => {
 
         <div className='flex flex-col items-center justify-center'>
           <div className='flex flex-col items-center justify-center'>
-            <img
-              src={Logo512}
-              alt='Migawe Logo'
-              className='w-48 animate-[spin_90s_ease-in-out_infinite] drop-shadow-[0_0px_12px_hsl(var(--p))]'
-            />
+            <Logo512 className='w-48 animate-[spin_90s_ease-in-out_infinite] drop-shadow-[0_0px_12px_hsl(var(--p))]' />
             <p className='w-full md:w-2/3 mt-6 text-center font-bold italic drop-shadow-[0_0px_10px_hsl(var(--p))]'>
               &quot;By combining games, rewards, branding opportunities, and engagement enhancement
               on dapps, Migawe aims to create a thriving ecosystem within the web3 space&quot;
