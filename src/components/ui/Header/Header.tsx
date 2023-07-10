@@ -1,13 +1,17 @@
 import { Link } from 'react-router-dom'
 
+import { GiHamburgerMenu, GiCrossedSwords } from 'react-icons/gi'
+
 import { ThirdWebConnectWalletButton } from 'components/ui'
-import { Logo512 } from 'assets'
-import { GameWallet } from './components'
+import { Logo512 } from 'components/base'
+import { GameWallet, ToggleTheme } from './components'
 
 interface PropTypes {
   showMobileHeader: boolean
   handleToggleMobileHeader: () => void
 }
+
+// TODO: Fix UI bug w.r.t clicking actions
 
 const Header = ({ showMobileHeader, handleToggleMobileHeader }: PropTypes) => {
   return (
@@ -17,16 +21,14 @@ const Header = ({ showMobileHeader, handleToggleMobileHeader }: PropTypes) => {
     >
       <nav className='h-full flex justify-between items-center'>
         <Link to='/' className='hover:text-primary flex items-center'>
-          <img
-            src={Logo512}
-            alt='logo'
-            width='24'
-            className='mr-2 animate-[spin_5s_ease-in-out_infinite]'
-          />
+          <Logo512 width='24' className='mr-2 animate-[spin_5s_ease-in-out_infinite]' />
           <h3 className='text-2xl font-bold uppercase'>MIGAWE</h3>
         </Link>
 
         <div className='items-center hidden md:flex'>
+          <div className='mr-12'>
+            <ToggleTheme />
+          </div>
           <div className='mr-12'>
             <GameWallet />
           </div>
@@ -37,45 +39,33 @@ const Header = ({ showMobileHeader, handleToggleMobileHeader }: PropTypes) => {
         </div>
 
         <div className='flex items-center md:hidden'>
+          <div className='mr-4 flex'>
+            <ToggleTheme />
+          </div>
           <Link className='mr-4 font-medium uppercase hover:text-primary' to='/ronins-gambit'>
             Game
           </Link>
           <label className={`btn btn-xs swap swap-rotate ${showMobileHeader ? 'swap-active' : ''}`}>
             {/* this hidden checkbox controls the state */}
-            <input type='checkbox' onChange={handleToggleMobileHeader} />
+            <input type='checkbox' onClick={handleToggleMobileHeader} />
 
-            {/* hamburger icon */}
-            <svg
-              className='swap-off fill-current'
-              xmlns='http://www.w3.org/2000/svg'
-              width='20'
-              height='20'
-              viewBox='0 0 512 512'
-            >
-              <path d='M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,120v42.67H448V120Z' />
-            </svg>
-
-            {/* close icon */}
-            <svg
-              className='swap-on fill-current'
-              xmlns='http://www.w3.org/2000/svg'
-              width='20'
-              height='20'
-              viewBox='0 0 512 512'
-            >
-              <polygon points='400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49' />
-            </svg>
+            <GiHamburgerMenu className='swap-off' />
+            <GiCrossedSwords className='swap-on' />
           </label>
 
           <div
             className={`absolute transition-all z-[-1] w-screen ${
               showMobileHeader ? 'top-[90px]' : 'top-[0px] opacity-0'
-            } h-[100px] bg-secondary/90 left-0  flex items-center justify-between px-4`}
+            } h-[90px] bg-primary left-0 flex items-center justify-between px-4`}
           >
-            <div className='mr-12'>
-              <GameWallet />
-            </div>
-            <ThirdWebConnectWalletButton />
+            {showMobileHeader ? (
+              <>
+                <div className='mr-12'>
+                  <GameWallet />
+                </div>
+                <ThirdWebConnectWalletButton />
+              </>
+            ) : null}
           </div>
         </div>
       </nav>
