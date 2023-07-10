@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThirdwebProvider } from '@thirdweb-dev/react'
 import { Sepolia } from '@thirdweb-dev/chains'
@@ -8,11 +9,16 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Home, RoninsGambit, NotFound } from 'pages'
 import { ScrollToTop } from 'components/base'
 import { Header, Footer } from 'components/ui'
+import { ThemeContext } from 'contexts'
 
 import { inject } from '@vercel/analytics'
 inject()
 
 function App() {
+  const [theme, setTheme] = useState(
+    localStorage.getItem('theme') ? localStorage.getItem('theme') : 'valentine',
+  )
+
   return (
     <ThirdwebProvider
       activeChain={{
@@ -26,13 +32,15 @@ function App() {
     >
       <Router>
         <ScrollToTop />
-        <Header />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/ronins-gambit' element={<RoninsGambit />} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-        <Footer />
+        <ThemeContext.Provider value={{ theme, setTheme }}>
+          <Header />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/ronins-gambit' element={<RoninsGambit />} />
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+          <Footer />
+        </ThemeContext.Provider>
         <ToastContainer
           position='top-right'
           autoClose={5000}
